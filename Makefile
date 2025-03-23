@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+         #
+#    By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/03/24 01:50:07 by vnicoles         ###   ########.fr        #
+#    Updated: 2025/03/24 12:44:17 by mgavorni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,9 @@ SRC			= main.c \
 				exec_engine.c \
 				prompt.c \
 				cleanup.c \
+				signals.c \
+				sig_handlers.c \
+				virt_handler.c
 
 OBJ			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 HEADERS		= $(INC_DIR)minishell.h

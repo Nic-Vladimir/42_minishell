@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/24 03:40:01 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/24 12:49:24 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 #include "../inc/tokenizer.h"
 #include "../inc/ast.h"
+#include "../inc/sig_hand.h"
 #include <readline/history.h>
 
 /*
@@ -37,11 +38,14 @@ int	main(int argc, char **argv, char **envp) {
 	(void)argc;
 	(void)argv;
 	env = init_env(envp);
+	setup_sig_handler(SIG_REAL);
 	while (1) {
 		prompt = get_prompt(env);
 		input = readline(prompt);
 		free(prompt);
 		if (!input)
+		{
+			setup_sig_handler(SIG_VIRTUAL_CTRL_D);
 			continue;
 		if (ft_strcmp(input, "exit") == 0) {
             free(input);

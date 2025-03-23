@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/24 01:50:43 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/24 12:48:19 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include "ast.h"
 #include "env.h"
 #include "tokenizer.h"
+# include "sig_hand.h"
+# include "colors.h"
 
 #include "../lib/libft/inc/libft.h"
 #include <dirent.h>
