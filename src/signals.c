@@ -5,14 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/20 15:52:08 by mgavorni          #+#    #+#             */
-<<<<<<< Updated upstream
-/*   Updated: 2025/03/24 11:21:02 by mgavorni         ###   ########.fr       */
-=======
-/*   Updated: 2025/03/23 02:24:56 by mgavorni         ###   ########.fr       */
->>>>>>> Stashed changes
+/*   Created: 2025/03/24 13:03:36 by mgavorni          #+#    #+#             */
+/*   Updated: 2025/03/24 13:03:42 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "../inc/minishell.h"
 
