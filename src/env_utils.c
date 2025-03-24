@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 19:23:59 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/13 19:52:52 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/20 03:13:49 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ char **process_wildcard(t_arena *arena, char *arg, int *count) {
 	int				match_count;
 
 	dir = opendir(".");
-	//TODO: potential magnumber issue
+	//TODO: potential magic number issue
 	matches = arena_malloc(arena, sizeof(char *) * 100);
 	match_count = 0;
 	if(!dir || !matches)
@@ -246,7 +246,7 @@ void expand_command(t_arena *arena, t_ast_node *node, t_env_var *env_list) {
 
 void process_expansions(t_arena *arena, t_ast_node *node, t_env_var *env_list) {
     if (!node || g_signal_received) return;
-    
+
     if (node->type == NODE_CMD)
         expand_command(arena, node, env_list);
     else if (node->type == NODE_REDIR_IN || node->type == NODE_REDIR_OUT || 

@@ -36,15 +36,15 @@ int hashmap_insert(t_env *env, char *key, char *value) {
 	current_node = env->vars->buckets[index];
 	while (current_node) {
 		if (strcmp(current_node->key, key) == 0) {
-			current_node->value = (char *)arena_malloc(env->arena, ft_strlen(value) + 1);
+			current_node->value = (char *)malloc(ft_strlen(value) + 1);
 			strcpy(current_node->value, value);
             return 0;
 		}
 		current_node = current_node->next;
 	}
-	new_node = (t_bucket *)arena_malloc(env->arena, sizeof(t_bucket));
-	new_node->key = (char *)arena_malloc(env->arena, ft_strlen(key) + 1);
-	new_node->value = (char *)arena_malloc(env->arena, ft_strlen(value) + 1);
+	new_node = (t_bucket *)malloc(sizeof(t_bucket));
+	new_node->key = (char *)malloc(ft_strlen(key) + 1);
+	new_node->value = (char *)malloc(ft_strlen(value) + 1);
 	strcpy(new_node->key, key);
 	strcpy(new_node->value, value);
 	new_node->next = env->vars->buckets[index];
@@ -79,11 +79,11 @@ char **get_envp_from_hashmap(t_env *env) {
 	i = 0;
 	j = 0;
 	count = get_vars_num(env);
-    envp = arena_malloc(env->arena, (count + 1) * sizeof(char *));
+    envp = malloc((count + 1) * sizeof(char *));
 	while (j < env->vars->size) {
         current = env->vars->buckets[j];
         while (current) {
-            char *env_var = (char *)arena_malloc(env->arena, strlen(current->key) + strlen(current->value) + 2);
+            char *env_var = (char *)malloc(strlen(current->key) + strlen(current->value) + 2);
             sprintf(env_var, "%s=%s", current->key, current->value);
             envp[i++] = env_var;
             current = current->next;

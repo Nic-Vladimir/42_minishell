@@ -23,6 +23,8 @@ typedef enum e_node_type {
 	NODE_AND,
 	NODE_OR,
 	NODE_GROUP,
+	NODE_SGQ,
+	NODE_DBQ
 } t_node_type;
 
 typedef struct s_ast_node {

@@ -13,7 +13,6 @@
 # ifndef ENV_H
 # define ENV_H
 
-# include "arena.h"
 # include "tokenizer.h"
 # include <unistd.h>
 
@@ -33,7 +32,6 @@ typedef struct s_env {
 	int					last_exit_code;
 	pid_t				shell_pid;
 	t_tokenizer_data	*tokenizer;
-	t_arena				*arena;
 } t_env;
 
 

@@ -15,7 +15,6 @@
 
 //TODO: Learn about multiple header inclusions
 
-#include "arena.h"
 typedef enum e_token_type {
     TOK_CMD,
     TOK_PIPE,
@@ -29,6 +28,8 @@ typedef enum e_token_type {
     TOK_GROUP_CLOSE,
     TOK_WORD,
     TOK_EOF,
+	TOK_SGQ_BLOCK,
+	TOK_DBQ_BLOCK
 } t_token_type;
 
 typedef struct s_token {
@@ -38,7 +39,6 @@ typedef struct s_token {
 } t_token;
 
 typedef struct s_tokenizer_data {
-	t_arena *arena;
 	t_token *tokens;
 	t_token *tail;
 } t_tokenizer_data;

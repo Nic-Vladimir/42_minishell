@@ -1,24 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   arena.h                                            :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vnicoles <vnicoles@student.42prague.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/10 08:45:18 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/10 08:52:27 by vnicoles         ###   ########.fr       */
+/*   Created: 2025/03/20 04:10:00 by vnicoles          #+#    #+#             */
+/*   Updated: 2025/03/20 04:12:18 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ARENA_H
-# define ARENA_H
+#include "../inc/libft.h"
 
-# include <stddef.h>
+int ft_strcmp(const char *s1, const char *s2)
+{
+	size_t	i;
 
-typedef struct s_arena {
-	char	*mem;
-	size_t	size;
-	size_t	used;
-} t_arena;
-
-#endif
+	i = 0;
+	while ((s1[i]) && (s1[i] == s2[i]))
+		i++;
+	return (((unsigned char)s1[i]) - ((unsigned char)s2[i]));
+}

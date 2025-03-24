@@ -14,14 +14,14 @@
 #include "../inc/minishell.h"
 
 
-static t_token	*new_token(t_tokenizer_data *tok_data, t_token_type type, char *value, size_t len) {
+static t_token	*new_token(t_token_type type, char *value, size_t len) {
 	t_token *token;
 
-	token = arena_malloc(tok_data->arena, sizeof(t_token));
+	token = malloc(sizeof(t_token));
 	if (!token)
 		return NULL;
 	token->type = type;
-	token->value = arena_malloc(tok_data->arena, len + 1);
+	token->value = malloc(len + 1);
 	if (!token->value)
 		return NULL;
 	memcpy(token->value, value, len);
@@ -33,7 +33,7 @@ static t_token	*new_token(t_tokenizer_data *tok_data, t_token_type type, char *v
 static void	add_token(t_tokenizer_data *tok_data, t_token_type type, char *value, size_t len) {
 	t_token *new;
 
-	new = new_token(tok_data, type, value, len);
+	new = new_token(type, value, len);
 	if(!new)
 		return;
 	if (!tok_data->tokens) {
@@ -45,8 +45,32 @@ static void	add_token(t_tokenizer_data *tok_data, t_token_type type, char *value
 	}
 }
 
+static char *process_single_quotes(t_tokenizer_data *tok_data, char *input) {
+	char	*start;
+
+	input++;
+	start = input;
+	while (*input && *input != '\'')
+		input++;
+	add_token(tok_data, TOK_SGQ_BLOCK, start, input - start);
+	input++;
+	return input;
+}
+
+static char *process_double_quotes(t_tokenizer_data *tok_data, char *input) {
+	char	*start;
+
+	input++;
+	start = input;
+	while (*input && *input != '\"')
+		input++;
+	add_token(tok_data, TOK_DBQ_BLOCK, start, input - start);
+	input++;
+	return input;
+}
+
 static char *process_word_token(t_tokenizer_data *tok_data, char *input) {
-    char *start;
+    char	*start;
 
 	start = input;
     while (*input && !isspace(*input) && *input != '|' && *input != '<' && *input != '>' && *input != ')')
@@ -84,6 +108,14 @@ t_token	*tokenize(t_tokenizer_data *tok_data, char *input) {
 				input++;
 			} else
 				add_token(tok_data, TOK_REDIR_OUT, ">", 1);
+		}
+		else if (*input == '\'') {
+			input = process_single_quotes(tok_data, input);
+			continue;
+		}
+		else if (*input == '\"') {
+			input = process_double_quotes(tok_data, input);
+			continue;
 		}
 		else if (*input == '(')
 			add_token(tok_data, TOK_GROUP_OPEN, "(", 1);

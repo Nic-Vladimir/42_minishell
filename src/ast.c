@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:02:13 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/10 08:56:10 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/24 03:43:07 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 
 t_ast_node *parse_group(t_tokenizer_data *tok_data);
 
-t_ast_node *ast_new_node(t_arena *arena, t_node_type type, char **args) {
+t_ast_node *ast_new_node(t_node_type type, char **args) {
 	t_ast_node	*node;
 
-	node = (t_ast_node *)arena_malloc(arena, sizeof(t_ast_node));
+	node = (t_ast_node *)malloc(sizeof(t_ast_node));
     if (!node)
         return NULL;
     node->type = type;
@@ -30,21 +30,21 @@ t_ast_node *ast_new_node(t_arena *arena, t_node_type type, char **args) {
     return node;
 }
 
-t_ast_node *ast_node_insert(t_arena *arena, t_ast_node *root, t_node_type type, char **args) {
+t_ast_node *ast_node_insert(t_ast_node *root, t_node_type type, char **args) {
 	t_ast_node	*new_root;
 
 	if (!root)
-		return ast_new_node(arena, type, args);
+		return ast_new_node(type, args);
 	if (type == NODE_PIPE || type == NODE_AND || type == NODE_OR) {
-		new_root = ast_new_node(arena, type, NULL);
+		new_root = ast_new_node(type, NULL);
 		new_root->left = root;
 		new_root->right = NULL;
 
         if (!args)
-            new_root->right = ast_new_node(arena, NODE_CMD, args);
+            new_root->right = ast_new_node(NODE_CMD, args);
 		return new_root;
 	}
-	root->right = ast_node_insert(arena, root->right, type, args);
+	root->right = ast_node_insert(root->right, type, args);
 	return root;
 }
 
@@ -69,16 +69,16 @@ t_ast_node *parse_redirection(t_tokenizer_data *tok_data, t_ast_node *cmd) {
     }
     switch (redir->type) {
         case TOK_REDIR_IN:
-            redir_node = ast_new_node(tok_data->arena, NODE_REDIR_IN, NULL);
+            redir_node = ast_new_node(NODE_REDIR_IN, NULL);
             break;
         case TOK_REDIR_APPEND:
-            redir_node = ast_new_node(tok_data->arena, NODE_REDIR_APPEND, NULL);
+            redir_node = ast_new_node(NODE_REDIR_APPEND, NULL);
             break;
         case TOK_REDIR_OUT:
-            redir_node = ast_new_node(tok_data->arena, NODE_REDIR_OUT, NULL);
+            redir_node = ast_new_node(NODE_REDIR_OUT, NULL);
             break;
         case TOK_HEREDOC:
-            redir_node = ast_new_node(tok_data->arena, NODE_HEREDOC, NULL);
+            redir_node = ast_new_node(NODE_HEREDOC, NULL);
             break;
         default:
             printf("Syntax error: unnexpected redirection type\n");
@@ -86,7 +86,7 @@ t_ast_node *parse_redirection(t_tokenizer_data *tok_data, t_ast_node *cmd) {
     }
     redir_node->right = cmd;
     if ((*tok_data->tokens).value) {
-        args = (char **)arena_malloc(tok_data->arena, 2 * sizeof(char *));
+        args = (char **)malloc(2 * sizeof(char *));
         if (args == NULL)
             return NULL;
         args[0] = tok_data->tokens->value;
@@ -108,19 +108,21 @@ t_ast_node *parse_simple_command(t_tokenizer_data *tok_data) {
     i = 0;
     arg_count = 0;
     temp = tok_data->tokens;
-    while (temp && temp->type == TOK_WORD) {
+    while (temp && (temp->type == TOK_WORD || temp->type == TOK_SGQ_BLOCK || temp->type == TOK_DBQ_BLOCK)) {
         arg_count++;
         temp = temp->next;
     }
-    args = arena_malloc(tok_data->arena, sizeof(char *) * (arg_count + 1));
+    args = malloc(sizeof(char *) * (arg_count + 1));
     if (!args)
         return NULL;
-    while (tok_data->tokens && tok_data->tokens->type == TOK_WORD) {
-        args[i++] = tok_data->tokens->value;
+    while (tok_data->tokens && (tok_data->tokens->type == TOK_WORD ||
+								tok_data->tokens->type == TOK_SGQ_BLOCK ||
+								tok_data->tokens->type == TOK_DBQ_BLOCK)) {
+		args[i++] = tok_data->tokens->value;
         tok_data->tokens = tok_data->tokens->next;
     }
     args[i] = NULL;
-    cmd = ast_new_node(tok_data->arena, NODE_CMD, args);
+    cmd = ast_new_node(NODE_CMD, args);
     while (tok_data->tokens && (tok_data->tokens->type == TOK_REDIR_IN || tok_data->tokens->type == TOK_REDIR_OUT ||
                                 tok_data->tokens->type == TOK_REDIR_APPEND || tok_data->tokens->type == TOK_HEREDOC)) {
         cmd = parse_redirection(tok_data, cmd);
@@ -136,7 +138,7 @@ t_ast_node *parse_pipeline(t_tokenizer_data *tok_data) {
     while (tok_data->tokens && tok_data->tokens->type == TOK_PIPE) {
         tok_data->tokens = tok_data->tokens->next;
         right = parse_group(tok_data);
-        left = ast_node_insert(tok_data->arena, left, NODE_PIPE, NULL);
+        left = ast_node_insert(left, NODE_PIPE, NULL);
         left->right = right;
     }
     return left;
@@ -155,7 +157,7 @@ t_ast_node *parse_logical_operators(t_tokenizer_data *tok_data) {
 			type = NODE_OR;
 		tok_data->tokens = tok_data->tokens->next;
 		right = parse_pipeline(tok_data);
-		left = ast_node_insert(tok_data->arena, left, type, NULL);
+		left = ast_node_insert(left, type, NULL);
 		left->right = right;
 	}
 	return left;
@@ -173,7 +175,7 @@ t_ast_node *parse_group(t_tokenizer_data *tok_data) {
 			return NULL;
 		}
 		tok_data->tokens = tok_data->tokens->next;
-		group_node = ast_new_node(tok_data->arena, NODE_GROUP, NULL);
+		group_node = ast_new_node(NODE_GROUP, NULL);
 		if (!group_node)
 			return NULL;
 		group_node->left = group;
@@ -186,7 +188,7 @@ t_ast_node *parse(t_tokenizer_data *tok_data) {
 	return parse_logical_operators(tok_data);
 }
 
-
+// DEBUGGING FUNCTIONS ---
 // Function to get string representation of node types
 const char *node_type_to_str(t_node_type type) {
     switch (type) {

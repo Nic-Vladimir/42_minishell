@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/18 22:10:07 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/24 03:40:01 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,38 +28,42 @@ static void print_tokens(t_tokenizer_data *tok_data) {
 */
 
 int	main(int argc, char **argv, char **envp) {
-	char				*input;
-	t_arena				*arena;
-	t_ast_node			*root;
-	int					status;
-	t_env				*env;
+	char		*input;
+	char		*prompt;
+	t_ast_node	*root;
+	int			status;
+	t_env		*env;
 
 	(void)argc;
 	(void)argv;
-	arena = arena_init(1024 * 1024);
-	//env_list = create_env_list();
-	env = init_env(arena, envp);
+	env = init_env(envp);
 	while (1) {
-		input = readline("minishell> ");
+		prompt = get_prompt(env);
+		input = readline(prompt);
+		free(prompt);
 		if (!input)
 			continue;
-		if (strcmp(input, "exit") == 0) {
+		if (ft_strcmp(input, "exit") == 0) {
             free(input);
 			break;
         }
 		if (*input)
 			add_history(input);
 
+		print_transient_prompt(input);
 		env->tokenizer->tokens = tokenize(env->tokenizer, input);
 		root = parse(env->tokenizer);
-		//debug_ast(root);
+		debug_ast(root);
 		//print_tokens(env->tokenizer);
 		status = execute_ast(env, root);
+		free_tokens(env->tokenizer);
+		free_ast(root);
+        env->last_exit_code = status;
 		printf("Command return value: %d\n", status);
 		free(input);
 	}
+	free_env(env);
     rl_clear_history();
     rl_cleanup_after_signal();
-	arena_free(arena);
 	return 0;
 }
