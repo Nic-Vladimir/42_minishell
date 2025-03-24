@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 21:19:38 by mgavorni          #+#    #+#             */
-/*   Updated: 2025/03/23 02:25:00 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/03/24 12:57:10 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,3 @@ t_sig_action	m_virtual_handler(sigset_t sig_mask)
 		.signum = 0
 	});
 }
-
-// void	setup_virt_handler(int id)
-// {
-// 	size_t			i;
-// 	t_sig_action	signals_vr[SIGNAL_COUNT];
-
-// 	i = 0;
-// 	while (i < SIGNAL_COUNT)
-// 	{
-// 		if (signals_vr[i].type == FAKE_SIGNAL && signals_vr[i].id == id)
-// 		{
-// 			signals_vr[i].virtual();
-// 			break ;
-// 		}
-// 		i++;
-// 	}
-// }
