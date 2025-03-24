@@ -24,23 +24,20 @@ int execute_redirections(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 int execute_logical_op(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 int execute_group(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 
-
+//TODO: This is ass, doesn't work, rewrite and fix
 char *expand_vars_DBQ(t_env *env, const char *input) {
 	int		i;
 	char	*expanded;
-	char	var_name[256]; // Temporary buffer for variable name
+	char	var_name[256];
 	int		var_len;
 	char	*temp;
 
 	i = 0;
 	var_len = 0;
-	expanded = ft_strdup(""); // Start with an empty string
-
+	expanded = ft_strdup("");
 	while (input[i]) {
 		if (input[i] == '$') {
-			i++; // Skip the $
-
-			// Handle special cases ($$ and $?)
+			i++;
 			if (input[i] == '$') {
 				temp = ft_itoa(env->shell_pid);
 				i++;
@@ -48,26 +45,20 @@ char *expand_vars_DBQ(t_env *env, const char *input) {
 				temp = ft_itoa(env->last_exit_code);
 				i++;
 			} else {
-				// Extract variable name
 				var_len = 0;
 				while (ft_isalnum(input[i]) || input[i] == '_') {
 					var_name[var_len++] = input[i++];
 				}
 				var_name[var_len] = '\0';
-
-				// Look up environment variable
 				temp = get_env_value(env, var_name);
-				if (!temp) 
-					temp = ft_strdup(""); // Avoid NULL issues
-				else 
-					temp = ft_strdup(temp); // Ensure alloc safety
+				if (!temp)
+					temp = ft_strdup("");
+				else
+					temp = ft_strdup(temp);
 			}
-
-			// Append expanded value
 			expanded = ft_strjoin_free(expanded, temp);
 			free(temp);
 		} else {
-			// Append normal characters
 			char str[2] = {input[i], '\0'};
 			expanded = ft_strjoin_free(expanded, str);
 			i++;
