@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 21:35:07 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/23 21:40:42 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/27 03:18:39 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,23 @@ void free_tokens(t_tokenizer_data *tokenizer) {
     tokenizer->tail = NULL;
 }
 
-void free_ast(t_ast_node *node) {
-    if (!node) return;
+void free_ast(t_ast_node *node)
+{
+    int i;
+
+    if (!node)
+        return ;
     free_ast(node->left);
     free_ast(node->right);
-    if (node->args) {
-        for (int i = 0; node->args[i]; i++) {
-            free(node->args[i]);
-        }
+    if (node->args)
+    {
+        i = 0;
+        while (node->args[i])
+            free(node->args[i++]);
         free(node->args);
     }
+    if (node->arg_types)
+        free(node->arg_types);
     free(node);
 }
 
@@ -61,6 +68,7 @@ void free_env(t_env *env) {
     free_hashmap(env->vars);
     free_tokens(env->tokenizer);
     free(env->tokenizer);
+    free(env->input);
     free(env);
 }
 

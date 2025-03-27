@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 05:47:09 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/18 22:38:48 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/27 05:01:24 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int hashmap_insert(t_env *env, char *key, char *value) {
 		index *= -1;
 	current_node = env->vars->buckets[index];
 	while (current_node) {
-		if (strcmp(current_node->key, key) == 0) {
+		if (ft_strcmp(current_node->key, key) == 0) {
 			current_node->value = (char *)malloc(ft_strlen(value) + 1);
 			strcpy(current_node->value, value);
             return 0;
@@ -49,7 +49,7 @@ int hashmap_insert(t_env *env, char *key, char *value) {
 	strcpy(new_node->value, value);
 	new_node->next = env->vars->buckets[index];
 	env->vars->buckets[index] = new_node;
-	return 1;
+	return 0;
 }
 
 int get_vars_num(t_env *env) {
@@ -58,6 +58,7 @@ int get_vars_num(t_env *env) {
 	int			j;
 
 	j = 0;
+	count = 0;
 	while (j < env->vars->size) {
         current = env->vars->buckets[j];
         while (current) {
@@ -93,6 +94,4 @@ char **get_envp_from_hashmap(t_env *env) {
     envp[i] = NULL;
     return envp;
 }
-
-
 

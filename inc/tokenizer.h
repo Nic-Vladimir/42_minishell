@@ -16,7 +16,7 @@
 //TODO: Learn about multiple header inclusions
 
 typedef enum e_token_type {
-    TOK_CMD,
+    TOK_WORD,
     TOK_PIPE,
     TOK_REDIR_IN,
     TOK_REDIR_OUT,
@@ -26,7 +26,6 @@ typedef enum e_token_type {
     TOK_OR,
     TOK_GROUP_OPEN,
     TOK_GROUP_CLOSE,
-    TOK_WORD,
     TOK_EOF,
 	TOK_SGQ_BLOCK,
 	TOK_DBQ_BLOCK

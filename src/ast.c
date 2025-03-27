@@ -17,6 +17,31 @@
 
 t_ast_node *parse_group(t_tokenizer_data *tok_data);
 
+t_ast_node *ast_set_node_arg_types(t_ast_node *node, char **args)
+{
+	int			i;
+	int			j;
+
+	if (args)
+	{
+		i = 0;
+		j = 0;
+		while (args[i])
+			i++;
+		node->arg_types = malloc(sizeof(t_token_type) * i);
+		if (!node->arg_types)
+		{
+			free(node);
+			return NULL;
+		}
+		while (j < i)
+			node->arg_types[j++] = TOK_WORD;
+	}
+	else
+		node->arg_types = NULL;
+	return node;
+}
+
 t_ast_node *ast_new_node(t_node_type type, char **args) {
 	t_ast_node	*node;
 
@@ -27,7 +52,8 @@ t_ast_node *ast_new_node(t_node_type type, char **args) {
     node->args = args;
 	node->left = NULL;
 	node->right = NULL;
-    return node;
+	node = ast_set_node_arg_types(node, args);
+	return node;
 }
 
 t_ast_node *ast_node_insert(t_ast_node *root, t_node_type type, char **args) {
@@ -105,7 +131,6 @@ t_ast_node *parse_simple_command(t_tokenizer_data *tok_data) {
     t_token     *temp;
     int         i;
 
-    i = 0;
     arg_count = 0;
     temp = tok_data->tokens;
     while (temp && (temp->type == TOK_WORD || temp->type == TOK_SGQ_BLOCK || temp->type == TOK_DBQ_BLOCK)) {
@@ -115,14 +140,21 @@ t_ast_node *parse_simple_command(t_tokenizer_data *tok_data) {
     args = malloc(sizeof(char *) * (arg_count + 1));
     if (!args)
         return NULL;
+    cmd = ast_new_node(NODE_CMD, args);
+	if (!cmd)
+	{
+		free(args);
+		return NULL;
+	}
+    i = 0;
     while (tok_data->tokens && (tok_data->tokens->type == TOK_WORD ||
 								tok_data->tokens->type == TOK_SGQ_BLOCK ||
 								tok_data->tokens->type == TOK_DBQ_BLOCK)) {
-		args[i++] = tok_data->tokens->value;
+		args[i] = tok_data->tokens->value;
+		cmd->arg_types[i++] = tok_data->tokens->type;
         tok_data->tokens = tok_data->tokens->next;
     }
     args[i] = NULL;
-    cmd = ast_new_node(NODE_CMD, args);
     while (tok_data->tokens && (tok_data->tokens->type == TOK_REDIR_IN || tok_data->tokens->type == TOK_REDIR_OUT ||
                                 tok_data->tokens->type == TOK_REDIR_APPEND || tok_data->tokens->type == TOK_HEREDOC)) {
         cmd = parse_redirection(tok_data, cmd);

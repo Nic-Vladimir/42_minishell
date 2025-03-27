@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vnicoles <vnicoles@student.42prague.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/24 13:03:36 by mgavorni          #+#    #+#             */
-/*   Updated: 2025/03/24 13:03:42 by mgavorni         ###   ########.fr       */
+/*   Created: 2025/03/27 11:13:28 by vnicoles          #+#    #+#             */
+/*   Updated: 2025/03/27 11:43:11 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../inc/minishell.h"
 
@@ -89,5 +88,3 @@ int	register_sig(const t_sig_action *config)
 	}
 	return (0);
 }
-
-
