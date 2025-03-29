@@ -16,15 +16,18 @@ int	execute_env(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 {
 	int		i;
 	char	**envp;
+    size_t  len;
 
 	(void)node;
 	(void)in_fd;
-	(void)out_fd;
 	i = 0;
 	envp = get_envp_from_hashmap(env);
 	while (envp[i])
 	{
-    	printf("%s\n", envp[i++]);
+        len = ft_strlen(envp[i]);
+        write(out_fd, envp[i], len);
+        write(out_fd, "\n", 1);
+        i++;
 	}
 	return 0;
 }

@@ -13,12 +13,18 @@
 #include "../inc/tokenizer.h"
 #include "../inc/ast.h"
 #include "../inc/env.h"
+#include <stdio.h>
 #include <stdlib.h>
 
-void free_tokens(t_tokenizer_data *tokenizer) {
-    t_token *current = tokenizer->tokens;
+void free_tokens(t_tokenizer_data *tokenizer)
+{
+    t_token *current;
+    t_token *next;
+
+    current = tokenizer->tokens;
+    //printf("Freeing tokens from: %p\n", (void*)tokenizer->tokens);
     while (current) {
-        t_token *next = current->next;
+        next = current->next;
         free(current->value);
         free(current);
         current = next;
@@ -47,12 +53,16 @@ void free_ast(t_ast_node *node)
     free(node);
 }
 
-static void free_hashmap(t_hashmap *hashmap) {
+static void free_hashmap(t_hashmap *hashmap)
+{
+    t_bucket    *current;
+    t_bucket    *next;
+
     if (!hashmap) return;
     for (ssize_t i = 0; i < hashmap->size; i++) {
-        t_bucket *current = hashmap->buckets[i];
+        current = hashmap->buckets[i];
         while (current) {
-            t_bucket *next = current->next;
+            next = current->next;
             free(current->key);
             free(current->value);
             free(current);
@@ -63,7 +73,8 @@ static void free_hashmap(t_hashmap *hashmap) {
     free(hashmap);
 }
 
-void free_env(t_env *env) {
+void free_env(t_env *env)
+{
     if (!env) return;
     free_hashmap(env->vars);
     free_tokens(env->tokenizer);

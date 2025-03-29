@@ -23,6 +23,13 @@ static t_tokenizer_data *init_tok_data() {
     return tok_data;
 }
 
+void free_str_array(char **arr) {
+    if (!arr) return;
+    for (int i = 0; arr[i]; i++) 
+        free(arr[i]); 
+    free(arr);
+}
+
 static void insert_env_var(t_env *env, char *envp_entry) {
 	char	**res;
     char	*key;
@@ -40,7 +47,9 @@ static void insert_env_var(t_env *env, char *envp_entry) {
     strcpy(value, res[1]);
 
     hashmap_insert(env, key, value);
-	free(res);
+    free(key);
+    free(value);
+    free_str_array(res);
 }
 
 t_env *init_env(char **envp) {
