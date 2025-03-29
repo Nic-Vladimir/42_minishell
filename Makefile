@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+         #
+#    By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/03/27 11:47:08 by vnicoles         ###   ########.fr        #
+#    Updated: 2025/03/29 19:48:53 by mgavorni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,7 +50,7 @@ SRC			= main.c \
 				cmds/cd.c \
 				cmds/exit.c \
 				cmds/unset.c \
-				#signals.c \
+				signals.c \
 				signals_handlers.c \
 				virt_handler.c \
 

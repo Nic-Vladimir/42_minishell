@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/27 11:47:50 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/29 19:47:57 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,12 @@ int execute_echo(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 int execute_cd(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 int execute_exit(t_env *env);
 int execute_unset(t_env *env, t_ast_node *node);
-/*
+
 void init_sig(int id);
 t_sig_action m_sigint_handler(sigset_t sig_mask);
 t_sig_action m_sigquit_handler(sigset_t sig_mask);
 t_sig_action m_sigchild_handler(sigset_t sig_mask);
 int register_sig(const t_sig_action *config);
-*/
+
 
 #endif

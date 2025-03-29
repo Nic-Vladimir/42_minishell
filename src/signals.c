@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42prague.com>   +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:13:28 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/27 11:43:11 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/29 19:57:06 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,6 @@ void	sig_alt_handler(int sig, siginfo_t *info, void *context)
 		else if (WIFSIGNALED(status))
 			printf("signal:[%d] child PID:[%d] kill signal %d\n",
 				sig, pid, WTERMSIG(status));
-	}
-	else
-	{
-		printf("signal:[%d] received but no exited child\n", sig);
 	}
 }
 
