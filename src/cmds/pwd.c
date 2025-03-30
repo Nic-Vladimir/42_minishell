@@ -14,19 +14,21 @@
 
 int execute_pwd(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 {
-    char    cwd[PATH_MAX];
+    char    *cwd;
+    ssize_t len;
 
     (void)in_fd;
-    (void)out_fd;
-    (void)env;
+    cwd = get_env_value(env, "PWD");
     if (node->args[1])
     {
         ft_printf(YELLOW"pwd: too many arguments\n"RESET);
         return 1;
     }
-    else if (getcwd(cwd, sizeof(cwd)) != NULL)
+    else if (*cwd)
     {
-        printf(YELLOW"%s\n"RESET, cwd);
+        len = ft_strlen(cwd);
+        write(out_fd, cwd, len);
+        write(out_fd, "\n", 1);
         return 0;
     }
     else

@@ -92,11 +92,129 @@ char *expand_var(t_env *env, const char *input)
 	return (expanded);
 }
 
+void update_arg_types(t_ast_node *node, int star_index, int len_args, int len_expanded)
+{
+    int             i;
+    int             j;
+    t_token_type    *new_arg_types;
+    int             new_size;
+
+    // New size = args before * + expanded + args after *
+    new_size = (star_index) + len_expanded + (len_args - star_index - 1);
+    new_arg_types = malloc(sizeof(int) * new_size);
+    if (!new_arg_types)
+        return; // Handle allocation failure gracefully in real code
+
+    // Copy types before the * argument
+    i = 0;
+    while (i < star_index)
+    {
+        new_arg_types[i] = node->arg_types[i];
+        i++;
+    }
+
+    // Assign TOK_WORD to all expanded arguments
+    j = 0;
+    while (j < len_expanded)
+    {
+        new_arg_types[i] = TOK_WORD;
+        i++;
+        j++;
+    }
+
+    // Copy types after the * argument
+    while (star_index + 1 < len_args)
+    {
+        new_arg_types[i] = node->arg_types[star_index + 1];
+        i++;
+        star_index++;
+    }
+
+    // Free old arg_types and replace
+    free(node->arg_types);
+    node->arg_types = new_arg_types;
+}
+
+char **copy_args(t_ast_node *node, int star_index, char **expanded)
+{
+    char    **args_copy;
+    int     i;
+    int     j;
+    int     len_expanded;
+    int     len_args;
+
+    if (!node || !node->args || !expanded)
+        return NULL;
+
+    // Count total original args
+    len_args = 0;
+    while (node->args[len_args])
+        len_args++;
+
+    // Count expanded args
+    len_expanded = 0;
+    while (expanded[len_expanded])
+        len_expanded++;
+
+    // Allocate enough space: args before * + expanded + args after *
+    args_copy = malloc(sizeof(char *) * (len_args + len_expanded));
+    if (!args_copy)
+        return NULL;
+
+    // Copy args before the * (star_index)
+    i = 0;
+    while (i < star_index)
+    {
+        args_copy[i] = ft_strdup(node->args[i]);
+        i++;
+    }
+
+    // Copy expanded args
+    j = 0;
+    while (j < len_expanded)
+    {
+        args_copy[i] = ft_strdup(expanded[j]);
+        i++;
+        j++;
+    }
+
+    // Copy remaining args after the *
+    while (star_index + 1 < len_args)
+    {
+        args_copy[i] = ft_strdup(node->args[star_index + 1]);
+        i++;
+        star_index++;
+    }
+
+    args_copy[i] = NULL; // Null-terminate
+
+    // Update node->arg_types
+    update_arg_types(node, star_index, len_args, len_expanded);
+
+    return args_copy;
+}
+
+void free_list(char **list)
+{
+    int i;
+
+    i = 0;
+    while (list[i])
+    {
+        free(list[i]);
+        i++;
+    }
+    free(list);
+}
+
 int execute_command_filter(t_env *env, t_ast_node *node, int in_fd, int out_fd) 
 {
     int     i;
 	char	*temp;
 	char	*expanded;
+    char    *args_str;
+    char    **args_list;
+    char    **temp_args;
 
     /*
 	//TODO: Debugging
@@ -114,10 +232,16 @@ int execute_command_filter(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 		if (node->arg_types[i] == TOK_WORD && ft_strchr(node->args[i], '*'))
 		{
 			temp = node->args[i];
-			node->args[i] = expand_wildcard(temp);
-			free(temp);
+            args_str = expand_wildcard(temp);
+            //printf("args_str: %s\n", args_str);
 			if (!node->args[i])
 				return 1;
+            args_list = ft_split(args_str, ' ');
+            free(args_str);
+            temp_args = copy_args(node, i, args_list);
+            free_list(node->args);
+            node->args = temp_args;
+            free_list(args_list);
 		}
 		else if (node->arg_types[i] == TOK_WORD || node->arg_types[i] == TOK_DBQ_BLOCK)
 		{
@@ -331,7 +455,11 @@ int execute_group(t_env *env, t_ast_node *node, int in_fd, int out_fd) {
 }
 
 int execute_ast(t_env *env, t_ast_node *root) {
+    t_env       *env_cpy;
+    t_ast_node  *root_cpy;
 
-	return execute_node(env, root, STDIN_FILENO, STDOUT_FILENO);
+    env_cpy = env;
+    root_cpy = root;
+	return execute_node(env_cpy, root_cpy, STDIN_FILENO, STDOUT_FILENO);
 }
 

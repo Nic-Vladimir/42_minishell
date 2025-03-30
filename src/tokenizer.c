@@ -17,14 +17,17 @@
 static t_token	*new_token(t_token_type type, char *value, size_t len) {
 	t_token *token;
 
-	token = malloc(sizeof(t_token));
+	token = (t_token *)malloc(sizeof(t_token));
 	if (!token)
 		return NULL;
 	token->type = type;
 	token->value = malloc(len + 1);
 	if (!token->value)
-		return NULL;
-	memcpy(token->value, value, len);
+    {
+        free(token);
+        return NULL;
+    }
+	ft_memcpy(token->value, value, len);
 	token->value[len] = '\0';
 	token->next = NULL;
 	return token;

@@ -14,8 +14,10 @@
 
 int execute_exit(t_env *env)
 {
-    free_tokens(env->tokenizer);
+    //free_tokens(env->tokenizer);
     free_ast(env->root);
     free_env(env);
+    rl_clear_history();
+    rl_cleanup_after_signal();
     exit(0);
 }

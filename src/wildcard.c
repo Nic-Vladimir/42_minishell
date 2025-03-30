@@ -37,13 +37,11 @@ char *expand_wildcard(char *arg)
     struct dirent	*entry;
     int				match_count;
 
-    // Extract prefix and suffix around first '*'
     prefix = ft_substr(arg, 0, ft_strchr(arg, '*') - arg);
     suffix = ft_strdup(ft_strchr(arg, '*') + 1);
     result = ft_strdup("");
     match_count = 0;
 
-    // Open current directory
     dir = opendir(".");
     if (!dir)
     {
@@ -54,7 +52,6 @@ char *expand_wildcard(char *arg)
         return (ft_strdup(arg));
     }
 
-    // Collect matching files
     while ((entry = readdir(dir)) != NULL)
     {
         if (entry->d_name[0] != '.' && match_pattern(entry->d_name, prefix, suffix))
@@ -67,7 +64,6 @@ char *expand_wildcard(char *arg)
     }
     closedir(dir);
 
-    // Replace args with matches
     if (match_count == 0)
 	{
         free(result);

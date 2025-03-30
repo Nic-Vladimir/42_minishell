@@ -28,21 +28,25 @@ t_ast_node *ast_set_node_arg_types(t_ast_node *node, char **args)
 		j = 0;
 		while (args[i])
 			i++;
-		node->arg_types = malloc(sizeof(t_token_type) * i);
-		if (!node->arg_types)
-		{
-			free(node);
-			return NULL;
-		}
-		while (j < i)
-			node->arg_types[j++] = TOK_WORD;
-	}
-	else
-		node->arg_types = NULL;
+        if (i > 0)
+        {
+            node->arg_types = malloc(sizeof(t_token_type) * i);
+            if (!node->arg_types)
+            {
+                free(node);
+                return NULL;
+            }
+            while (j < i)
+                node->arg_types[j++] = TOK_WORD;
+        }
+        else
+            node->arg_types = NULL;
+    }
 	return node;
 }
 
-t_ast_node *ast_new_node(t_node_type type, char **args) {
+t_ast_node *ast_new_node(t_node_type type, char **args)
+{
 	t_ast_node	*node;
 
 	node = (t_ast_node *)malloc(sizeof(t_ast_node));
@@ -50,6 +54,7 @@ t_ast_node *ast_new_node(t_node_type type, char **args) {
         return NULL;
     node->type = type;
     node->args = args;
+    node->arg_types = NULL;
 	node->left = NULL;
 	node->right = NULL;
 	node = ast_set_node_arg_types(node, args);
@@ -113,9 +118,13 @@ t_ast_node *parse_redirection(t_tokenizer_data *tok_data, t_ast_node *cmd) {
     redir_node->right = cmd;
     if ((*tok_data->tokens).value) {
         args = (char **)malloc(2 * sizeof(char *));
-        if (args == NULL)
+        if (!args)
+        {
+            free(redir_node);
             return NULL;
-        args[0] = tok_data->tokens->value;
+        }
+
+        args[0] = ft_strdup(tok_data->tokens->value);
         args[1] = NULL;
         redir_node->args = args;
     } else
@@ -124,12 +133,41 @@ t_ast_node *parse_redirection(t_tokenizer_data *tok_data, t_ast_node *cmd) {
     return redir_node;
 }
 
+t_ast_node *init_cmd_node(char **args, int arg_count)
+{
+	t_ast_node	*node;
+    int         j;
+
+    j = 0;
+	node = (t_ast_node *)malloc(sizeof(t_ast_node));
+    if (!node)
+        return NULL;
+    node->type = NODE_CMD;
+    node->args = args;
+	node->left = NULL;
+	node->right = NULL;
+    if (arg_count > 0)
+        {
+            node->arg_types = malloc(sizeof(t_token_type) * arg_count);
+            if (!node->arg_types)
+            {
+                free(node);
+                free(args);
+                return NULL;
+            }
+            while (j < arg_count)
+                node->arg_types[j++] = TOK_WORD;
+        }
+	return node;
+}
+
 t_ast_node *parse_simple_command(t_tokenizer_data *tok_data) {
     t_ast_node  *cmd;
     char        **args;
     int         arg_count;
     t_token     *temp;
     int         i;
+    t_token     *current;
 
     arg_count = 0;
     temp = tok_data->tokens;
@@ -140,21 +178,25 @@ t_ast_node *parse_simple_command(t_tokenizer_data *tok_data) {
     args = malloc(sizeof(char *) * (arg_count + 1));
     if (!args)
         return NULL;
-    cmd = ast_new_node(NODE_CMD, args);
+    printf("Args: [%d]\n", arg_count);
+    //cmd = ast_new_node(NODE_CMD, args);
+    cmd = init_cmd_node(args, arg_count);
 	if (!cmd)
 	{
 		free(args);
 		return NULL;
 	}
     i = 0;
-    while (tok_data->tokens && (tok_data->tokens->type == TOK_WORD ||
-								tok_data->tokens->type == TOK_SGQ_BLOCK ||
-								tok_data->tokens->type == TOK_DBQ_BLOCK)) {
-		args[i] = tok_data->tokens->value;
-		cmd->arg_types[i++] = tok_data->tokens->type;
-        tok_data->tokens = tok_data->tokens->next;
+    current = tok_data->tokens;
+    while (current && (current->type == TOK_WORD ||
+								current->type == TOK_SGQ_BLOCK ||
+								current->type == TOK_DBQ_BLOCK)) {
+		args[i] = ft_strdup(current->value);
+		cmd->arg_types[i++] = current->type;
+        current = current->next;
     }
     args[i] = NULL;
+    tok_data->tokens = current;
     while (tok_data->tokens && (tok_data->tokens->type == TOK_REDIR_IN || tok_data->tokens->type == TOK_REDIR_OUT ||
                                 tok_data->tokens->type == TOK_REDIR_APPEND || tok_data->tokens->type == TOK_HEREDOC)) {
         cmd = parse_redirection(tok_data, cmd);
@@ -217,7 +259,10 @@ t_ast_node *parse_group(t_tokenizer_data *tok_data) {
 }
 
 t_ast_node *parse(t_tokenizer_data *tok_data) {
-	return parse_logical_operators(tok_data);
+    t_tokenizer_data    *tok_data_cpy;
+
+    tok_data_cpy = tok_data;
+	return parse_logical_operators(tok_data_cpy);
 }
 
 // DEBUGGING FUNCTIONS ---
