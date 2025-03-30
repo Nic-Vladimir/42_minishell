@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42prague.com>   +#+  +:+       +#+        */
+/*   By: matus <matus@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 20:03:32 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/26 21:22:51 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/30 12:52:53 by matus            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,15 @@ static char *check_path(t_env *env, char *input_path)
         path = get_env_value(env, "OLDPWD");
         if (!path)
             return NULL;
-        printf("PURPLE%sRESET\n", path);
     }
+    fancy_write(1, path, PURPLE);
     return path;
 }
 
 static int change_dir(char *path, char **old_pwd)
 {
-    int result;
+    if(!path)
+        return(1);
 
     *old_pwd = getcwd(NULL, 0);
     if (!*old_pwd)
@@ -45,9 +46,7 @@ static int change_dir(char *path, char **old_pwd)
         perror("cd: getcwd failed");
         return 1;
     }
-
-    result = chdir(path);
-    if (result != 0)
+    if (chdir(path) != 0)
     {
         perror("cd");
         free(*old_pwd);
@@ -71,7 +70,7 @@ static int update_env(t_env *env, char *old_pwd)
         return 1;
     }
     if (old_pwd && hashmap_insert(env, "OLDPWD", old_pwd) != 0)
-        fprintf(stderr, "cd: failed to update OLDPWD\n");
+        fancy_write(1,"cd: failed to update OLDPWD", RED);
     if (hashmap_insert(env, "PWD", new_pwd) != 0)
         result = 1; // Keep going, but note the error
     free(old_pwd);

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+         #
+#    By: matus <matus@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/03/29 19:48:53 by mgavorni         ###   ########.fr        #
+#    Updated: 2025/03/30 16:29:56 by matus            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ CLEAR	= \r\033[Ks
 
 # --- Vars ---
 NAME		= minishell
-CC			= gcc -g
+CC			= gcc -fsanitize=address -g
 CFLAGS		= -Wall -Wextra -Werror -I $(INC_DIR)
 
 # --- Paths ---
@@ -53,6 +53,7 @@ SRC			= main.c \
 				signals.c \
 				signals_handlers.c \
 				virt_handler.c \
+				custom_write.c \
 
 OBJ			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 HEADERS		= $(INC_DIR)minishell.h

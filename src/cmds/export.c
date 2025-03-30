@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: matus <matus@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 02:17:49 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/27 04:59:33 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/30 16:53:21 by matus            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ int	execute_export(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 		printf("value= [%s]\n", value);
 
 		status = hashmap_insert(env, key, value);
-		printf("inserted: [%s]", get_env_value(env, key));
+		printf("inserted: [%s]\n", get_env_value(env, key));
 		free(key);
 		free(value);
 	}

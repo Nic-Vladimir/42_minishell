@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   colors.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42prague.com>   +#+  +:+       +#+        */
+/*   By: matus <matus@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 20:42:33 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/26 20:42:38 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/30 12:10:27 by matus            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,6 @@
 #define BOLD "\033[1m"
 #define CLEAR "\r\033[K"
 
+void    write_string(int fd, char *str);
+void    fancy_write(int fd, char *str, char *color);
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: matus <matus@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/29 19:47:57 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/03/30 16:53:18 by matus            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,7 @@ t_sig_action m_sigquit_handler(sigset_t sig_mask);
 t_sig_action m_sigchild_handler(sigset_t sig_mask);
 int register_sig(const t_sig_action *config);
 
+void clean_rl(void);
+void ft_free_split(char **res);
 
 #endif

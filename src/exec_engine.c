@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_engine.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: matus <matus@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/27 11:56:11 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/30 16:54:14 by matus            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,7 +241,7 @@ int execute_command_filter(t_env *env, t_ast_node *node, int in_fd, int out_fd)
             temp_args = copy_args(node, i, args_list);
             free_list(node->args);
             node->args = temp_args;
-            free_list(args_list);
+            ft_free_split(args_list);
 		}
 		else if (node->arg_types[i] == TOK_WORD || node->arg_types[i] == TOK_DBQ_BLOCK)
 		{
@@ -320,6 +320,11 @@ int execute_command(t_env *env, t_ast_node *node, int in_fd, int out_fd) {
 		}
 		envp = get_envp_from_hashmap(env);
 		exec_path = find_executable(env, node->args[0]);
+        if (exec_path == NULL)
+        {
+            perror("not valid exec_path");
+            exit(127);
+        }
 
         /*
 		//TODO: Remove this debug print

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: matus <matus@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/29 20:45:12 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/03/30 16:03:59 by matus            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,7 @@ int	main(int argc, char **argv, char **envp)
 		if (!input)
 		{
 			init_sig(SIG_VIRTUAL_CTRL_D);
-			execute_exit(env);
-			break;
+			continue;
 		}
 		if (check_empty(input))
 		{
@@ -93,9 +92,11 @@ int	main(int argc, char **argv, char **envp)
 		env->last_exit_code = status;
 		// printf("Command return (value: %d\n", status));
 		env->input = NULL;
-	
+		
 		free(input);
+		input = NULL;
 
 	}
+	clean_rl();
 	return (0);
 }

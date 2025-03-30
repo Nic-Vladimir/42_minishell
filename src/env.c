@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: matus <matus@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 19:51:51 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/20 02:03:16 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/30 16:53:21 by matus            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void insert_env_var(t_env *env, char *envp_entry) {
     strcpy(value, res[1]);
 
     hashmap_insert(env, key, value);
-	free(res);
+	ft_free_split(res);
 }
 
 t_env *init_env(char **envp) {
