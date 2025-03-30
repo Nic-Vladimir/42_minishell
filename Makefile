@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: matus <matus@student.42.fr>                +#+  +:+       +#+         #
+#    By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/03/30 16:29:56 by matus            ###   ########.fr        #
+#    Updated: 2025/03/30 21:55:29 by mgavorni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ CLEAR	= \r\033[Ks
 
 # --- Vars ---
 NAME		= minishell
-CC			= gcc -fsanitize=address -g
+CC			= gcc -g #-fsanitize=address -fno-omit-frame-pointer -O1
 CFLAGS		= -Wall -Wextra -Werror -I $(INC_DIR)
 
 # --- Paths ---

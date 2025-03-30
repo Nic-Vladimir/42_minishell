@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_engine.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matus <matus@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/30 16:54:14 by matus            ###   ########.fr       */
+/*   Updated: 2025/03/30 21:42:05 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -337,6 +337,7 @@ int execute_command(t_env *env, t_ast_node *node, int in_fd, int out_fd) {
 		//printf("Child: in_fd: %d, exec_path: %s\n", in_fd, exec_path);
 		execve(exec_path, node->args, envp);
 		fprintf(stderr, "Command not found: %s\n", node->args[0]);
+        free_envp(envp);
 		exit(127);
 	}
     int status;
@@ -368,14 +369,27 @@ int execute_pipeline(t_env *env, t_ast_node *node, int in_fd, int out_fd) {
 	env->last_exit_code = right_status;
     return right_status;
 }
+int status_check(int *pipe_fds, int status, char *expanded, char *line)
+{
+    if (status == -1)
+    {
+        free(expanded);
+        free(line);
+        close(pipe_fds[0]);
+        close(pipe_fds[1]);
+        return (-1);
+    }
+    return(0);
+}
 
 int collect_heredoc(t_env *env, char *delimiter, int *write_fd)
 {
     char    *line;
     char    *expanded;
     int     pipe_fds[2];
-    int     status;
+    ssize_t     status;
 
+    status = 0;
     if (pipe(pipe_fds) == -1)
     {
         perror("pipe failed");
@@ -394,7 +408,10 @@ int collect_heredoc(t_env *env, char *delimiter, int *write_fd)
         if (expanded)
         {
             status = write(pipe_fds[1], expanded, ft_strlen(expanded));
-            write(pipe_fds[1], "\n", 1);
+            if (status == -1 || write(pipe_fds[1], "\n", 1) == -1)
+                status_check(pipe_fds, status, expanded, line);
+            // write(pipe_fds[1], "\n", 1);
+            // status_check(pipe_fds, status, expanded, line);
             free(expanded);
         }
         free(line);

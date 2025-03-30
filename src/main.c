@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matus <matus@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/30 16:03:59 by matus            ###   ########.fr       */
+/*   Updated: 2025/03/30 23:02:01 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,8 @@ int	main(int argc, char **argv, char **envp)
 		env->tokenizer->tokens = token_head;
 		free_tokens(env->tokenizer);
 		// printf("root node: [%p]", root);
-		free_ast(root);
+		if(root != NULL)
+			free_ast(root);
 		env->last_exit_code = status;
 		// printf("Command return (value: %d\n", status));
 		env->input = NULL;

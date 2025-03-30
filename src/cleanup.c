@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 21:35:07 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/27 03:18:39 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/30 23:15:14 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,10 @@ void free_ast(t_ast_node *node)
     {
         i = 0;
         while (node->args[i])
-            free(node->args[i++]);
+        {
+            free(node->args[i]);
+            i++;
+        }
         free(node->args);
     }
     if (node->arg_types)

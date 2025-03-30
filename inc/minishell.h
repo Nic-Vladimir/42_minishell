@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matus <matus@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/30 16:53:18 by matus            ###   ########.fr       */
+/*   Updated: 2025/03/30 23:14:05 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,8 @@ int register_sig(const t_sig_action *config);
 
 void clean_rl(void);
 void ft_free_split(char **res);
+void free_envp(char **envp);
+void    init_t_ast(t_ast_node *node);
 
+int status_check(int *pipe_fds, int status, char *expanded, char *line);
 #endif

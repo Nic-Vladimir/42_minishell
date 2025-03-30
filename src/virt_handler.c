@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   virt_handler.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matus <matus@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:14:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/30 14:56:58 by matus            ###   ########.fr       */
+/*   Updated: 2025/03/30 18:21:00 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	virtual(void)
 {
 	printf("exit\n");
+	clean_rl();
 	exit(0);
 }
 

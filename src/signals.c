@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:13:28 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/29 19:57:06 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/03/30 21:40:45 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,16 @@ t_sig_data		g_glob_sig = {0};
 
 void	sig_handler(int sig)
 {
+	ssize_t status;
 	(void)sig;
 	rl_catch_signals = 0;
 	g_glob_sig.sig = 1;
+	status = 0;
 	while (g_glob_sig.sig)
 	{
-		write(STDOUT_FILENO, "\n", 1);
+		status = write(STDOUT_FILENO, "\n", 1);
+		if(status == -1)
+			g_glob_sig.sig = -1;
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
