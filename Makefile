@@ -50,9 +50,9 @@ SRC			= main.c \
 				cmds/cd.c \
 				cmds/exit.c \
 				cmds/unset.c \
-				#signals.c \
-				signals_handlers.c \
-				virt_handler.c \
+				signals/signals.c \
+				signals/signals_handlers.c \
+				signals/virt_handler.c \
 
 OBJ			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 HEADERS		= $(INC_DIR)minishell.h
@@ -94,6 +94,7 @@ $(LIBFT):
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 	@mkdir -p obj/cmds/
+	@mkdir -p obj/signals/
 
 clean:
 	@rm -rf $(OBJ_DIR)
