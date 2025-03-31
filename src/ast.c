@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:02:13 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/31 01:18:26 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/03/31 02:10:30 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,14 @@ t_ast_node *parse_redirection(t_tokenizer_data *tok_data, t_ast_node *cmd) {
     tok_data->tokens = tok_data->tokens->next;
     return redir_node;
 }
+void    init_t_ast(t_ast_node *node)
+{
+    node->arg_types = NULL;
+    node->args = NULL;
+    node->left = NULL;
+    node->right = NULL;
+    node->type = NODE_CMD;
+}
 
 t_ast_node *init_cmd_node(char **args, int arg_count)
 {
@@ -143,10 +151,8 @@ t_ast_node *init_cmd_node(char **args, int arg_count)
 	node = (t_ast_node *)malloc(sizeof(t_ast_node));
     if (!node)
         return NULL;
-    node->type = NODE_CMD;
+    init_t_ast(node);
     node->args = args;
-	node->left = NULL;
-	node->right = NULL;
     if (arg_count > 0)
         {
             node->arg_types = malloc(sizeof(t_token_type) * arg_count);
