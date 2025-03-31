@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:13:28 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/31 02:07:29 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/03/31 02:37:09 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,6 @@ void	sig_alt_handler(int sig, siginfo_t *info, void *context)
 		else if (WIFSIGNALED(status))
 			printf("signal:[%d] child PID:[%d] kill signal %d\n",
 				sig, pid, WTERMSIG(status));
-	}
-	else
-	{
-		printf("signal:[%d] received but no exited child\n", sig);
 	}
 }
 

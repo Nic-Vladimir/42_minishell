@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   virt_handler.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42prague.com>   +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:14:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/27 11:28:26 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/31 02:36:36 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	virtual(void)
 {
-	printf("Signal recognized\n");
 	printf("exit\n");
+	clean_rl();
 	exit(0);
 }
 
