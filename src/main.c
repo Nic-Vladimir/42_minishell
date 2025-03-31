@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/27 11:56:34 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/31 01:53:11 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,12 @@ int	main(int argc, char **argv, char **envp)
 		free_ast(root);
 		env->last_exit_code = status;
 		// printf("Command return (value: %d\n", status));
+		env->input = NULL;
+		
 		free(input);
+		input = NULL;
+
 	}
+	clean_rl();
 	return (0);
 }

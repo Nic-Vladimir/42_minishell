@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42prague.com>   +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:13:28 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/27 11:43:11 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/31 01:56:00 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,16 @@ t_sig_data		g_glob_sig = {0};
 
 void	sig_handler(int sig)
 {
+	ssize_t status;
 	(void)sig;
 	rl_catch_signals = 0;
 	g_glob_sig.sig = 1;
+	status = 0;
 	while (g_glob_sig.sig)
 	{
+		// status = write(STDOUT_FILENO, "\n", 1);
+		// if(status == -1)
+		// 	g_glob_sig.sig = -1;
         char *prompt = rl_prompt;              // Get full prompt string
         char *first_line = prompt;             // Start of first line
         char *newline_pos = strchr(prompt, '\n');  // Find newline

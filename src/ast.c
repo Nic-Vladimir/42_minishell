@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:02:13 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/24 03:43:07 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/31 01:18:26 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,12 @@ t_ast_node *ast_new_node(t_node_type type, char **args)
 	node = (t_ast_node *)malloc(sizeof(t_ast_node));
     if (!node)
         return NULL;
+    init_t_ast(node);
     node->type = type;
     node->args = args;
-    node->arg_types = NULL;
-	node->left = NULL;
-	node->right = NULL;
+    // node->arg_types = NULL;
+	// node->left = NULL;
+	// node->right = NULL;
 	node = ast_set_node_arg_types(node, args);
 	return node;
 }

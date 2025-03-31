@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hashmap.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 05:47:09 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/27 05:01:24 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/31 01:51:49 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,26 @@ int hashmap_insert(t_env *env, char *key, char *value) {
 		index *= -1;
 	current_node = env->vars->buckets[index];
 	while (current_node) {
-		if (ft_strcmp(current_node->key, key) == 0) {
-			current_node->value = (char *)malloc(ft_strlen(value) + 1);
-			strcpy(current_node->value, value);
+        if (ft_strcmp(current_node->key, key) == 0) 
+		{
+            free(current_node->value);
+            current_node->value = ft_strdup(value);  
             return 0;
 		}
 		current_node = current_node->next;
 	}
 	new_node = (t_bucket *)malloc(sizeof(t_bucket));
-	new_node->key = (char *)malloc(ft_strlen(key) + 1);
-	new_node->value = (char *)malloc(ft_strlen(value) + 1);
-	strcpy(new_node->key, key);
-	strcpy(new_node->value, value);
+    if (!new_node)
+        return 1;
+    new_node->key = ft_strdup(key);
+    new_node->value = ft_strdup(value); 
+    if (!new_node->key || !new_node->value) 
+	{
+        free(new_node->key); 
+        free(new_node->value);
+        free(new_node);
+        return 1;
+    }
 	new_node->next = env->vars->buckets[index];
 	env->vars->buckets[index] = new_node;
 	return 0;

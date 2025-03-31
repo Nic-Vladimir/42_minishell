@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 02:17:49 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/27 04:59:33 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/31 01:40:46 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ static int	print_sorted_envp(t_env *env, int out_fd)
 {
 	int		i;
 	char	**envp;
-
+    ssize_t write_status;
 	i = 0;
 	envp = get_envp_from_hashmap(env);
 	while (envp[i])
@@ -101,11 +101,16 @@ static int	print_sorted_envp(t_env *env, int out_fd)
 	i = 0;
 	while (envp[i])
 	{
-		write(out_fd, envp[i], ft_strlen(envp[i]));
-		write(out_fd, "\n", 1);
+        write_status = write(out_fd, envp[i], ft_strlen(envp[i]));
+       if (write_status == -1 || write(out_fd, "\n", 1) == -1)
+       {
+        free_envp(envp);
+        return (1);
+       }
 		i++;
 	}
-	return (0);
+    free_envp(envp);
+    return 0;
 }
 
 int	execute_export(t_env *env, t_ast_node *node, int in_fd, int out_fd)
@@ -144,5 +149,19 @@ int	execute_export(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 		free(key);
 		free(value);
 	}
-	return (status);
+	return status;
+}
+
+void free_envp(char **envp)
+{
+    int i;
+    if(!envp)
+        return;
+    i = 0;
+    while (envp[i])
+    {
+        free(envp[i]);
+        i++;
+    }
+    free(envp);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 03:52:57 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/26 21:01:52 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/30 21:41:43 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	execute_env(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 	int		i;
 	char	**envp;
     size_t  len;
+	ssize_t status;
 
 	(void)node;
 	(void)in_fd;
@@ -25,9 +26,15 @@ int	execute_env(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 	while (envp[i])
 	{
         len = ft_strlen(envp[i]);
-        write(out_fd, envp[i], len);
-        write(out_fd, "\n", 1);
+        status = write(out_fd, envp[i], len);
+		if(status == -1 || write(out_fd, "\n", 1) == -1 )
+		{
+			free_envp(envp);
+			return (1);
+		}
+        
         i++;
 	}
+	free_envp(envp);
 	return 0;
 }

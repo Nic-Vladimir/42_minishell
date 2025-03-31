@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+         #
+#    By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/03/27 11:47:08 by vnicoles         ###   ########.fr        #
+#    Updated: 2025/03/31 01:59:46 by mgavorni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,6 +53,7 @@ SRC			= main.c \
 				signals/signals.c \
 				signals/signals_handlers.c \
 				signals/virt_handler.c \
+				fancy_write.c
 
 OBJ			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 HEADERS		= $(INC_DIR)minishell.h

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42prague.com>   +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 20:05:11 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/26 20:55:24 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/03/31 01:43:44 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@ int execute_pwd(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 {
     char    *cwd;
     ssize_t len;
+    ssize_t status;
 
+    status = 0;
     (void)in_fd;
     cwd = get_env_value(env, "PWD");
     if (node->args[1])
@@ -27,8 +29,9 @@ int execute_pwd(t_env *env, t_ast_node *node, int in_fd, int out_fd)
     else if (*cwd)
     {
         len = ft_strlen(cwd);
-        write(out_fd, cwd, len);
-        write(out_fd, "\n", 1);
+        status = write(out_fd, cwd, len);
+        if(status == -1 || write(out_fd, "\n", 1) == -1)
+            return(1);
         return 0;
     }
     else
