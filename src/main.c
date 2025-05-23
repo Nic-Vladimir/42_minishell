@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/23 16:36:08 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/05/23 23:13:57 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -47,14 +47,15 @@ int	main(int argc, char **argv, char **envp) {
 	t_ast_node	*root;
 	int			status;
 	t_env		*env;
+	
 
 	(void)argc;
 	(void)argv;
 	env = init_env(envp);
-	g_glob_sig.env = env;
-	g_glob_sig.def = init_signal_handlers();
-	set_all_signals(MINI_MODE, &g_glob_sig.def);
-	fprintf(stderr, "[MAIN BEGIN] current mode : %s\n", mode(g_glob_sig.current_mode));
+	env->sigenv->env = env;
+	//init_signal_handlers();
+	set_all_signals(MINI_MODE, env->sigenv);
+	fprintf(stderr, "[MAIN BEGIN] current mode : %s\n", mode(env->sigenv->current_mode));
 	while (1) 
 	{
 		prompt = get_prompt(env);
@@ -62,9 +63,11 @@ int	main(int argc, char **argv, char **envp) {
 		free(prompt);
 		if (!input)
 		{
-			set_all_signals(CD, &g_glob_sig.def);
-			fprintf(stderr, "current mode !input : %s\n", mode(g_glob_sig.current_mode));
-			continue;
+			set_all_signals(CD, env->sigenv);
+			fprintf(stderr, "current mode !input : %s\n", mode(env->sigenv->current_mode));
+			cd_handler(sig);
+			free_env(env);
+			//free + break;
 		}
 		if (ft_strcmp(input, "exit") == 0) 
 		{
@@ -74,7 +77,7 @@ int	main(int argc, char **argv, char **envp) {
 		if (*input)
 			add_history(input);
 		
-		fprintf(stderr, "[MAIN FURTHER] current mode : %s\n", mode(g_glob_sig.current_mode));
+		fprintf(stderr, "[MAIN FURTHER] current mode : %s\n", mode(env->sigenv->current_mode));
 		print_transient_prompt(input);
 		env->tokenizer->tokens = tokenize(env->tokenizer, input);
 		root = parse(env->tokenizer);

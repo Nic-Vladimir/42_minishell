@@ -1,25 +1,18 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/24 12:48:19 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/05/23 22:35:38 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #ifndef MINISHELL_H
 #define MINISHELL_H
 
-#include "ast.h"
-#include "env.h"
-#include "tokenizer.h"
-# include "sig_hand.h"
-# include "colors.h"
-
-#include "../lib/libft/inc/libft.h"
 #include <dirent.h>
 #include <fcntl.h>
 #include <readline/history.h>
@@ -29,6 +22,19 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
+
+#include "../lib/libft/inc/libft.h"
+#include "colors.h"
+
+typedef struct s_env t_env;
+typedef struct s_ast_node t_ast_node;
+typedef struct s_token t_token;
+typedef struct s_tokenizer_data t_tokenizer_data;
+
+#include "sig_hand.h"
+#include "tokenizer.h"
+#include "ast.h"
+#include "env.h"
 
 t_token *tokenize(t_tokenizer_data *data, char *input);
 t_ast_node *parse(t_tokenizer_data *data);
@@ -42,10 +48,9 @@ int djb2_hash(const char *key);
 char *find_executable(t_env *env, const char *command);
 char *get_env_value(t_env *env, const char *key);
 char *get_prompt(t_env *env);
-void	print_transient_prompt(char *command);
+void print_transient_prompt(char *command);
 void free_tokens(t_tokenizer_data *tokenizer);
 void free_ast(t_ast_node *node);
 void free_env(t_env *env);
-
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/23 16:05:26 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/05/23 23:00:49 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -221,7 +221,6 @@ char *collect_heredoc(char *delimiter, int *write_fd) {
     pipe_fds[0] = 0;
     pipe_fds[1] = 0;
     status = pipe(pipe_fds);
-	set_all_signals(NORMAL_MODE, &g_glob_sig.def);
     if (status == -1) {
         perror("pipe failed");
         return NULL;
@@ -254,8 +253,10 @@ int execute_redirections(t_env *env, t_ast_node *node, int in_fd, int out_fd) {
     delimiter = NULL;
     if (node->type == NODE_HEREDOC) {
         delimiter = node->args[0];
+		set_all_signals(NORMAL_MODE, env->sigenv);
         collect_heredoc(delimiter, &heredoc_fd);
         new_fd = heredoc_fd;
+		set_all_signals(MINI_MODE, env->sigenv);
 		//printf("new_fd: %d, right: %p\n", new_fd, (void*)node->right);
     }
     if (node->type == NODE_REDIR_IN)

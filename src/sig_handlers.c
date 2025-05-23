@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 21:09:45 by mgavorni          #+#    #+#             */
-/*   Updated: 2025/05/23 16:59:02 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/05/23 23:12:03 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -17,9 +17,9 @@ void mini_sigint_handler(int sig)
 	//ssize_t status;
 	(void)sig;
 	rl_catch_signals = 0;
-	g_glob_sig.sig = 1;	
+	sig = 1;	
 	//status = 0;
-	if (g_glob_sig.sig)
+	if (sig)
 	{
 		// status = write(STDOUT_FILENO, "\n", 1);
 		// if(status == -1)
@@ -46,7 +46,7 @@ void mini_sigint_handler(int sig)
         rl_redisplay();                        // Redisplay full prompt
         if (current_input && *current_input)
             printf("%s", current_input);       // Print interrupted input on new prompt
-        g_glob_sig.sig = SIGINT;
+        sig = SIGINT;
 	}
 }
 
@@ -56,6 +56,6 @@ void cd_handler(int sig)
 	(void)sig;
 	printf("Signal recognized\n");
 	printf("exit\n");
-	exit(0);
+	
 }
 

@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 19:51:51 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/20 02:03:16 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/05/23 22:06:38 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../inc/minishell.h"
 
@@ -51,6 +51,7 @@ t_env *init_env(char **envp) {
 	env = (t_env *)malloc(sizeof(t_env));
     if (!env)
 		return NULL;
+    sig_malinit(&env->sigenv);
 	env->shell_pid = getpid();
 	env->last_exit_code = 0;
 	env->vars = (t_hashmap *)malloc(sizeof(t_hashmap));

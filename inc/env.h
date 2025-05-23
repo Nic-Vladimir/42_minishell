@@ -1,18 +1,19 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   env.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 18:29:00 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/18 19:47:39 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/05/23 22:23:02 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 # ifndef ENV_H
 # define ENV_H
 
+# include "sig_hand.h"
 # include "tokenizer.h"
 # include <unistd.h>
 
@@ -32,6 +33,7 @@ typedef struct s_env {
 	int					last_exit_code;
 	pid_t				shell_pid;
 	t_tokenizer_data	*tokenizer;
+	t_sigenv			*sigenv;
 } t_env;
 
 
