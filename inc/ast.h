@@ -13,6 +13,8 @@
 #ifndef AST_H
 # define AST_H
 
+#include "tokenizer.h"
+
 typedef enum e_node_type {
 	NODE_CMD,
 	NODE_PIPE,
@@ -30,6 +32,7 @@ typedef enum e_node_type {
 typedef struct s_ast_node {
 	t_node_type type;
 	char **args;
+	t_token_type	*arg_types;
 	struct s_ast_node *left;
 	struct s_ast_node *right;
 } t_ast_node;

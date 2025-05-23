@@ -1,12 +1,16 @@
 /******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   shell_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 19:51:51 by vnicoles          #+#    #+#             */
+<<<<<<< HEAD:src/env.c
 /*   Updated: 2025/05/23 22:06:38 by mgavornik        ###   ########.fr       */
+=======
+/*   Updated: 2025/03/27 03:17:56 by vnicoles         ###   ########.fr       */
+>>>>>>> origin/mvp:src/shell_env.c
 /*                                                                            */
 /******************************************************************************/
 
@@ -21,6 +25,13 @@ static t_tokenizer_data *init_tok_data() {
     tok_data->tokens = NULL;
     tok_data->tail = NULL;
     return tok_data;
+}
+
+void free_str_array(char **arr) {
+    if (!arr) return;
+    for (int i = 0; arr[i]; i++) 
+        free(arr[i]); 
+    free(arr);
 }
 
 static void insert_env_var(t_env *env, char *envp_entry) {
@@ -40,7 +51,9 @@ static void insert_env_var(t_env *env, char *envp_entry) {
     strcpy(value, res[1]);
 
     hashmap_insert(env, key, value);
-	free(res);
+    free(key);
+    free(value);
+    free_str_array(res);
 }
 
 t_env *init_env(char **envp) {
@@ -67,6 +80,7 @@ t_env *init_env(char **envp) {
 	while (envp[i])
 		insert_env_var(env, envp[i++]);
     env->tokenizer = init_tok_data();
+    env->root = NULL;
     return env;
 }
 

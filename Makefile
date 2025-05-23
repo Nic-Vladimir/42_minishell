@@ -6,7 +6,7 @@
 #    By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/03/24 12:44:17 by mgavorni         ###   ########.fr        #
+#    Updated: 2025/03/31 01:59:46 by mgavorni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,14 +37,23 @@ LIBFT		= $(LIB_DIR)/libft/libft.a
 SRC			= main.c \
 				ast.c \
 				tokenizer.c \
-				env.c \
+				shell_env.c \
 				hashmap.c \
 				exec_engine.c \
 				prompt.c \
 				cleanup.c \
-				signals.c \
-				sig_handlers.c \
-				virt_handler.c
+				wildcard.c \
+				cmds/export.c \
+				cmds/env.c \
+				cmds/pwd.c \
+				cmds/echo.c \
+				cmds/cd.c \
+				cmds/exit.c \
+				cmds/unset.c \
+				signals/signals.c \
+				signals/signals_handlers.c \
+				signals/virt_handler.c \
+				fancy_write.c
 
 OBJ			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 HEADERS		= $(INC_DIR)minishell.h
@@ -85,6 +94,8 @@ $(LIBFT):
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
+	@mkdir -p obj/cmds/
+	@mkdir -p obj/signals/
 
 clean:
 	@rm -rf $(OBJ_DIR)

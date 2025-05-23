@@ -6,12 +6,14 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/23 23:00:49 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/05/23 23:55:58 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "../inc/minishell.h"
 #include <unistd.h>
+
+int	execute_builtin_command(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 
 void exec_error(const char *msg) {
     perror(msg);
@@ -24,112 +26,262 @@ int execute_redirections(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 int execute_logical_op(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 int execute_group(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 
-//TODO: This is ass, doesn't work, rewrite and fix
-char *expand_vars_DBQ(t_env *env, const char *input) {
-	int		i;
-	char	*expanded;
-	char	var_name[256];
-	int		var_len;
-	char	*temp;
+char	*get_expand_value(t_env *env, const char *input, int start, int end)
+{
+	char	*var_name;
+	char	*value;
+	int		len;
 
-	i = 0;
-	var_len = 0;
-	expanded = ft_strdup("");
-	while (input[i]) {
-		if (input[i] == '$') {
-			i++;
-			if (input[i] == '$') {
-				temp = ft_itoa(env->shell_pid);
-				i++;
-			} else if (input[i] == '?') {
-				temp = ft_itoa(env->last_exit_code);
-				i++;
-			} else {
-				var_len = 0;
-				while (ft_isalnum(input[i]) || input[i] == '_') {
-					var_name[var_len++] = input[i++];
-				}
-				var_name[var_len] = '\0';
-				temp = get_env_value(env, var_name);
-				if (!temp)
-					temp = ft_strdup("");
-				else
-					temp = ft_strdup(temp);
-			}
-			expanded = ft_strjoin_free(expanded, temp);
-			free(temp);
-		} else {
-			char str[2] = {input[i], '\0'};
-			expanded = ft_strjoin_free(expanded, str);
-			i++;
-		}
-	}
-	return expanded;
+	len = end - start;
+	if (len == 1 && input[start] == '?')
+		return (ft_itoa(env->last_exit_code));
+	if (len == 1 && input[start] == '$')
+		return (ft_itoa(env->shell_pid));
+	var_name = malloc(len + 1);
+	if (!var_name)
+		return NULL;
+	ft_strlcpy(var_name, &input[start], len + 1);
+	value = get_env_value(env, var_name);
+	free(var_name);
+	if (value)
+		return ft_strdup(value);
+	else
+		return ft_strdup("");
 }
 
+char *expand_var(t_env *env, const char *input)
+{
+	char	*expanded;
+	char	*temp;
+	int		i;
+	int		start;
+
+	expanded = ft_strdup("");
+	if (!expanded)
+        return NULL;
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == '$' && input[i+1])
+		{
+			i++;
+			start = i;
+			if (input[i] == '$' || input[i] == '?')
+				i++;
+			else
+				while (input[i] && (ft_isalnum(input[i]) || input[i] == '_'))
+					i++;
+			temp = get_expand_value(env, input, start, i);
+			expanded = ft_strjoin_free(expanded, temp);
+			free(temp);
+		}
+		else
+		{
+			temp = malloc(2);
+			if (!temp)
+			{
+				free(expanded);
+				return NULL;
+			}
+			temp[0] = input[i++];
+			temp[1] = '\0';
+			expanded = ft_strjoin_free(expanded, temp);
+			free(temp);
+		}
+	}
+	return (expanded);
+}
+
+void update_arg_types(t_ast_node *node, int star_index, int len_args, int len_expanded)
+{
+    int             i;
+    int             j;
+    t_token_type    *new_arg_types;
+    int             new_size;
+
+    // New size = args before * + expanded + args after *
+    new_size = (star_index) + len_expanded + (len_args - star_index - 1);
+    new_arg_types = malloc(sizeof(int) * new_size);
+    if (!new_arg_types)
+        return; // Handle allocation failure gracefully in real code
+
+    // Copy types before the * argument
+    i = 0;
+    while (i < star_index)
+    {
+        new_arg_types[i] = node->arg_types[i];
+        i++;
+    }
+
+    // Assign TOK_WORD to all expanded arguments
+    j = 0;
+    while (j < len_expanded)
+    {
+        new_arg_types[i] = TOK_WORD;
+        i++;
+        j++;
+    }
+
+    // Copy types after the * argument
+    while (star_index + 1 < len_args)
+    {
+        new_arg_types[i] = node->arg_types[star_index + 1];
+        i++;
+        star_index++;
+    }
+
+    // Free old arg_types and replace
+    free(node->arg_types);
+    node->arg_types = new_arg_types;
+}
+
+char **copy_args(t_ast_node *node, int star_index, char **expanded)
+{
+    char    **args_copy;
+    int     i;
+    int     j;
+    int     len_expanded;
+    int     len_args;
+
+    if (!node || !node->args || !expanded)
+        return NULL;
+
+    // Count total original args
+    len_args = 0;
+    while (node->args[len_args])
+        len_args++;
+
+    // Count expanded args
+    len_expanded = 0;
+    while (expanded[len_expanded])
+        len_expanded++;
+
+    // Allocate enough space: args before * + expanded + args after *
+    args_copy = malloc(sizeof(char *) * (len_args + len_expanded));
+    if (!args_copy)
+        return NULL;
+
+    // Copy args before the * (star_index)
+    i = 0;
+    while (i < star_index)
+    {
+        args_copy[i] = ft_strdup(node->args[i]);
+        i++;
+    }
+
+    // Copy expanded args
+    j = 0;
+    while (j < len_expanded)
+    {
+        args_copy[i] = ft_strdup(expanded[j]);
+        i++;
+        j++;
+    }
+
+    // Copy remaining args after the *
+    while (star_index + 1 < len_args)
+    {
+        args_copy[i] = ft_strdup(node->args[star_index + 1]);
+        i++;
+        star_index++;
+    }
+
+    args_copy[i] = NULL; // Null-terminate
+
+    // Update node->arg_types
+    update_arg_types(node, star_index, len_args, len_expanded);
+
+    return args_copy;
+}
+
+void free_list(char **list)
+{
+    int i;
+
+    i = 0;
+    while (list[i])
+    {
+        free(list[i]);
+        i++;
+    }
+    free(list);
+}
 
 int execute_command_filter(t_env *env, t_ast_node *node, int in_fd, int out_fd) 
 {
     int     i;
-    char    *env_value;
-    size_t  env_value_len;
+	char	*temp;
+	char	*expanded;
+    char    *args_str;
+    char    **args_list;
+    char    **temp_args;
 
-	/*
+    /*
+	//TODO: Debugging
     printf("Node type: %d\n", node->type);
     printf("Node args: %p\n", (void*)node->args);
     if (node->args) {
         for (int j = 0; node->args[j] != NULL; j++) {
-            printf("Args[%d]: %s\n", j, node->args[j]);
+            printf("Args Before execute_command [%d]: %s\n", j, node->args[j]);
         }
     }
-	*/
-    i = 1;
+    */
+
+    i = 0;
 	while (node->args[i] != NULL) {
-		if (node->type == NODE_DBQ) {
-			char *expanded = expand_vars_DBQ(env, node->args[i]);
-			node->args[i] = (char *)malloc(ft_strlen(expanded) + 1);
-			ft_strlcpy(node->args[i], expanded, ft_strlen(expanded) + 1);
+		if (node->arg_types[i] == TOK_WORD && ft_strchr(node->args[i], '*'))
+		{
+			temp = node->args[i];
+            args_str = expand_wildcard(temp);
+            //printf("args_str: %s\n", args_str);
+			if (!node->args[i])
+				return 1;
+            args_list = ft_split(args_str, ' ');
+            free(args_str);
+            temp_args = copy_args(node, i, args_list);
+            free_list(node->args);
+            node->args = temp_args;
+            ft_free_split(args_list);
+		}
+		else if (node->arg_types[i] == TOK_WORD || node->arg_types[i] == TOK_DBQ_BLOCK)
+		{
+			temp = node->args[i];
+			expanded = expand_var(env, temp);
+			node->args[i] = ft_strdup(expanded);
 			free(expanded);
+			free(temp);
+			if (!node->args[i])
+				return 1;
 		}
 		i++;
 	}
-	if (node->type == NODE_CMD) {
-		while (node->args[i] != NULL)
-		{
-			if (node->args[i][0] == '$')
-			{
-				if (node->args[i][1] == '?' && node->args[i][2] == '\0')
-				{
-					env_value = ft_itoa(env->last_exit_code);
-					env_value_len = ft_strlen(env_value) + 1;
-					node->args[i] = (char *)malloc(env_value_len);
-					ft_strlcpy(node->args[i], env_value, env_value_len);
-					i++;
-					continue;
-				}
-				else if (node->args[i][1] == '$' && node->args[i][2] == '\0')
-				{
-					env_value = ft_itoa(env->shell_pid);
-					env_value_len = ft_strlen(env_value) + 1;
-					node->args[i] = (char *)malloc(env_value_len);
-					ft_strlcpy(node->args[i], env_value, env_value_len);
-					i++;
-					continue;
-				}
-				env_value = get_env_value(env, &node->args[i][1]);
-				env_value_len = ft_strlen(env_value) + 1;
-				node->args[i] = (char *)malloc(env_value_len);
-				ft_strlcpy(node->args[i], env_value, env_value_len);
-			}
-			i++;
-		}
-	}
+    return (execute_builtin_command(env, node, in_fd, out_fd)) ;
+}
+
+int	execute_builtin_command(t_env *env, t_ast_node *node, int in_fd, int out_fd)
+{
+    if (node->args[0] == NULL)
+        return 1;
+    if (ft_strncmp(node->args[0], "cd", 3) == 0)
+        return execute_cd(env, node, in_fd, out_fd);
+    if (ft_strncmp(node->args[0], "echo", 5) == 0)
+		return execute_echo(env, node, in_fd, out_fd);
+    if (ft_strncmp(node->args[0], "pwd", 4) == 0)
+		return execute_pwd(env, node, in_fd, out_fd);
+    if (ft_strncmp(node->args[0], "export", 7) == 0)
+		return execute_export(env, node, in_fd, out_fd);
+    if (ft_strncmp(node->args[0], "env", 4) == 0)
+		return execute_env(env, node, in_fd, out_fd);
+    if (ft_strncmp(node->args[0], "unset", 6) == 0)
+		return execute_unset(env, node);
+    if (ft_strncmp(node->args[0], "exit", 6) == 0)
+		return execute_exit(env);
     return (execute_command(env, node, in_fd, out_fd));
 }
 
 int execute_node(t_env *env, t_ast_node *node, int in_fd, int out_fd) {
     if (!node) return 0;
-	printf("Node type: %d, in_fd: %d\n", node->type, in_fd);
+	//printf("Node type: %d, in_fd: %d\n", node->type, in_fd);
     switch (node->type) {
         case NODE_CMD:
             return execute_command_filter(env, node, in_fd, out_fd);
@@ -168,16 +320,24 @@ int execute_command(t_env *env, t_ast_node *node, int in_fd, int out_fd) {
 		}
 		envp = get_envp_from_hashmap(env);
 		exec_path = find_executable(env, node->args[0]);
-		/*
+        if (exec_path == NULL)
+        {
+            perror("not valid exec_path");
+            exit(127);
+        }
+
+        /*
 		//TODO: Remove this debug print
 		printf("\nArgs: [%s]", exec_path);
         for (int i = 0; node->args[i]; i++)
             printf(" [%s]", node->args[i]);
         printf("\n");
-		*/
+        */
+
 		//printf("Child: in_fd: %d, exec_path: %s\n", in_fd, exec_path);
 		execve(exec_path, node->args, envp);
 		fprintf(stderr, "Command not found: %s\n", node->args[0]);
+        free_envp(envp);
 		exit(127);
 	}
     int status;
@@ -209,36 +369,56 @@ int execute_pipeline(t_env *env, t_ast_node *node, int in_fd, int out_fd) {
 	env->last_exit_code = right_status;
     return right_status;
 }
-
-char *collect_heredoc(char *delimiter, int *write_fd) {
-    char *line;
-    char *result;
-    int pipe_fds[2];
-    int status;
-
-    line = NULL;
-    result = NULL;
-    pipe_fds[0] = 0;
-    pipe_fds[1] = 0;
-    status = pipe(pipe_fds);
-    if (status == -1) {
-        perror("pipe failed");
-        return NULL;
+int status_check(int *pipe_fds, int status, char *expanded, char *line)
+{
+    if (status == -1)
+    {
+        free(expanded);
+        free(line);
+        close(pipe_fds[0]);
+        close(pipe_fds[1]);
+        return (-1);
     }
-    while (1) {
-        line = readline("> ");
-        if (!line || strcmp(line, delimiter) == 0) {
-            if (line) free(line);
+    return(0);
+}
+
+int collect_heredoc(t_env *env, char *delimiter, int *write_fd)
+{
+    char    *line;
+    char    *expanded;
+    int     pipe_fds[2];
+    ssize_t     status;
+
+    status = 0;
+    if (pipe(pipe_fds) == -1)
+    {
+        perror("pipe failed");
+        return (-1);
+    }
+    while (1)
+    {
+        line = readline("heredoc> ");
+        if (!line || ft_strcmp(line, delimiter) == 0)
+        {
+            if (line)
+                free(line);
             break;
         }
-        status = write(pipe_fds[1], line, strlen(line));
-        write(pipe_fds[1], "\n", 1);
+        expanded = expand_var(env, line);
+        if (expanded)
+        {
+            status = write(pipe_fds[1], expanded, ft_strlen(expanded));
+            if (status == -1 || write(pipe_fds[1], "\n", 1) == -1)
+                status_check(pipe_fds, status, expanded, line);
+            // write(pipe_fds[1], "\n", 1);
+            // status_check(pipe_fds, status, expanded, line);
+            free(expanded);
+        }
         free(line);
     }
     close(pipe_fds[1]);
     *write_fd = pipe_fds[0];
-	//printf("pipe_fds[0]: %d\n", pipe_fds[0]);
-    return result;
+    return status;
 }
 
 int execute_redirections(t_env *env, t_ast_node *node, int in_fd, int out_fd) {
@@ -254,7 +434,8 @@ int execute_redirections(t_env *env, t_ast_node *node, int in_fd, int out_fd) {
     if (node->type == NODE_HEREDOC) {
         delimiter = node->args[0];
 		set_all_signals(NORMAL_MODE, env->sigenv);
-        collect_heredoc(delimiter, &heredoc_fd);
+        if (collect_heredoc(env, delimiter, &heredoc_fd) == -1)
+            return (1);
         new_fd = heredoc_fd;
 		set_all_signals(MINI_MODE, env->sigenv);
 		//printf("new_fd: %d, right: %p\n", new_fd, (void*)node->right);
@@ -298,7 +479,11 @@ int execute_group(t_env *env, t_ast_node *node, int in_fd, int out_fd) {
 }
 
 int execute_ast(t_env *env, t_ast_node *root) {
+    t_env       *env_cpy;
+    t_ast_node  *root_cpy;
 
-	return execute_node(env, root, STDIN_FILENO, STDOUT_FILENO);
+    env_cpy = env;
+    root_cpy = root;
+	return execute_node(env_cpy, root_cpy, STDIN_FILENO, STDOUT_FILENO);
 }
 
