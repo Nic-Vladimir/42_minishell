@@ -1,93 +1,92 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 13:03:36 by mgavorni          #+#    #+#             */
-/*   Updated: 2025/03/24 13:03:42 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/05/23 16:56:25 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 
 #include "../inc/minishell.h"
 
-t_sig_data		g_glob_sig = {0};
+t_sig_data g_glob_sig = {0};
 
-void	sig_handler(int sig)
+// void	sig_handler(int sig)
+// {
+// 	(void)sig;
+// 	rl_catch_signals = 0;
+// 	g_glob_sig.sig = 1;
+// 	while (g_glob_sig.sig)
+// 	{
+// 		write(STDOUT_FILENO, "\n", 1);
+// 		rl_on_new_line();
+// 		rl_replace_line("", 0);
+// 		rl_redisplay();
+// 		g_glob_sig.sig = 0;
+// 	}
+// }
+
+void set_signal_mode(int sig, t_sig_mode mode, t_sig_def *def)
 {
-	(void)sig;
-	rl_catch_signals = 0;
-	g_glob_sig.sig = 1;
-	while (g_glob_sig.sig)
-	{
-		write(STDOUT_FILENO, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-		g_glob_sig.sig = 0;
-	}
-}
-
-pid_t	child_ret(siginfo_t *info, int *status)
-{
-	pid_t	pid;
-
-	if (!info)
-		return (waitpid(-1, status, WNOHANG));
-	pid = info->si_pid;
-	if (waitpid(pid, status, WNOHANG) <= 0)
-		return (-1);
-	return (pid);
-}
-
-void	sig_alt_handler(int sig, siginfo_t *info, void *context)
-{
-	int		status;
-	pid_t	pid;
-
-	(void)context;
-	pid = child_ret(info, &status);
-	if (pid > 0)
-	{
-		if (WIFEXITED(status))
-			printf("signal:[%d] child PID:[%d] exit code %d\n",
-				sig, pid, WEXITSTATUS(status));
-		else if (WIFSIGNALED(status))
-			printf("signal:[%d] child PID:[%d] kill signal %d\n",
-				sig, pid, WTERMSIG(status));
-	}
-	else
-	{
-		printf("signal:[%d] received but no exited child\n", sig);
-	}
-}
-
-int	register_sig(const t_sig_action *config)
-{
-	struct sigaction	sa;
+	struct sigaction sa;
 
 	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = config->sig_flag;
-	sa.sa_mask = config->sig_mask;
-	if (config->sig_flag & SA_SIGINFO)
-		sa.sa_sigaction = config->sig_alt_handler;
-	else
-		sa.sa_handler = config->sig_handler;
-	if (sigaction(config->signum, &sa, NULL) == -1)
+	if (mode == MINI_MODE && sig == SIGINT)
 	{
-		if (config->descript)
-		{
-			perror(config->descript);
-		}
-		else
-		{
-			perror("register_sig : sigaction");
-		}
-		return (-1);
+		sigemptyset(&sa.sa_mask);
+
+		sa.sa_handler = mini_sigint_handler;
+		sa.sa_flags = SA_RESTART;
+		sigaction(sig, &sa, NULL);
 	}
-	return (0);
+	else if (mode == MINI_MODE && sig == SIGQUIT)
+	{
+		sigemptyset(&sa.sa_mask);
+
+		sa.sa_handler = SIG_IGN;
+		sa.sa_flags = 0;
+		sigaction(sig, &sa, NULL);
+	}
+	else if (mode == NORMAL_MODE)
+	{
+		sigemptyset(&sa.sa_mask);
+
+		sigaction(SIGINT, &def->sigint, NULL);
+		sigaction(SIGQUIT, &def->sigquit, NULL);
+	}
+	else if (mode == CD)
+	{
+		sigemptyset(&sa.sa_mask);
+
+		sa.sa_handler = cd_handler;
+		sa.sa_flags = SA_RESTART;
+		sigaction(sig, &sa, NULL);
+	}
+
+	g_glob_sig.current_mode = mode;
+	
 }
+
+void set_all_signals(t_sig_mode mode, t_sig_def *def)
+{
+	
+	set_signal_mode(SIGINT, mode, def);
+	set_signal_mode(SIGQUIT, mode, def);
+}
+
+t_sig_def init_signal_handlers(void)
+{
+	t_sig_def defaults;
+
+	sigaction(SIGINT, NULL, &defaults.sigint);
+	sigaction(SIGQUIT, NULL, &defaults.sigquit);
+	set_all_signals(MINI_MODE, &defaults);
+	return (defaults);
+}
+
 
 

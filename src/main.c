@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/24 12:49:24 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/05/23 16:36:08 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../inc/minishell.h"
 #include "../inc/tokenizer.h"
@@ -27,6 +27,19 @@ static void print_tokens(t_tokenizer_data *tok_data) {
 	}
 }
 */
+char *mode(int mod)
+{
+    char *str;
+    if (mod == 0)
+        str = "MINI MODE";
+    else if (mod == 1)
+        str = "NORMAL MODE";
+    else if (mod == 2)
+        str = "CD MODE";
+    else
+        str = "UNKNOWN MODE";
+    return str;
+}
 
 int	main(int argc, char **argv, char **envp) {
 	char		*input;
@@ -38,22 +51,30 @@ int	main(int argc, char **argv, char **envp) {
 	(void)argc;
 	(void)argv;
 	env = init_env(envp);
-	setup_sig_handler(SIG_REAL);
-	while (1) {
+	g_glob_sig.env = env;
+	g_glob_sig.def = init_signal_handlers();
+	set_all_signals(MINI_MODE, &g_glob_sig.def);
+	fprintf(stderr, "[MAIN BEGIN] current mode : %s\n", mode(g_glob_sig.current_mode));
+	while (1) 
+	{
 		prompt = get_prompt(env);
 		input = readline(prompt);
 		free(prompt);
 		if (!input)
 		{
-			setup_sig_handler(SIG_VIRTUAL_CTRL_D);
+			set_all_signals(CD, &g_glob_sig.def);
+			fprintf(stderr, "current mode !input : %s\n", mode(g_glob_sig.current_mode));
 			continue;
-		if (ft_strcmp(input, "exit") == 0) {
+		}
+		if (ft_strcmp(input, "exit") == 0) 
+		{
             free(input);
 			break;
         }
 		if (*input)
 			add_history(input);
-
+		
+		fprintf(stderr, "[MAIN FURTHER] current mode : %s\n", mode(g_glob_sig.current_mode));
 		print_transient_prompt(input);
 		env->tokenizer->tokens = tokenize(env->tokenizer, input);
 		root = parse(env->tokenizer);

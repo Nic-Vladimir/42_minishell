@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   exec_engine.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/24 03:59:02 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/05/23 16:05:26 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../inc/minishell.h"
 #include <unistd.h>
@@ -221,6 +221,7 @@ char *collect_heredoc(char *delimiter, int *write_fd) {
     pipe_fds[0] = 0;
     pipe_fds[1] = 0;
     status = pipe(pipe_fds);
+	set_all_signals(NORMAL_MODE, &g_glob_sig.def);
     if (status == -1) {
         perror("pipe failed");
         return NULL;
