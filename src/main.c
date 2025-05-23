@@ -13,7 +13,6 @@
 #include "../inc/ast.h"
 #include "../inc/minishell.h"
 #include "../inc/tokenizer.h"
-#include <readline/history.h>
 
 /*
 static void	print_tokens(t_tokenizer_data *tok_data) {
@@ -40,63 +39,64 @@ int	check_empty(const char *input)
 	return (1);
 }
 
-int	main(int argc, char **argv, char **envp)
+void	handle_command(t_env *env, char *input)
 {
-	char		*input;
-	char		*prompt;
+	t_token		*token_head;
 	t_ast_node	*root;
 	int			status;
-	t_env		*env;
-	t_token		*token_head;
+
+	print_transient_prompt(input);
+	token_head = tokenize(env->tokenizer, input);
+	env->tokenizer->tokens = token_head;
+	root = parse(env->tokenizer);
+	env->root = root;
+	env->input = input;
+	env->tokenizer->tokens = token_head;
+	status = execute_ast(env, root);
+	free_tokens(env->tokenizer);
+	free_ast(root);
+	env->last_exit_code = status;
+	env->input = NULL;
+}
+
+int	check_input(char *input)
+{
+	if (!input)
+	{
+		init_sig(SIG_VIRTUAL_CTRL_D);
+		return (1);
+	}
+	if (check_empty(input))
+	{
+		free(input);
+		print_transient_prompt("");
+		return (1);
+	}
+	if (*input)
+		add_history(input);
+	return (0);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	char	*input;
+	char	*prompt;
+	t_env	*env;
 
 	(void)argc;
 	(void)argv;
-	status = 0;
 	env = init_env(envp);
-	// printf("PATH: %s\n", get_env_value(env, "PATH"));
 	init_sig(SIG_REAL);
 	while (1)
 	{
 		prompt = get_prompt(env);
 		input = readline(prompt);
 		free(prompt);
-		if (!input)
-		{
-			init_sig(SIG_VIRTUAL_CTRL_D);
+		if (check_input(input))
 			continue ;
-		}
-		if (check_empty(input))
-		{
-			free(input);
-			print_transient_prompt("\n");
-			continue ;
-		}
-		if (*input)
-			add_history(input);
-		print_transient_prompt(input);
-		token_head = tokenize(env->tokenizer, input);
-		env->tokenizer->tokens = token_head;
-		// printf("Tokenized: %p, value: %s\n", (void*)env->tokenizer->tokens,
-		// env->tokenizer->tokens ? env->tokenizer->tokens->value : "NULL";
-		// print_tokens(env->tokenizer);
-		root = parse(env->tokenizer);
-		// printf("After parse, tokens: %p\n", (void*)env->tokenizer->tokens);
-		env->root = root;
-		env->input = input;
-		// debug_ast(root);
-		status = execute_ast(env, root);
-		env->tokenizer->tokens = token_head;
-		free_tokens(env->tokenizer);
-		// printf("root node: [%p]", root);
-		free_ast(root);
-		env->last_exit_code = status;
-		// printf("Command return (value: %d\n", status));
-		env->input = NULL;
-		
+		handle_command(env, input);
 		free(input);
 		input = NULL;
-
 	}
-	clean_rl();
 	return (0);
 }
