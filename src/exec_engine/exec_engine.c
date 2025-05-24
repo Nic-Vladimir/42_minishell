@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/24 11:40:53 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/05/24 11:59:07 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,27 +101,49 @@ int	execute_node(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 {
 	if (!node)
 		return (0);
-	switch (node->type)
-	{
-	case NODE_CMD:
+	if (node->type == NODE_CMD)
 		return (execute_command_expansion(env, node, in_fd, out_fd));
-	case NODE_PIPE:
+	else if (node->type == NODE_PIPE)
 		return (execute_pipeline(env, node, in_fd, out_fd));
-	case NODE_REDIR_IN:
-	case NODE_REDIR_OUT:
-	case NODE_REDIR_APPEND:
-	case NODE_HEREDOC:
+	else if (node->type == NODE_REDIR_IN || node->type == NODE_REDIR_OUT
+		|| node->type == NODE_REDIR_APPEND || node->type == NODE_HEREDOC)
 		return (execute_redirections(env, node, in_fd, out_fd));
-	case NODE_AND:
-	case NODE_OR:
+	else if (node->type == NODE_AND || node->type == NODE_OR)
 		return (execute_logical_op(env, node, in_fd, out_fd));
-	case NODE_GROUP:
+	else if (node->type == NODE_GROUP)
 		return (execute_group(env, node, in_fd, out_fd));
-	default:
+	else
+	{
 		fprintf(stderr, "Unknown node type in execution\n");
 		return (1);
 	}
 }
+
+// int	execute_node(t_env *env, t_ast_node *node, int in_fd, int out_fd)
+//{
+//	if (!node)
+//		return (0);
+//	switch (node->type)
+//	{
+//	case NODE_CMD:
+//		return (execute_command_expansion(env, node, in_fd, out_fd));
+//	case NODE_PIPE:
+//		return (execute_pipeline(env, node, in_fd, out_fd));
+//	case NODE_REDIR_IN:
+//	case NODE_REDIR_OUT:
+//	case NODE_REDIR_APPEND:
+//	case NODE_HEREDOC:
+//		return (execute_redirections(env, node, in_fd, out_fd));
+//	case NODE_AND:
+//	case NODE_OR:
+//		return (execute_logical_op(env, node, in_fd, out_fd));
+//	case NODE_GROUP:
+//		return (execute_group(env, node, in_fd, out_fd));
+//	default:
+//		fprintf(stderr, "Unknown node type in execution\n");
+//		return (1);
+//	}
+//}
 
 // int	execute_command(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 //{

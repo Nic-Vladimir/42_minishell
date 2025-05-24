@@ -6,7 +6,7 @@
 #    By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/05/24 11:43:51 by vnicoles         ###   ########.fr        #
+#    Updated: 2025/05/24 11:59:35 by vnicoles         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ OBJ_DIR		= obj/
 LIBFT_DIR	= $(LIB_DIR)/libft
 LIBFT		= $(LIB_DIR)/libft/libft.a
 SRC			= main.c \
-				ast.c \
+				ast/ast.c \
 				env/shell_env.c \
 				env/env_utils.c \
 				env/hashmap.c \
@@ -110,6 +110,7 @@ $(OBJ_DIR):
 	@mkdir -p obj/tokenizer/
 	@mkdir -p obj/exec_engine/
 	@mkdir -p obj/env/
+	@mkdir -p obj/ast/
 
 clean:
 	@rm -rf $(OBJ_DIR)

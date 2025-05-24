@@ -6,14 +6,13 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:02:13 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/24 11:47:09 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/05/24 11:55:09 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/ast.h"
-#include "../inc/minishell.h"
-#include "../inc/tokenizer.h"
-#include <stdio.h>
+#include "../../inc/ast.h"
+#include "../../inc/minishell.h"
+#include "../../inc/tokenizer.h"
 
 t_ast_node	*parse_group(t_tokenizer_data *tok_data);
 
