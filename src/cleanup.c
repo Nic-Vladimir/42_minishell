@@ -1,18 +1,19 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 21:35:07 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/21 16:40:25 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/05/24 18:57:39 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../inc/ast.h"
 #include "../inc/env.h"
 #include "../inc/tokenizer.h"
+#include "../inc/minishell.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -22,7 +23,6 @@ void	free_tokens(t_tokenizer_data *tokenizer)
 	t_token	*next;
 
 	current = tokenizer->tokens;
-	// printf("Freeing tokens from: %p\n", (void*)tokenizer->tokens);
 	while (current)
 	{
 		next = current->next;
@@ -80,13 +80,53 @@ static void	free_hashmap(t_hashmap *hashmap)
 	free(hashmap);
 }
 
-void	free_env(t_env *env)
+// void	free_env(t_env *env)
+// {
+// 	if (!env)
+// 		return ;
+// 	free_hashmap(env->vars);
+// 	free_tokens(env->tokenizer);
+// 	free(env->tokenizer);
+// 	free(env->input);
+// 	free(env);
+// }
+
+void free_sig(t_sigenv *sigenv)
 {
-	if (!env)
-		return ;
-	free_hashmap(env->vars);
-	free_tokens(env->tokenizer);
-	free(env->tokenizer);
-	free(env->input);
-	free(env);
+    if (!sigenv)
+        return;        
+    if (sigenv->def)
+    {
+        free(sigenv->def);
+        sigenv->def = NULL;
+    }
+    sigenv->env = NULL;
+    free(sigenv);
+}
+
+
+
+void free_env(t_env *env)
+{
+    if (!env)
+        return;
+    if (env->vars)
+        free_hashmap(env->vars);
+    if (env->tokenizer)
+	{
+        free_tokens(env->tokenizer);
+		free(env->tokenizer);
+	}
+    if (env->sigenv)
+    {
+        if (env->sigenv->env && env->sigenv->env == env)
+            env->sigenv->env = NULL;
+        free_sig(env->sigenv);
+    }
+    if(env->input)
+    {
+        free(env->input);
+        env->input = NULL;
+    }
+    free(env);
 }

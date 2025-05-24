@@ -1,74 +1,59 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   sig_hand.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:09:02 by mgavorni          #+#    #+#             */
-/*   Updated: 2025/03/27 11:28:06 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/05/24 16:55:18 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #ifndef SIG_HAND_H
 #define SIG_HAND_H
 
-#define _POSIX_C_SOURCE 200809L
-
 #include <sys/signal.h>
 #include <sys/wait.h>
-// # include <asm-generic/siginfo.h>
-// # include <asm-generic/signal.h>
+#include <signal.h>
+#include "../inc/minishell.h"
 
-#define SIGNAL_COUNT 4
-#define SIG_VIRTUAL_CTRL_D 1
-#define SIG_REAL 0
+typedef struct s_env t_env;
 
-// --- Handler function typedefs ---
-typedef void (*t_real_af)(int);
-typedef void (*t_real_af_plus)(int, siginfo_t *, void *);
-typedef void (*t_fake_af)(void);
+typedef struct s_sig_def
+{
+    struct sigaction sigint;
+    struct sigaction sigquit;
+    
+} t_sig_def;
 
-// --- Signal type: real vs virtual ---
-typedef enum e_signal_type_e { REAL_SIGNAL, FAKE_SIGNAL } t_signal_type;
+typedef enum e_sig_mode
+{
+    MINI_MODE,
+    NORMAL_MODE,
+    CD,
+} t_sig_mode;
 
-// --- Global signal state ---
-typedef struct sig_data_s {
-  volatile sig_atomic_t sig;
-} t_sig_data;
+typedef struct s_sigenv
+{
+    t_sig_mode current_mode;
+    t_env *env;
+    t_sig_def *def;
+    
+}t_sigenv;
 
-// --- Signal action configuration ---
-typedef struct sig_action_s {
-  const char *descript;           // short description
-  t_signal_type type;             // REAL_SIGNAL or FAKE_SIGNAL
-  t_real_af sig_handler;          // handler for classic signal
-  t_real_af_plus sig_alt_handler; // handler for SA_SIGINFO
-  t_fake_af virt;                 // fake handler function
-  sigset_t sig_mask;              // signal mask
-  int id;                         // ID for virtual handler
-  int sig_flag;                   // sa flags
-  int signum;                     // signal number SIGINT
-} t_sig_action;
 
-// --- Globals ---
-extern t_sig_data g_glob_sig;
-extern t_sig_action signals[SIGNAL_COUNT];
+extern volatile sig_atomic_t sig;  
 
-// --- Core signal system API ---
-int register_sig(const t_sig_action *config);
-void setup_sig_handler(int id);
-void setup_virt_handler(int id);
+// extern t_sig_data g_glob_sig;
 
-// --- General-purpose handlers ---
-void sig_handler(int sig);
-void sig_alt_handler(int sig, siginfo_t *info, void *context);
-void virt(void);
-pid_t child_ret(siginfo_t *info, int *status);
+void sig_malinit(t_sigenv **sigenv);
 
-// --- Signal configuration builders ---
-t_sig_action m_virtual_handler(sigset_t sig_mask);
-t_sig_action m_sigchild_handler(sigset_t sig_mask);
-t_sig_action m_sigquit_handler(sigset_t sig_mask);
-t_sig_action m_sigint_handler(sigset_t sig_mask);
+void set_signal_mode(int sig, t_sig_mode mode, t_sigenv *env);
+void set_all_signals(t_sig_mode mode, t_sigenv *sigenv);
+t_sig_def init_signal_handlers(void);
+void cd_handler(int sig, t_env *env);
+void mini_sigint_handler(int sig);
+
 
 #endif

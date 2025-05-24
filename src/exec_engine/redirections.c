@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 21:34:09 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/23 22:52:24 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/05/24 17:09:53 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/minishell.h"
 
@@ -45,9 +45,11 @@ static int	setup_redirection_fd(t_env *env, t_ast_node **node)
 	new_fd = -1;
 	if ((*node)->type == NODE_HEREDOC)
 	{
+		set_all_signals(NORMAL_MODE, env->sigenv);
 		delimiter = (*node)->args[0];
 		if (collect_heredoc(env, delimiter, &new_fd) == -1)
 			return (-1);
+		set_all_signals(MINI_MODE, env->sigenv);
 	}
 	else if ((*node)->type == NODE_REDIR_IN)
 		new_fd = open((*node)->args[0], O_RDONLY);

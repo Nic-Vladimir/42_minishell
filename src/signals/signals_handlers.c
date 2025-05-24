@@ -1,107 +1,75 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   signals_handlers.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42prague.com>   +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 10:16:04 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/27 11:30:12 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/05/24 17:55:40 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
-#include "../../inc/minishell.h"
+#include "../inc/minishell.h"
 
-t_sig_action	m_sigint_handler(sigset_t sig_mask)
+void mini_sigint_handler(int sig)
 {
-	return ((t_sig_action){
-		.descript = "Ctrl-C Handler",
-		.type = REAL_SIGNAL,
-		.sig_handler = sig_handler,
-		.sig_alt_handler = NULL,
-		.virt = NULL,
-		.sig_mask = sig_mask,
-		.id = SIG_REAL,
-		.sig_flag = SA_RESTART,
-		.signum = SIGINT});
-}
-
-t_sig_action	m_sigquit_handler(sigset_t sig_mask)
-{
-	return ((t_sig_action){
-		.descript = "Ctrl-\\ Handler",
-		.type = REAL_SIGNAL,
-		.sig_handler = SIG_IGN,
-		.sig_alt_handler = NULL,
-		.virt = NULL,
-		.sig_mask = sig_mask,
-		.id = SIG_REAL,
-		.sig_flag = 0,
-		.signum = SIGQUIT});
-}
-
-t_sig_action	m_sigchild_handler(sigset_t sig_mask)
-{
-	return ((t_sig_action){
-		.descript = "Child exit Handler",
-		.type = REAL_SIGNAL,
-		.sig_handler = NULL,
-		.sig_alt_handler = sig_alt_handler,
-		.virt = NULL,
-		.sig_mask = sig_mask,
-		.id = SIG_REAL,
-		.sig_flag = SA_SIGINFO | SA_RESTART,
-		.signum = SIGCHLD});
-}
-
-
-void	init_sig(int id)
-{
-	sigset_t		sig_mask;
-	size_t			i;
-	t_sig_action	signals[SIGNAL_COUNT];
-
+	//ssize_t status;
+	(void)sig;
 	rl_catch_signals = 0;
-	sigemptyset(&sig_mask);
-	signals[0] = m_sigint_handler(sig_mask);
-	signals[1] = m_sigquit_handler(sig_mask);
-	signals[2] = m_sigchild_handler(sig_mask);
-	signals[3] = m_virtual_handler(sig_mask);
-	i = 0;
-	while (i < SIGNAL_COUNT)
+	sig = 1;	
+	//status = 0;
+	if (sig)
 	{
-		if (signals[i].type == REAL_SIGNAL && register_sig(&signals[i]) == -1)
-		{
-			printf("Registration of : %s FAILED\n", signals[i].descript);
-		}
-		else if (signals[i].type == FAKE_SIGNAL && signals[i].id == id)
-		{
-			signals[i].virt();
-			break ;
-		}
-		i++;
+		// status = write(STDOUT_FILENO, "\n", 1);
+		// if(status == -1)
+		// 	g_glob_sig.sig = -1;
+        char *prompt = rl_prompt;              // Get full prompt string
+        char *first_line = prompt;             // Start of first line
+        char *newline_pos = strchr(prompt, '\n');  // Find newline
+        char *current_input = rl_line_buffer;  // Get interrupted input
+
+        write(STDOUT_FILENO, "\n", 1);         // Move past partial input
+        if (newline_pos)
+        {
+            size_t len = newline_pos - first_line;  // Length of first line
+            write(STDOUT_FILENO, first_line, len);  // Print first line
+            write(STDOUT_FILENO, "\n", 1);      // Newline after first line
+        }
+        else
+            write(STDOUT_FILENO, "\n", 1);      // Fallback if no newline
+        //write(STDOUT_FILENO, "\n", 1);         // Blank line
+        rl_replace_line("", 0);                // Clear input buffer
+        rl_on_new_line();                      // Sync after initial newline
+        rl_on_new_line();                      // Sync after first line
+        rl_on_new_line();                      // Sync after blank line
+        rl_redisplay();                        // Redisplay full prompt
+        if (current_input && *current_input)
+            printf("%s", current_input);       // Print interrupted input on new prompt
+        sig = SIGINT;
 	}
-}/*
-void sigquit_handler(int signum)
+}
+void get_env(void *arg)
 {
-    (void)signum;
+    t_env *env = (t_env *)arg;
+    fprintf(stderr,"env addr2: %p\n", env);
+    free_env(env);
+    printf("here\n");
 }
 
-void sigint_handler(int signum)
+void cd_handler(int sig, t_env *env)
 {
-    (void)signum;
-    print_transient_prompt("");
+    (void)sig;
+    fprintf(stderr, "cd_handler %p\n", env);
+    printf("Signal recognized\n");
+    printf("exit\n");
+    execute_exit(env);
+
+    //(void)env;
+    // if (env)
+    //     free_env(env);
+        
+    //exit(EXIT_SUCCESS);
 }
 
-void init_sig(void)
-{
-    struct sigaction    sa_int;
-    struct sigaction    sa_quit;
 
-    sa_int.sa_handler = sigint_handler;
-    sa_int.sa_flags = SA_RESTART;
-    sigaction(SIGINT, &sa_int, NULL);
-    sa_quit.sa_handler = sigquit_handler;
-    sigaction(SIGQUIT, &sa_quit, NULL);
-}
-*/

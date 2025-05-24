@@ -1,14 +1,14 @@
-# **************************************************************************** #
+#******************************************************************************#
 #                                                                              #
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+         #
+#    By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/05/24 11:59:35 by vnicoles         ###   ########.fr        #
+#    Updated: 2025/05/24 17:20:22 by mgavornik        ###   ########.fr        #
 #                                                                              #
-# **************************************************************************** #
+#******************************************************************************#
 
 # --- Stfu make ---
 MAKEFLAGS += --no-print-directory
@@ -47,7 +47,6 @@ SRC			= main.c \
 				exec_engine/expand_command.c \
 				exec_engine/arg_utils.c \
 				prompt.c \
-				cleanup.c \
 				wildcard.c \
 				cmds/export.c \
 				cmds/export_utils.c \
@@ -60,11 +59,11 @@ SRC			= main.c \
 				cmds/unset.c \
 				signals/signals.c \
 				signals/signals_handlers.c \
-				signals/virt_handler.c \
 				fancy_write.c \
 				tokenizer/tokenizer.c \
 				tokenizer/tokenizer_filters.c \
-				tokenizer/tokenizer_utils.c
+				tokenizer/tokenizer_utils.c \
+				cleanup.c
 
 OBJ			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 HEADERS		= $(INC_DIR)minishell.h

@@ -1,35 +1,59 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/24 11:39:09 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/05/24 17:17:55 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "../lib/libft/inc/libft.h"
-# include "ast.h"
-# include "colors.h"
-# include "env.h"
-# include "sig_hand.h"
-# include "tokenizer.h"
-# include <dirent.h>
-# include <fcntl.h>
-# include <limits.h>
-# include <readline/history.h>
-# include <readline/readline.h>
-# include <stdbool.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <sys/wait.h>
-# include <unistd.h>
+// # include "../lib/libft/inc/libft.h"
+// # include "ast.h"
+// # include "colors.h"
+// # include "env.h"
+// # include "sig_hand.h"
+// # include "tokenizer.h"
+// # include <dirent.h>
+// # include <fcntl.h>
+// # include <limits.h>
+// # include <readline/history.h>
+// # include <readline/readline.h>
+// # include <stdbool.h>
+// # include <stdio.h>
+// # include <stdlib.h>
+// # include <string.h>
+// # include <sys/wait.h>
+// # include <unistd.h>
+
+#include <dirent.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <readline/history.h>
+#include <readline/readline.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <stdbool.h>
+#include "../lib/libft/inc/libft.h"
+#include "colors.h"
+
+typedef struct s_env t_env;
+typedef struct s_ast_node t_ast_node;
+typedef struct s_token t_token;
+typedef struct s_tokenizer_data t_tokenizer_data;
+
+#include "sig_hand.h"
+#include "tokenizer.h"
+#include "ast.h"
+#include "env.h"
 
 t_token			*tokenize(t_tokenizer_data *data, char *input);
 t_ast_node		*parse(t_tokenizer_data *data);
@@ -61,11 +85,7 @@ int				execute_cd(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 int				execute_exit(t_env *env);
 int				execute_unset(t_env *env, t_ast_node *node);
 
-void			init_sig(int id);
-t_sig_action	m_sigint_handler(sigset_t sig_mask);
-t_sig_action	m_sigquit_handler(sigset_t sig_mask);
-t_sig_action	m_sigchild_handler(sigset_t sig_mask);
-int				register_sig(const t_sig_action *config);
+
 
 void			clean_rl(void);
 void			ft_free_split(char **res);

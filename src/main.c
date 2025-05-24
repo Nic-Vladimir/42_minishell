@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/31 01:53:11 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/05/24 18:51:21 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../inc/ast.h"
 #include "../inc/minishell.h"
@@ -59,12 +59,13 @@ void	handle_command(t_env *env, char *input)
 	env->input = NULL;
 }
 
-int	check_input(char *input)
+int	check_input(t_env *env, char *input)
 {
 	if (!input)
 	{
-		init_sig(SIG_VIRTUAL_CTRL_D);
-		return (1);
+		set_all_signals(CD, env->sigenv);
+		cd_handler(sig, env);
+		return(1);
 	}
 	if (check_empty(input))
 	{
@@ -86,13 +87,14 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	env = init_env(envp);
-	init_sig(SIG_REAL);
+	env->sigenv->env = env;
+	set_all_signals(MINI_MODE, env->sigenv);
 	while (1)
 	{
 		prompt = get_prompt(env);
 		input = readline(prompt);
 		free(prompt);
-		if (check_input(input))
+		if (check_input(env, input))
 			continue ;
 		handle_command(env, input);
 		free(input);
