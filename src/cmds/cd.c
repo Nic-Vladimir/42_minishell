@@ -71,7 +71,7 @@ static int	update_env(t_env *env, char *old_pwd)
 	if (old_pwd && hashmap_insert(env, "OLDPWD", old_pwd) != 0)
 		fancy_write(1, "cd: failed to update OLDPWD", RED);
 	if (hashmap_insert(env, "PWD", new_pwd) != 0)
-		result = 1; // Keep going, but note the error
+		result = 1;
 	free(old_pwd);
 	free(new_pwd);
 	return (result);

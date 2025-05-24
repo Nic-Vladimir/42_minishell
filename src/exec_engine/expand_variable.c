@@ -12,7 +12,7 @@
 
 #include "../../inc/minishell.h"
 
-char	*get_expand_value(t_env *env, const char *input, int start, int end)
+static char	*get_expand_value(t_env *env, const char *input, int start, int end)
 {
 	char	*var_name;
 	char	*value;
@@ -78,7 +78,7 @@ char	*get_expand_value(t_env *env, const char *input, int start, int end)
 //	return (expanded);
 //}
 
-int	parse_variable_name(const char *input, int *i)
+static int	parse_variable_name(const char *input, int *i)
 {
 	int	start;
 
@@ -92,7 +92,7 @@ int	parse_variable_name(const char *input, int *i)
 	return (start);
 }
 
-char	*append_single_char(char *expanded, char c)
+static char	*append_single_char(char *expanded, char c)
 {
 	char	*temp;
 

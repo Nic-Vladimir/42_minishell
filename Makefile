@@ -6,7 +6,7 @@
 #    By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/05/23 22:31:41 by vnicoles         ###   ########.fr        #
+#    Updated: 2025/05/24 11:43:51 by vnicoles         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,12 +36,16 @@ LIBFT_DIR	= $(LIB_DIR)/libft
 LIBFT		= $(LIB_DIR)/libft/libft.a
 SRC			= main.c \
 				ast.c \
-				shell_env.c \
-				hashmap.c \
+				env/shell_env.c \
+				env/env_utils.c \
+				env/hashmap.c \
 				exec_engine/exec_engine.c \
+				exec_engine/exec_command.c \
 				exec_engine/heredoc.c \
 				exec_engine/redirections.c \
-				exec_engine/expand_var.c \
+				exec_engine/expand_variable.c \
+				exec_engine/expand_command.c \
+				exec_engine/arg_utils.c \
 				prompt.c \
 				cleanup.c \
 				wildcard.c \
@@ -58,7 +62,6 @@ SRC			= main.c \
 				signals/signals_handlers.c \
 				signals/virt_handler.c \
 				fancy_write.c \
-				env_utils.c \
 				tokenizer/tokenizer.c \
 				tokenizer/tokenizer_filters.c \
 				tokenizer/tokenizer_utils.c
@@ -106,6 +109,7 @@ $(OBJ_DIR):
 	@mkdir -p obj/signals/
 	@mkdir -p obj/tokenizer/
 	@mkdir -p obj/exec_engine/
+	@mkdir -p obj/env/
 
 clean:
 	@rm -rf $(OBJ_DIR)

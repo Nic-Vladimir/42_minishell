@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/23 22:30:31 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/05/24 11:39:09 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -88,5 +89,12 @@ int				execute_redirections(t_env *env, t_ast_node *node, int in_fd,
 					int out_fd);
 int				collect_heredoc(t_env *env, char *delimiter, int *write_fd);
 char			*expand_var(t_env *env, const char *input);
+char			**copy_args(t_ast_node *node, int star_index, char **expanded);
+int				execute_command(t_env *env, t_ast_node *node, int in_fd,
+					int out_fd);
+int				execute_command_expansion(t_env *env, t_ast_node *node,
+					int in_fd, int out_fd);
+int				execute_builtin_command(t_env *env, t_ast_node *node, int in_fd,
+					int out_fd);
 
 #endif

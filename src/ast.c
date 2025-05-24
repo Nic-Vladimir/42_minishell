@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:02:13 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/23 18:11:02 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/05/24 11:47:09 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ t_ast_node	*ast_node_insert(t_ast_node *root, t_node_type type, char **args)
 		new_root = ast_new_node(type, NULL);
 		new_root->left = root;
 		new_root->right = NULL;
-		if (!args)
-			new_root->right = ast_new_node(NODE_CMD, args);
+		// if (!args)
+		//	new_root->right = ast_new_node(NODE_CMD, args);
 		return (new_root);
 	}
 	root->right = ast_node_insert(root->right, type, args);
@@ -317,9 +317,9 @@ const char	*node_type_to_str(t_node_type type)
 	case NODE_OR:
 		return ("OR");
 	case NODE_GROUP:
-		return "GROUP";
+		return ("GROUP");
 	default:
-		return "UNKNOWN";
+		return ("UNKNOWN");
 	}
 }
 

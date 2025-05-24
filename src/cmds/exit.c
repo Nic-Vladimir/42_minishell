@@ -24,6 +24,7 @@ void	ft_free_split(char **res)
 	}
 	free(res);
 }
+
 void	clean_rl(void)
 {
 	rl_cleanup_after_signal();
@@ -33,7 +34,6 @@ void	clean_rl(void)
 
 int	execute_exit(t_env *env)
 {
-	// free_tokens(env->tokenizer);
 	free_ast(env->root);
 	free_env(env);
 	clean_rl();
