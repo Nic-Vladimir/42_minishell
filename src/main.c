@@ -65,7 +65,7 @@ int	check_input(t_env *env, char *input)
 	{
 		set_all_signals(CD, env->sigenv);
 		cd_handler(sig, env);
-		return(1);
+		return (1);
 	}
 	if (check_empty(input))
 	{
