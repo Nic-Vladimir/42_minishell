@@ -76,27 +76,6 @@ static int	execute_group(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 //	return (execute_builtin_command(env, node, in_fd, out_fd));
 //}
 
-int	execute_builtin_command(t_env *env, t_ast_node *node, int in_fd, int out_fd)
-{
-	if (node->args[0] == NULL)
-		return (1);
-	if (ft_strncmp(node->args[0], "cd", 3) == 0)
-		return (execute_cd(env, node, in_fd, out_fd));
-	if (ft_strncmp(node->args[0], "echo", 5) == 0)
-		return (execute_echo(env, node, in_fd, out_fd));
-	if (ft_strncmp(node->args[0], "pwd", 4) == 0)
-		return (execute_pwd(env, node, in_fd, out_fd));
-	if (ft_strncmp(node->args[0], "export", 7) == 0)
-		return (execute_export(env, node, in_fd, out_fd));
-	if (ft_strncmp(node->args[0], "env", 4) == 0)
-		return (execute_env(env, node, in_fd, out_fd));
-	if (ft_strncmp(node->args[0], "unset", 6) == 0)
-		return (execute_unset(env, node));
-	if (ft_strncmp(node->args[0], "exit", 6) == 0)
-		return (execute_exit(env));
-	return (execute_command(env, node, in_fd, out_fd));
-}
-
 int	execute_node(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 {
 	if (!node)

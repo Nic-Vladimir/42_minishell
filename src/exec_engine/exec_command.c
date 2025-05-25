@@ -12,8 +12,11 @@
 
 #include "../../inc/minishell.h"
 
-static void	setup_child_fds(int in_fd, int out_fd)
+static void	setup_child_fds(t_ast_node *node, int in_fd, int out_fd)
 {
+	if (node->args && node->args[0] && strcmp(node->args[0], "cat") == 0
+		&& node->args[1] == NULL)
+		in_fd = STDIN_FILENO;
 	if (in_fd != STDIN_FILENO)
 	{
 		dup2(in_fd, STDIN_FILENO);
@@ -26,7 +29,7 @@ static void	setup_child_fds(int in_fd, int out_fd)
 	}
 }
 
-static void	execute_child_process(t_env *env, t_ast_node *node)
+static int	execute_external_command(t_env *env, t_ast_node *node)
 {
 	char	**envp;
 	char	*exec_path;
@@ -44,23 +47,46 @@ static void	execute_child_process(t_env *env, t_ast_node *node)
 	if (execve(exec_path, node->args, envp) == -1)
 	{
 		free_ast(node);
-		free_envp(envp);
 	}
 	fprintf(stderr, "Command not found: %s\n", node->args[0]);
 	free_envp(envp);
 	exit(127);
 }
 
-int	execute_command(t_env *env, t_ast_node *node, int in_fd, int out_fd)
+static int	execute_command(t_env *env, t_ast_node *node, int in_fd, int out_fd)
+{
+	if (node->args[0] == NULL)
+		return (1);
+	if (ft_strncmp(node->args[0], "cd", 3) == 0)
+		return (execute_cd(env, node, in_fd, out_fd));
+	if (ft_strncmp(node->args[0], "echo", 5) == 0)
+		return (execute_echo(env, node, in_fd, out_fd));
+	if (ft_strncmp(node->args[0], "pwd", 4) == 0)
+		return (execute_pwd(env, node, in_fd, out_fd));
+	if (ft_strncmp(node->args[0], "export", 7) == 0)
+		return (execute_export(env, node, in_fd, out_fd));
+	if (ft_strncmp(node->args[0], "env", 4) == 0)
+		return (execute_env(env, node, in_fd, out_fd));
+	if (ft_strncmp(node->args[0], "unset", 6) == 0)
+		return (execute_unset(env, node));
+	return (execute_external_command(env, node));
+}
+
+int	create_child_process(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 {
 	pid_t	pid;
 	int		status;
 
+	if (ft_strncmp(node->args[0], "exit", 6) == 0)
+		return (execute_exit(env));
 	pid = fork();
 	if (pid == 0)
 	{
-		setup_child_fds(in_fd, out_fd);
-		execute_child_process(env, node);
+		setup_child_fds(node, in_fd, out_fd);
+		status = execute_command(env, node, STDIN_FILENO, STDOUT_FILENO);
+		free_ast(env->root);
+		free_env(env);
+		exit(status);
 	}
 	waitpid(pid, &status, 0);
 	if (in_fd != STDIN_FILENO)

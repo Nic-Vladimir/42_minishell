@@ -12,8 +12,8 @@
 
 #include "../inc/ast.h"
 #include "../inc/env.h"
-#include "../inc/tokenizer.h"
 #include "../inc/minishell.h"
+#include "../inc/tokenizer.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -91,42 +91,40 @@ static void	free_hashmap(t_hashmap *hashmap)
 // 	free(env);
 // }
 
-void free_sig(t_sigenv *sigenv)
+void	free_sig(t_sigenv *sigenv)
 {
-    if (!sigenv)
-        return;        
-    if (sigenv->def)
-    {
-        free(sigenv->def);
-        sigenv->def = NULL;
-    }
-    sigenv->env = NULL;
-    free(sigenv);
+	if (!sigenv)
+		return ;
+	if (sigenv->def)
+	{
+		free(sigenv->def);
+		sigenv->def = NULL;
+	}
+	sigenv->env = NULL;
+	free(sigenv);
 }
 
-
-
-void free_env(t_env *env)
+void	free_env(t_env *env)
 {
-    if (!env)
-        return;
-    if (env->vars)
-        free_hashmap(env->vars);
-    if (env->tokenizer)
+	if (!env)
+		return ;
+	if (env->vars)
+		free_hashmap(env->vars);
+	if (env->tokenizer)
 	{
-        free_tokens(env->tokenizer);
+		free_tokens(env->tokenizer);
 		free(env->tokenizer);
 	}
-    if (env->sigenv)
-    {
-        if (env->sigenv->env && env->sigenv->env == env)
-            env->sigenv->env = NULL;
-        free_sig(env->sigenv);
-    }
-    if(env->input)
-    {
-        free(env->input);
-        env->input = NULL;
-    }
-    free(env);
+	if (env->sigenv)
+	{
+		if (env->sigenv->env && env->sigenv->env == env)
+			env->sigenv->env = NULL;
+		free_sig(env->sigenv);
+	}
+	if (env->input)
+	{
+		free(env->input);
+		env->input = NULL;
+	}
+	free(env);
 }

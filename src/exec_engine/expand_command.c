@@ -81,5 +81,5 @@ int	execute_command_expansion(t_env *env, t_ast_node *node, int in_fd,
 		}
 		i++;
 	}
-	return (execute_builtin_command(env, node, in_fd, out_fd));
+	return (create_child_process(env, node, in_fd, out_fd));
 }

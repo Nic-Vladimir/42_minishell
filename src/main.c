@@ -45,6 +45,8 @@ void	handle_command(t_env *env, char *input)
 	t_ast_node	*root;
 	int			status;
 
+	if (!input)
+		return ;
 	print_transient_prompt(input);
 	token_head = tokenize(env->tokenizer, input);
 	env->tokenizer->tokens = token_head;
