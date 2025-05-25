@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   shell_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 19:51:51 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/24 18:56:10 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/05/25 16:37:38 by mgavorni         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
@@ -30,6 +30,7 @@ static t_tokenizer_data	*init_tok_data(void)
 	tok_data = (t_tokenizer_data *)malloc(sizeof(t_tokenizer_data));
 	if (!tok_data)
 		return (NULL);
+	ft_memset(tok_data, 0, sizeof(t_tokenizer_data));
 	tok_data->tokens = NULL;
 	tok_data->tail = NULL;
 	return (tok_data);
@@ -76,11 +77,13 @@ t_env	*init_env(char **envp)
 	env->vars = (t_hashmap *)malloc(sizeof(t_hashmap));
 	if (!env->vars)
 		return (NULL);
+	ft_memset(env->vars, 0, sizeof(t_hashmap));
 	env->vars->size = 100;
 	env->vars->buckets = (t_bucket **)malloc(env->vars->size
 			* sizeof(t_bucket *));
 	if (env->vars->buckets == NULL)
 		return (NULL);
+	ft_memset(env->vars->buckets, 0, env->vars->size * sizeof(t_bucket *));
 	while (i < env->vars->size)
 		env->vars->buckets[i++] = NULL;
 	i = 0;

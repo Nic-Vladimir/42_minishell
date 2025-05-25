@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:02:13 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/24 11:55:09 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/05/25 17:24:50 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ t_ast_node	*ast_set_node_arg_types(t_ast_node *node, char **args)
 				free(node);
 				return (NULL);
 			}
+			ft_memset(node->arg_types, 0, sizeof(t_token_type) * i);
 			while (j < i)
 				node->arg_types[j++] = TOK_WORD;
 		}
@@ -140,10 +141,7 @@ t_ast_node	*parse_redirection(t_tokenizer_data *tok_data, t_ast_node *cmd)
 }
 void	init_t_ast(t_ast_node *node)
 {
-	node->arg_types = NULL;
-	node->args = NULL;
-	node->left = NULL;
-	node->right = NULL;
+	ft_memset(node, 0, sizeof(t_ast_node));
 	node->type = NODE_CMD;
 }
 
@@ -155,9 +153,13 @@ t_ast_node	*init_cmd_node(char **args, int arg_count)
 	j = 0;
 	node = (t_ast_node *)malloc(sizeof(t_ast_node));
 	if (!node)
+	{
+		free(args);
 		return (NULL);
+	}
 	init_t_ast(node);
 	node->args = args;
+	node->arg_types = NULL;
 	if (arg_count > 0)
 	{
 		node->arg_types = malloc(sizeof(t_token_type) * arg_count);
@@ -167,6 +169,7 @@ t_ast_node	*init_cmd_node(char **args, int arg_count)
 			free(args);
 			return (NULL);
 		}
+		ft_memset(node->arg_types, 0, sizeof(t_token_type) * arg_count);
 		while (j < arg_count)
 			node->arg_types[j++] = TOK_WORD;
 	}

@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:02:59 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/21 17:11:41 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/05/25 17:29:05 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,10 @@ void	clean_rl(void)
 
 int	execute_exit(t_env *env)
 {
-	free_ast(env->root);
-	free_env(env);
+	if(env->root)
+		free_ast(env->root);
+	if(env)
+		free_env(env);
 	clean_rl();
 	exit(0);
 }

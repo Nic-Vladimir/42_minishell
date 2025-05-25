@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/24 18:51:21 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/05/25 19:50:48 by mgavorni         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../inc/ast.h"
 #include "../inc/minishell.h"
@@ -53,19 +53,20 @@ void	handle_command(t_env *env, char *input)
 	env->input = input;
 	env->tokenizer->tokens = token_head;
 	status = execute_ast(env, root);
-	free_tokens(env->tokenizer);
-	free_ast(root);
+	// free_tokens(env->tokenizer);
+	// free_ast(root);
 	env->last_exit_code = status;
 	env->input = NULL;
 }
 
 int	check_input(t_env *env, char *input)
 {
-	if (!input)
+	if(!input)
 	{
 		set_all_signals(CD, env->sigenv);
 		cd_handler(sig, env);
-		return (1);
+		exit(EXIT_SUCCESS);
+		//return(1);
 	}
 	if (check_empty(input))
 	{
@@ -89,13 +90,16 @@ int	main(int argc, char **argv, char **envp)
 	env = init_env(envp);
 	env->sigenv->env = env;
 	set_all_signals(MINI_MODE, env->sigenv);
+
 	while (1)
 	{
 		prompt = get_prompt(env);
 		input = readline(prompt);
 		free(prompt);
 		if (check_input(env, input))
-			continue ;
+		{
+			continue;
+		}
 		handle_command(env, input);
 		free(input);
 		input = NULL;

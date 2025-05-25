@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 21:35:07 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/24 18:57:39 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/05/25 16:56:38 by mgavorni         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../inc/ast.h"
 #include "../inc/env.h"
@@ -37,23 +37,35 @@ void	free_tokens(t_tokenizer_data *tokenizer)
 void	free_ast(t_ast_node *node)
 {
 	int	i;
-
 	if (!node)
 		return ;
-	free_ast(node->left);
-	free_ast(node->right);
+	if(node->left != NULL)
+	{
+		free_ast(node->left);
+		node->left = NULL;
+	}
+	if(node->right != NULL)
+	{
+		free_ast(node->right);
+		node->right = NULL;
+	}
 	if (node->args)
 	{
 		i = 0;
 		while (node->args[i])
 		{
 			free(node->args[i]);
+			node->args[i] = NULL;
 			i++;
 		}
 		free(node->args);
+		node->args = NULL;
 	}
 	if (node->arg_types)
+	{
 		free(node->arg_types);
+		node->arg_types = NULL;
+	}
 	free(node);
 }
 
