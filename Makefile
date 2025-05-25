@@ -46,8 +46,8 @@ SRC			= main.c \
 				exec_engine/expand_variable.c \
 				exec_engine/expand_command.c \
 				exec_engine/arg_utils.c \
-				prompt.c \
-				wildcard.c \
+				utils/prompt.c \
+				utils/wildcard.c \
 				cmds/export.c \
 				cmds/export_utils.c \
 				cmds/export_quick_sort.c \
@@ -110,6 +110,7 @@ $(OBJ_DIR):
 	@mkdir -p obj/exec_engine/
 	@mkdir -p obj/env/
 	@mkdir -p obj/ast/
+	@mkdir -p obj/utils/
 
 clean:
 	@rm -rf $(OBJ_DIR)
