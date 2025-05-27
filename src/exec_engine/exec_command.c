@@ -35,7 +35,8 @@ static void	execute_child_process(t_env *env, t_ast_node *node)
 	exec_path = find_executable(env, node->args[0]);
 	if (exec_path == NULL)
 	{
-		perror("Not valid exec_path");
+		ft_printf("minishell: %s: Is not an executable binary\n",
+			node->args[0]);
 		free_ast(node);
 		free_env(env);
 		free_envp(envp);
@@ -43,12 +44,13 @@ static void	execute_child_process(t_env *env, t_ast_node *node)
 	}
 	if (execve(exec_path, node->args, envp) == -1)
 	{
-		free_ast(node);
+		ft_printf("minishell: %s: Is not an executable binary\n", exec_path);
+		free_ast(env->root);
+		free(exec_path);
 		free_envp(envp);
+		free_env(env);
+		exit(127);
 	}
-	fprintf(stderr, "Command not found: %s\n", node->args[0]);
-	free_envp(envp);
-	exit(127);
 }
 
 int	execute_command(t_env *env, t_ast_node *node, int in_fd, int out_fd)

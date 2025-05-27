@@ -16,7 +16,6 @@
 #include <sys/signal.h>
 #include <sys/wait.h>
 #include <signal.h>
-#include "../inc/minishell.h"
 
 typedef struct s_env t_env;
 
@@ -24,7 +23,6 @@ typedef struct s_sig_def
 {
     struct sigaction sigint;
     struct sigaction sigquit;
-    
 } t_sig_def;
 
 typedef enum e_sig_mode

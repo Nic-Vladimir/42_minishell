@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
-#include "../inc/tokenizer.h"
+#include "../../inc/minishell.h"
+#include "../../inc/tokenizer.h"
 
 char	*process_pipe(t_tokenizer_data *tok_data, char *input)
 {

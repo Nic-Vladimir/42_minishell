@@ -15,11 +15,13 @@
 #include "../inc/tokenizer.h"
 
 /*
-static void	print_tokens(t_tokenizer_data *tok_data) {
+static void	print_tokens(t_tokenizer_data *tok_data)
+{
 	t_tokenizer_data	*tok_ptr;
 
 	tok_ptr = tok_data;
-	while (tok_ptr->tokens) {
+	while (tok_ptr->tokens)
+	{
 		printf("Tokens: [%s] (Type: %d)\n", tok_ptr->tokens->value,
 			tok_ptr->tokens->type);
 		tok_ptr->tokens = tok_ptr->tokens->next;
