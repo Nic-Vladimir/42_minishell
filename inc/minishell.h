@@ -90,7 +90,7 @@ int				execute_unset(t_env *env, t_ast_node *node);
 void			clean_rl(void);
 void			ft_free_split(char **res);
 void			free_envp(char **envp);
-void			init_t_ast(t_ast_node *node);
+//void			init_t_ast(t_ast_node *node);
 
 char			*process_pipe(t_tokenizer_data *tok_data, char *input);
 char			*process_ampersand(t_tokenizer_data *tok_data, char *input);
@@ -116,5 +116,10 @@ int				execute_command_expansion(t_env *env, t_ast_node *node,
 					int in_fd, int out_fd);
 int				execute_builtin_command(t_env *env, t_ast_node *node, int in_fd,
 					int out_fd);
+t_ast_node	*ast_new_node(t_node_type type, char **args);
+t_ast_node	*parse_redirection(t_tokenizer_data *tok_data, t_ast_node *cmd);
+t_ast_node	*parse_simple_command(t_tokenizer_data *tok_data);
+t_ast_node	*init_cmd_node(char **args, int arg_count);
+t_ast_node	*ast_node_insert(t_ast_node *root, t_node_type type, char **args);
 
 #endif

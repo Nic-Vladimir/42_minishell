@@ -6,11 +6,11 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 02:00:27 by mgavorni          #+#    #+#             */
-/*   Updated: 2025/05/21 16:40:11 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/05/28 17:52:09 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../inc/minishell.h"
 
 void	write_string(int fd, char *str)
 {

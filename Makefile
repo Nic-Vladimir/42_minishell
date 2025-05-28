@@ -36,6 +36,9 @@ LIBFT_DIR	= $(LIB_DIR)/libft
 LIBFT		= $(LIB_DIR)/libft/libft.a
 SRC			= main.c \
 				ast/ast.c \
+				ast/redirections.c \
+				ast/parse_simple_command.c \
+				ast/init_node.c \
 				env/shell_env.c \
 				env/env_utils.c \
 				env/hashmap.c \

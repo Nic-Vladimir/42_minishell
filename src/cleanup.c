@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
@@ -6,16 +6,14 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 21:35:07 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/24 18:57:39 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/05/28 17:51:57 by vnicoles         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../inc/ast.h"
 #include "../inc/env.h"
-#include "../inc/tokenizer.h"
 #include "../inc/minishell.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "../inc/tokenizer.h"
 
 void	free_tokens(t_tokenizer_data *tokenizer)
 {
@@ -61,6 +59,32 @@ static void	free_hashmap(t_hashmap *hashmap)
 {
 	t_bucket	*current;
 	t_bucket	*next;
+	ssize_t		i;
+
+	if (!hashmap)
+		return ;
+	i = 0;
+	while (i < hashmap->size)
+	{
+		current = hashmap->buckets[i];
+		while (current)
+		{
+			next = current->next;
+			free(current->key);
+			free(current->value);
+			free(current);
+			current = next;
+		}
+		i++;
+	}
+	free(hashmap->buckets);
+	free(hashmap);
+}
+/*
+static void	free_hashmap(t_hashmap *hashmap)
+{
+	t_bucket	*current;
+	t_bucket	*next;
 
 	if (!hashmap)
 		return ;
@@ -79,6 +103,7 @@ static void	free_hashmap(t_hashmap *hashmap)
 	free(hashmap->buckets);
 	free(hashmap);
 }
+*/
 
 // void	free_env(t_env *env)
 // {
@@ -91,42 +116,40 @@ static void	free_hashmap(t_hashmap *hashmap)
 // 	free(env);
 // }
 
-void free_sig(t_sigenv *sigenv)
+void	free_sig(t_sigenv *sigenv)
 {
-    if (!sigenv)
-        return;        
-    if (sigenv->def)
-    {
-        free(sigenv->def);
-        sigenv->def = NULL;
-    }
-    sigenv->env = NULL;
-    free(sigenv);
+	if (!sigenv)
+		return ;
+	if (sigenv->def)
+	{
+		free(sigenv->def);
+		sigenv->def = NULL;
+	}
+	sigenv->env = NULL;
+	free(sigenv);
 }
 
-
-
-void free_env(t_env *env)
+void	free_env(t_env *env)
 {
-    if (!env)
-        return;
-    if (env->vars)
-        free_hashmap(env->vars);
-    if (env->tokenizer)
+	if (!env)
+		return ;
+	if (env->vars)
+		free_hashmap(env->vars);
+	if (env->tokenizer)
 	{
-        free_tokens(env->tokenizer);
+		free_tokens(env->tokenizer);
 		free(env->tokenizer);
 	}
-    if (env->sigenv)
-    {
-        if (env->sigenv->env && env->sigenv->env == env)
-            env->sigenv->env = NULL;
-        free_sig(env->sigenv);
-    }
-    if(env->input)
-    {
-        free(env->input);
-        env->input = NULL;
-    }
-    free(env);
+	if (env->sigenv)
+	{
+		if (env->sigenv->env && env->sigenv->env == env)
+			env->sigenv->env = NULL;
+		free_sig(env->sigenv);
+	}
+	if (env->input)
+	{
+		free(env->input);
+		env->input = NULL;
+	}
+	free(env);
 }

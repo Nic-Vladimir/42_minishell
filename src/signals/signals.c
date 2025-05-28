@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
@@ -6,14 +6,13 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:13:28 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/24 18:58:49 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/05/28 18:05:40 by vnicoles         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
+#include "../../inc/minishell.h"
 
-#include "../inc/minishell.h"
-
-volatile sig_atomic_t sig = 0;
+volatile sig_atomic_t	sig = 0;
 
 // void	sig_handler(int sig)
 // {
@@ -30,73 +29,68 @@ volatile sig_atomic_t sig = 0;
 // 	}
 // }
 
-void set_signal_mode(int sig, t_sig_mode mode, t_sigenv *env)
+void	set_signal_mode(int sig, t_sig_mode mode, t_sigenv *env)
 {
-	struct sigaction sa;
+	struct sigaction	sa;
 
 	sigemptyset(&sa.sa_mask);
 	if (mode == MINI_MODE)
 	{
-		if(sig == SIGINT)
+		if (sig == SIGINT)
 		{
 			sa.sa_handler = mini_sigint_handler;
 			sa.sa_flags = SA_RESTART;
 			sigaction(sig, &sa, NULL);
 		}
-		else if(sig == SIGQUIT)
+		else if (sig == SIGQUIT)
 		{
 			sa.sa_handler = SIG_IGN;
 			sa.sa_flags = 0;
 			sigaction(sig, &sa, NULL);
 		}
-		//g_glob_sig.current_mode = mode;
-
+		// g_glob_sig.current_mode = mode;
 	}
 	if (mode == NORMAL_MODE)
 	{
 		sigaction(SIGINT, &env->def->sigint, NULL);
 		sigaction(SIGQUIT, &env->def->sigquit, NULL);
-		//g_glob_sig.current_mode = mode;
-
+		// g_glob_sig.current_mode = mode;
 	}
 	if (mode == CD)
 	{
 		sigemptyset(&sa.sa_mask);
-
 		sa.sa_handler = NULL;
 		sa.sa_flags = SA_RESTART;
 		sigaction(sig, &sa, NULL);
-		//g_glob_sig.current_mode = mode;
-
+		// g_glob_sig.current_mode = mode;
 	}
-
-	 env->current_mode = mode;
-	
+	env->current_mode = mode;
 }
-void sig_malinit(t_sigenv **sigenv)
+
+void	sig_malinit(t_sigenv **sigenv)
 {
-    *sigenv = (t_sigenv *)malloc(sizeof(t_sigenv));
-    if (!*sigenv)
+	*sigenv = (t_sigenv *)malloc(sizeof(t_sigenv));
+	if (!*sigenv)
 	{
-        return;
+		return ;
 	}
 	ft_memset(*sigenv, 0, sizeof(t_sigenv));
-    (*sigenv)->def = (t_sig_def *)malloc(sizeof(t_sig_def));
-    if (!(*sigenv)->def)
-    {
-        free(*sigenv);
-        *sigenv = NULL;
-        return;
-    }
+	(*sigenv)->def = (t_sig_def *)malloc(sizeof(t_sig_def));
+	if (!(*sigenv)->def)
+	{
+		free(*sigenv);
+		*sigenv = NULL;
+		return ;
+	}
 	ft_memset((*sigenv)->def, 0, sizeof(t_sig_def));
-    (*sigenv)->current_mode = NORMAL_MODE;
-    (*sigenv)->env = NULL;    
-    sigaction(SIGINT, NULL, &(*sigenv)->def->sigint);
-    sigaction(SIGQUIT, NULL, &(*sigenv)->def->sigquit);    
-    set_all_signals(MINI_MODE, *sigenv);
+	(*sigenv)->current_mode = NORMAL_MODE;
+	(*sigenv)->env = NULL;
+	sigaction(SIGINT, NULL, &(*sigenv)->def->sigint);
+	sigaction(SIGQUIT, NULL, &(*sigenv)->def->sigquit);
+	set_all_signals(MINI_MODE, *sigenv);
 }
 
-void set_all_signals(t_sig_mode mode, t_sigenv *sigenv)
+void	set_all_signals(t_sig_mode mode, t_sigenv *sigenv)
 {
 	sigenv->current_mode = mode;
 	set_signal_mode(SIGINT, mode, sigenv);
@@ -112,6 +106,3 @@ void set_all_signals(t_sig_mode mode, t_sigenv *sigenv)
 // 	set_all_signals(MINI_MODE, &defaults);
 // 	return (defaults);
 // }
-
-
-
