@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 11:16:18 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/24 11:16:33 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/05/29 21:53:03 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	execute_child_process(t_env *env, t_ast_node *node)
 	{
 		ft_printf("minishell: %s: Is not an executable binary\n",
 			node->args[0]);
-		free_ast(node);
+		free_ast(env->root);
 		free_env(env);
 		free_envp(envp);
 		exit(127);

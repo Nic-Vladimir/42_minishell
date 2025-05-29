@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/28 17:53:07 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/05/29 21:54:15 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,16 @@ void	handle_command(t_env *env, char *input)
 
 	print_transient_prompt(input);
 	token_head = tokenize(env->tokenizer, input);
+	if (token_head == NULL)
+	{
+		env->last_exit_code = 2;
+		free_tokens(env->tokenizer);
+		printf("minishell: Syntax error\n");
+		return ;
+	}
 	env->tokenizer->tokens = token_head;
+	// print_tokens(env->tokenizer);
+	// env->tokenizer->tokens = token_head;
 	root = parse(env->tokenizer);
 	env->root = root;
 	env->input = input;

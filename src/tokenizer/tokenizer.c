@@ -6,12 +6,35 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:40:49 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/21 16:55:42 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/05/29 21:06:06 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 #include "../../inc/tokenizer.h"
+
+static t_token	*validate_tokens(t_token *tokens)
+{
+	t_token	*current;
+	t_token	*prev;
+	int		paren_count;
+
+	if (!tokens)
+		return (NULL);
+	current = tokens;
+	prev = NULL;
+	paren_count = 0;
+	while (current && current->type != TOK_EOF)
+	{
+		if (!validate_single_token(current, prev, &paren_count))
+			return (NULL);
+		prev = current;
+		current = current->next;
+	}
+	if (paren_count != 0)
+		return (NULL);
+	return (tokens);
+}
 
 t_token	*tokenize(t_tokenizer_data *tok_data, char *input)
 {
@@ -39,7 +62,10 @@ t_token	*tokenize(t_tokenizer_data *tok_data, char *input)
 		else
 			input++;
 	}
-	return (tok_data->tokens);
+	// if (validate_tokens(tok_data->tokens))
+	// return (tok_data->tokens);
+	// return (NULL);
+	return (validate_tokens(tok_data->tokens));
 }
 
 // t_token	*tokenize(t_tokenizer_data *tok_data, char *input)

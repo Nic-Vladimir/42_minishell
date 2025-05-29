@@ -66,6 +66,8 @@ SRC			= main.c \
 				tokenizer/tokenizer.c \
 				tokenizer/tokenizer_filters.c \
 				tokenizer/tokenizer_utils.c \
+				tokenizer/validate_syntax.c \
+				tokenizer/validate_syntax_utils.c \
 				cleanup.c
 
 OBJ			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
