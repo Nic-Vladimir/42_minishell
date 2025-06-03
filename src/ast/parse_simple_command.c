@@ -67,8 +67,6 @@ t_ast_node	*parse_simple_command(t_tokenizer_data *tok_data)
 	args = malloc(sizeof(char *) * (arg_count + 1));
 	if (!args)
 		return (NULL);
-	// printf("Args: [%d]\n", arg_count);
-	// cmd = ast_new_node(NODE_CMD, args);
 	cmd = init_cmd_node(args, arg_count);
 	if (!cmd)
 	{

@@ -21,7 +21,6 @@ void	ast_execute(t_ast_node *node)
 	if (!node)
 		return ;
 	ast_execute(node->left);
-	printf("Executing: %s\n", node->args ? node->args[0] : "[OPERATOR]");
 	ast_execute(node->right);
 }
 
@@ -199,33 +198,31 @@ t_ast_node	*parse(t_tokenizer_data *tok_data)
 	return (parse_logical_operators(tok_data_cpy));
 }
 
+/*
 // DEBUGGING FUNCTIONS ---
 // Function to get string representation of node types
 const char	*node_type_to_str(t_node_type type)
 {
-	switch (type)
-	{
-	case NODE_CMD:
+	if (type == NODE_CMD)
 		return ("CMD");
-	case NODE_PIPE:
+	else if (type == NODE_PIPE)
 		return ("PIPE");
-	case NODE_REDIR_IN:
+	else if (type == NODE_REDIR_IN)
 		return ("REDIR_IN");
-	case NODE_REDIR_OUT:
+	else if (type == NODE_REDIR_OUT)
 		return ("REDIR_OUT");
-	case NODE_REDIR_APPEND:
+	else if (type == NODE_REDIR_APPEND)
 		return ("APPEND");
-	case NODE_HEREDOC:
+	else if (type == NODE_HEREDOC)
 		return ("HEREDOC");
-	case NODE_AND:
+	else if (type == NODE_AND)
 		return ("AND");
-	case NODE_OR:
+	else if (type == NODE_OR)
 		return ("OR");
-	case NODE_GROUP:
+	else if (type == NODE_GROUP)
 		return ("GROUP");
-	default:
+	else
 		return ("UNKNOWN");
-	}
 }
 
 // Helper function to print indentation
@@ -285,3 +282,4 @@ void	debug_ast(t_ast_node *root)
 	display_ast(root, 0);
 	printf("=======================\n");
 }
+*/

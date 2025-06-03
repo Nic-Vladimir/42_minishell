@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/24 11:59:07 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/03 18:59:15 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ int			execute_redirections(t_env *env, t_ast_node *node, int in_fd,
 				int out_fd);
 static int	execute_logical_op(t_env *env, t_ast_node *node, int in_fd,
 				int out_fd);
-static int	execute_group(t_env *env, t_ast_node *node, int in_fd, int out_fd);
+// static int	execute_group(t_env *env, t_ast_node *node, int in_fd,
+//		int out_fd);
 
 // int	execute_command_expansion(t_env *env, t_ast_node *node, int in_fd,
 //		int out_fd)
@@ -111,7 +112,7 @@ int	execute_node(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 	else if (node->type == NODE_AND || node->type == NODE_OR)
 		return (execute_logical_op(env, node, in_fd, out_fd));
 	else if (node->type == NODE_GROUP)
-		return (execute_group(env, node, in_fd, out_fd));
+		return (execute_node(env, node->left, in_fd, out_fd));
 	else
 	{
 		fprintf(stderr, "Unknown node type in execution\n");
@@ -239,11 +240,12 @@ static int	execute_logical_op(t_env *env, t_ast_node *node, int in_fd,
 	}
 	return (left_status);
 }
-
+/*
 static int	execute_group(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 {
 	return (execute_node(env, node->left, in_fd, out_fd));
 }
+*/
 
 int	execute_ast(t_env *env, t_ast_node *root)
 {

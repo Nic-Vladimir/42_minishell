@@ -55,6 +55,9 @@ typedef struct s_tokenizer_data	t_tokenizer_data;
 # include "sig_hand.h"
 # include "tokenizer.h"
 
+# define PROMPT_PREFIX_OK "\033[38;5;238m╭─\033[38;5;255;48;5;238m ₘᵢₙᵢ🐚 \033[38;5;238;48;5;42m ✔ \033[38;5;42;48;5;238m\033[38;5;255m  "
+# define PROMPT_PREFIX_KO "\033[38;5;238m╭─\033[38;5;255;48;5;238m ₘᵢₙᵢ🐚 \033[38;5;238;48;5;1m ✘ \033[38;5;1;48;5;238m\033[38;5;255m  "
+
 t_token							*tokenize(t_tokenizer_data *data, char *input);
 t_ast_node						*parse(t_tokenizer_data *data);
 void							debug_ast(t_ast_node *root);
@@ -139,5 +142,11 @@ bool							is_redirection_token(t_token_type type);
 bool							validate_special_cases(t_token *current);
 bool							validate_single_token(t_token *current,
 									t_token *prev, int *paren_count);
+void							update_arg_types(t_ast_node *node,
+									int star_index, int len_args,
+									int len_expanded);
+int								calculate_total_args(t_ast_node *node,
+									char **expanded, int *len_args,
+									int *len_expanded);
 
 #endif

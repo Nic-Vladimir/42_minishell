@@ -6,26 +6,11 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 05:47:09 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/21 17:04:46 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/03 18:16:42 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-int	djb2_hash(const char *key)
-{
-	size_t	i;
-	int		hash;
-
-	i = 0;
-	hash = 5381;
-	while (i < ft_strlen(key))
-	{
-		hash = ((hash << 5) + hash) + key[i];
-		i++;
-	};
-	return (hash);
-}
 
 static bool	update_value_if_key_exists(t_bucket *current_bucket, char *key,
 		char *value)

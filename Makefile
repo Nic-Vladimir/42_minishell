@@ -49,6 +49,7 @@ SRC			= main.c \
 				exec_engine/expand_variable.c \
 				exec_engine/expand_command.c \
 				exec_engine/arg_utils.c \
+				exec_engine/copy_args.c \
 				utils/prompt.c \
 				utils/wildcard.c \
 				cmds/export.c \

@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42prague.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 01:30:29 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/28 17:59:13 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/03 19:32:35 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,10 @@ char	*get_prompt(t_env *env)
 	cwd = get_env_value(env, "PWD");
 	if (env->last_exit_code == 0)
 	{
-		prefix = "\033[38;5;238m╭─\033[38;5;255;48;5;238m ₘᵢₙᵢ🐚 "
-					"\033[38;5;238;48;5;42m ✔ "
-					"\033[38;5;42;48;5;238m\033[38;5;255m  ";
+		prefix = PROMPT_PREFIX_OK;
 	}
 	else
-		prefix = "\033[38;5;238m╭─\033[38;5;255;48;5;238m ₘᵢₙᵢ🐚 "
-					"\033[38;5;238;48;5;1m ✘ "
-					"\033[38;5;1;48;5;238m\033[38;5;255m  ";
+		prefix = PROMPT_PREFIX_KO;
 	suffix = "\033[0m\033[38;5;238m\n╰─\033[0m ";
 	prompt = format_prompt(prefix, cwd, suffix);
 	return (prompt);

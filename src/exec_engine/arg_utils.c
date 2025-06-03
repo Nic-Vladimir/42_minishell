@@ -6,13 +6,13 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 23:30:55 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/28 18:35:48 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/03 18:53:31 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static void	update_arg_types(t_ast_node *node, int star_index, int len_args,
+void	update_arg_types(t_ast_node *node, int star_index, int len_args,
 		int len_expanded)
 {
 	int				i;
@@ -20,40 +20,27 @@ static void	update_arg_types(t_ast_node *node, int star_index, int len_args,
 	t_token_type	*new_arg_types;
 	int				new_size;
 
-	// New size = args before * + expanded + args after *
 	new_size = (star_index) + len_expanded + (len_args - star_index - 1);
 	new_arg_types = malloc(sizeof(int) * new_size);
 	if (!new_arg_types)
-		return ; // Handle allocation failure gracefully in real code
-	// Copy types before the * argument
+		return ;
 	i = 0;
 	while (i < star_index)
 	{
 		new_arg_types[i] = node->arg_types[i];
 		i++;
 	}
-	// Assign TOK_WORD to all expanded arguments
 	j = 0;
-	while (j < len_expanded)
-	{
-		new_arg_types[i] = TOK_WORD;
-		i++;
-		j++;
-	}
-	// Copy types after the * argument
+	while (j++ < len_expanded)
+		new_arg_types[i++] = TOK_WORD;
 	while (star_index + 1 < len_args)
-	{
-		new_arg_types[i] = node->arg_types[star_index + 1];
-		i++;
-		star_index++;
-	}
-	// Free old arg_types and replace
+		new_arg_types[i++] = node->arg_types[++star_index];
 	free(node->arg_types);
 	node->arg_types = new_arg_types;
 }
 
-static int	calculate_total_args(t_ast_node *node, char **expanded,
-		int *len_args, int *len_expanded)
+int	calculate_total_args(t_ast_node *node, char **expanded, int *len_args,
+		int *len_expanded)
 {
 	*len_args = 0;
 	while (node->args[*len_args])
@@ -63,7 +50,7 @@ static int	calculate_total_args(t_ast_node *node, char **expanded,
 		(*len_expanded)++;
 	return (*len_args + *len_expanded);
 }
-
+/*
 static void	copy_args_sections(char **args_copy, t_ast_node *node,
 		int star_index, char **expanded, int len_args, int len_expanded)
 {
@@ -110,7 +97,7 @@ char	**copy_args(t_ast_node *node, int star_index, char **expanded)
 	update_arg_types(node, star_index, len_args, len_expanded);
 	return (args_copy);
 }
-
+*/
 // char	**copy_args(t_ast_node *node, int star_index, char **expanded)
 //{
 //	char	**args_copy;

@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:40:49 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/29 21:06:06 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/03 19:26:30 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,6 @@ t_token	*tokenize(t_tokenizer_data *tok_data, char *input)
 		else
 			input++;
 	}
-	// if (validate_tokens(tok_data->tokens))
-	// return (tok_data->tokens);
-	// return (NULL);
 	return (validate_tokens(tok_data->tokens));
 }
 

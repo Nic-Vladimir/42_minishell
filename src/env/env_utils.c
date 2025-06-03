@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:02:41 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/21 16:29:23 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/03 18:16:40 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,41 @@ char	*find_executable(t_env *env, const char *command)
 	}
 	free(path_copy);
 	return (result);
+}
+
+char	*get_env_value(t_env *env, const char *key)
+{
+	int			index;
+	t_bucket	*current_node;
+
+	index = djb2_hash(key) % env->vars->size;
+	if (index < 0)
+		index *= -1;
+	current_node = env->vars->buckets[index];
+	while (current_node)
+	{
+		if (strcmp(current_node->key, key) == 0)
+		{
+			return (current_node->value);
+		}
+		current_node = current_node->next;
+	}
+	return (NULL);
+}
+
+int	djb2_hash(const char *key)
+{
+	size_t	i;
+	int		hash;
+
+	i = 0;
+	hash = 5381;
+	while (i < ft_strlen(key))
+	{
+		hash = ((hash << 5) + hash) + key[i];
+		i++;
+	}
+	return (hash);
 }
 
 // char	*find_executable(t_env *env, const char *command)

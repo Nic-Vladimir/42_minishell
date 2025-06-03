@@ -86,9 +86,6 @@ t_ast_node	*ast_new_node(t_node_type type, char **args)
 	init_t_ast(node);
 	node->type = type;
 	node->args = args;
-	// node->arg_types = NULL;
-	// node->left = NULL;
-	// node->right = NULL;
 	node = ast_set_node_arg_types(node, args);
 	return (node);
 }

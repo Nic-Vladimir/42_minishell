@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
+/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/23 21:34:09 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/24 17:09:53 by mgavornik        ###   ########.fr       */
+/*   Created: 2025/06/03 18:20:38 by vnicoles          #+#    #+#             */
+/*   Updated: 2025/06/03 18:21:18 by vnicoles         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
@@ -21,17 +21,9 @@ static t_ast_node	*handle_multiple_redirections(t_ast_node *node)
 	{
 		node = node->right;
 		if (node->type == NODE_REDIR_OUT)
-		{
 			temp_fd = open(node->args[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			printf("Opened %d with > mode along the way\n", temp_fd);
-			// close(open(node->args[0], O_WRONLY | O_CREAT | O_TRUNC, 0644));
-		}
 		else
-		{
 			temp_fd = open(node->args[0], O_WRONLY | O_CREAT | O_APPEND, 0644);
-			printf("Opened %d with >> mode along the way\n", temp_fd);
-			// close(open(node->args[0], O_WRONLY | O_CREAT | O_APPEND, 0644));
-		}
 		close(temp_fd);
 	}
 	return (node);
