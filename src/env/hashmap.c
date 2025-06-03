@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   hashmap.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 05:47:09 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/03 18:16:42 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/04 00:13:49 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/minishell.h"
 
@@ -43,6 +43,7 @@ int	hashmap_insert(t_env *env, char *key, char *value)
 	new_bucket = (t_bucket *)malloc(sizeof(t_bucket));
 	if (!new_bucket)
 		return (1);
+	ft_memset(new_bucket, 0, sizeof(t_bucket));
 	new_bucket->key = ft_strdup(key);
 	new_bucket->value = ft_strdup(value);
 	if (!new_bucket->key || !new_bucket->value)
@@ -104,6 +105,7 @@ char	**get_envp_from_hashmap(t_env *env)
 	envp = malloc((count + 1) * sizeof(char *));
 	if (!envp)
 		return (NULL);
+	ft_memset(envp, 0, (count + 1) * sizeof(char *));
 	while (j < env->vars->size)
 	{
 		current = env->vars->buckets[j];

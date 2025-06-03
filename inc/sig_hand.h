@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:09:02 by mgavorni          #+#    #+#             */
-/*   Updated: 2025/06/03 21:36:48 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/03 22:23:15 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -16,6 +16,7 @@
 #include <sys/signal.h>
 #include <sys/wait.h>
 #include <signal.h>
+
 
 typedef struct s_env t_env;
 
@@ -27,10 +28,9 @@ typedef struct s_sig_def
 
 typedef enum e_sig_mode
 {
-    MINI_MODE,
+    MINI_MODE = 2,
     NORMAL_MODE,
     CD,
-    EXIT,
 } t_sig_mode;
 
 typedef struct s_sigenv
@@ -38,7 +38,7 @@ typedef struct s_sigenv
     t_sig_mode current_mode;
     t_env *env;
     t_sig_def *def;
-    
+    int status;
 }t_sigenv;
 
 

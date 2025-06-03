@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:44:51 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/21 16:45:54 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/03 23:58:38 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/minishell.h"
 #include "../../inc/tokenizer.h"
@@ -20,6 +20,7 @@ t_token	*new_token(t_token_type type, char *value, size_t len)
 	token = (t_token *)malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
+	ft_memset(token, 0, sizeof(t_token));
 	token->type = type;
 	token->value = malloc(len + 1);
 	if (!token->value)

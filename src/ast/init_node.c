@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   init_node.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:11:16 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/28 17:13:29 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/04 00:15:29 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/ast.h"
 #include "../../inc/minishell.h"
@@ -20,11 +20,12 @@ static void	init_t_ast(t_ast_node *node)
 	node->left = NULL;
 	node->right = NULL;
 	node->type = NODE_CMD;
+
 }
 
 t_ast_node	*init_cmd_node(char **args, int arg_count)
 {
-	t_ast_node	*node;
+	t_ast_node	*node = NULL;
 	int			j;
 
 	j = 0;
@@ -42,6 +43,7 @@ t_ast_node	*init_cmd_node(char **args, int arg_count)
 			free(args);
 			return (NULL);
 		}
+		ft_memset(node->arg_types, 0, sizeof(t_token_type) * arg_count);
 		while (j < arg_count)
 			node->arg_types[j++] = TOK_WORD;
 	}
@@ -67,6 +69,7 @@ static t_ast_node	*ast_set_node_arg_types(t_ast_node *node, char **args)
 				free(node);
 				return (NULL);
 			}
+			ft_memset(node->arg_types, 0, sizeof(t_token_type) * i);
 			while (j < i)
 				node->arg_types[j++] = TOK_WORD;
 		}

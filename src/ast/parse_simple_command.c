@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parse_simple_command.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:02:55 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/28 17:07:53 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/04 00:16:13 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/ast.h"
 #include "../../inc/minishell.h"
@@ -67,6 +67,7 @@ t_ast_node	*parse_simple_command(t_tokenizer_data *tok_data)
 	args = malloc(sizeof(char *) * (arg_count + 1));
 	if (!args)
 		return (NULL);
+	ft_memset(args, 0, sizeof(char *) * (arg_count + 1));
 	cmd = init_cmd_node(args, arg_count);
 	if (!cmd)
 	{

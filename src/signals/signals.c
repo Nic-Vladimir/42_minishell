@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:13:28 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/28 18:05:40 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/04 01:16:36 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/minishell.h"
 
@@ -62,7 +62,7 @@ void	set_signal_mode(int sig, t_sig_mode mode, t_sigenv *env)
 		sa.sa_handler = NULL;
 		sa.sa_flags = SA_RESTART;
 		sigaction(sig, &sa, NULL);
-		// g_glob_sig.current_mode = mode;
+		env->status = 1;		// g_glob_sig.current_mode = mode;
 	}
 	env->current_mode = mode;
 }
@@ -87,7 +87,7 @@ void	sig_malinit(t_sigenv **sigenv)
 	(*sigenv)->env = NULL;
 	sigaction(SIGINT, NULL, &(*sigenv)->def->sigint);
 	sigaction(SIGQUIT, NULL, &(*sigenv)->def->sigquit);
-	set_all_signals(MINI_MODE, *sigenv);
+	set_all_signals(NORMAL_MODE, *sigenv);
 }
 
 void	set_all_signals(t_sig_mode mode, t_sigenv *sigenv)

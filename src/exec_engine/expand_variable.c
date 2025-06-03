@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_var.c                                       :+:      :+:    :+:   */
+/*   expand_variable.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 22:31:05 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/23 23:07:27 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/03 23:59:50 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/minishell.h"
 
@@ -26,6 +26,7 @@ static char	*get_expand_value(t_env *env, const char *input, int start, int end)
 	var_name = malloc(len + 1);
 	if (!var_name)
 		return (NULL);
+	ft_memset(var_name, 0, len + 1);
 	ft_strlcpy(var_name, &input[start], len + 1);
 	value = get_env_value(env, var_name);
 	free(var_name);

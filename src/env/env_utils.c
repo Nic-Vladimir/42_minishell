@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:02:41 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/03 18:16:40 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/04 00:14:14 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/minishell.h"
 
@@ -32,6 +32,7 @@ static char	*search_in_directory(const char *dir, const char *command)
 	full_path = malloc(path_len);
 	if (!full_path)
 		return (NULL);
+	ft_memset(full_path, 0, path_len);
 	snprintf(full_path, path_len, "%s/%s", dir, command);
 	result = check_executable_path(full_path);
 	free(full_path);
