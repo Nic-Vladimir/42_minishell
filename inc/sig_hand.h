@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:09:02 by mgavorni          #+#    #+#             */
-/*   Updated: 2025/05/24 16:55:18 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/03 21:36:48 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -30,6 +30,7 @@ typedef enum e_sig_mode
     MINI_MODE,
     NORMAL_MODE,
     CD,
+    EXIT,
 } t_sig_mode;
 
 typedef struct s_sigenv
