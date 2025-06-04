@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   exec_command.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 11:16:18 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/29 21:53:03 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/04 14:46:15 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/minishell.h"
 
@@ -60,11 +60,15 @@ int	execute_command(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 
 	pid = fork();
 	if (pid == 0)
-	{
+	{	
+		set_all_signals(NORMAL_MODE, env->sigenv);
 		setup_child_fds(in_fd, out_fd);
 		execute_child_process(env, node);
 	}
+	signal(SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
+	set_all_signals(MINI_MODE, env->sigenv);
+	write(STDOUT_FILENO, "\n", 1);
 	if (in_fd != STDIN_FILENO)
 		close(in_fd);
 	if (out_fd != STDOUT_FILENO)

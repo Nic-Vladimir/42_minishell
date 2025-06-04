@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 10:16:04 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/04 11:09:30 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/04 14:48:02 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -47,13 +47,19 @@ void mini_sigint_handler(int sig) {
     sig = 1;
     if (sig)
     {
+        //fprintf(stderr, "Signal recognized\n");
 		static int first_interrupt = 1;
-        if (first_interrupt) {
+        if (first_interrupt) 
+        {
             first_interrupt = 0;
-        } else {
+        } 
+        else 
+        {
             write(STDOUT_FILENO, "^C", 2);
+
         }
         custom_prompt_handler();
+        //fprintf(stderr, "CTRL-C\n");
     }
 }
 // 	// ssize_t status;
@@ -104,7 +110,6 @@ void	get_env(void *arg)
 void	cd_handler(int sig, t_env *env)
 {
 	(void)sig;
-	fprintf(stderr, "cd_handler %p\n", env);
 	printf("Signal recognized\n");
 	printf("exit\n");
 	execute_exit(env);
