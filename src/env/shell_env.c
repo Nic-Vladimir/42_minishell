@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 18:06:34 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/04 01:01:12 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/04 17:00:22 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -54,39 +54,58 @@ static t_tokenizer_data	*init_tok_data(void)
 //     hashmap_insert(env, res[0], res[1]);  // hashmap_insert copies with ft_strdup
 //     free_str_array(res);
 // }
-static void	insert_env_var(t_env *env, char *envp_entry)
-{
-	char	**res;
-	char	*key;
-	char	*value;
 
-	res = ft_split(envp_entry, '=');
-	if (!res || !res[0] || !res[1])
-	{
-		if (res)
-			free_str_array(res);
-		return ;
-	}
-	key = malloc(strlen(res[0]) + 1);
-	if(!key)
-	{
-		free_str_array(res);
-		return ;
-	}
-	value = malloc(strlen(res[1]) + 1);
-	if(!value)
-	{
-		free(key);
-		free_str_array(res);
-		return ;
-	}
-	strcpy(key, res[0]);
-	strcpy(value, res[1]);
-	hashmap_insert(env, key, value);
-	free(key);
-	free(value);
-	free_str_array(res);
+static void insert_env_var(t_env *env, char *envp_entry)
+{
+	char *key;
+	char *value;
+    char **res = ft_split(envp_entry, '=');
+    if (!res || !res[0] || !res[1])
+    {
+        if (res) free_str_array(res);
+        return;
+    }
+    key = strdup(res[0]);
+    value = strdup(res[1]);
+    if (key && value)
+        hashmap_insert(env, key, value);
+    free(key);
+    free(value);
+    free_str_array(res);
 }
+// static void	insert_env_var(t_env *env, char *envp_entry)
+// {
+// 	char	**res;
+// 	char	*key;
+// 	char	*value;
+
+// 	res = ft_split(envp_entry, '=');
+// 	if (!res || !res[0] || !res[1])
+// 	{
+// 		if (res)
+// 			free_str_array(res);
+// 		return ;
+// 	}
+// 	key = malloc(strlen(res[0]) + 1);
+// 	if(!key)
+// 	{
+// 		free_str_array(res);
+// 		return ;
+// 	}
+// 	value = malloc(strlen(res[1]) + 1);
+// 	if(!value)
+// 	{
+// 		free(key);
+// 		free_str_array(res);
+// 		return ;
+// 	}
+// 	strcpy(key, res[0]);
+// 	strcpy(value, res[1]);
+// 	hashmap_insert(env, key, value);
+// 	free(key);
+// 	free(value);
+// 	free_str_array(res);
+// }
 
 static t_hashmap	*init_hashmap_vars(void)
 {
