@@ -51,7 +51,7 @@ char	*get_prompt(t_env *env)
 	}
 	else
 		prefix = PROMPT_PREFIX_KO;
-	suffix = "\033[0m\033[38;5;238m\n╰─\033[0m ";
+	suffix = PROMPT_SUFFIX;
 	prompt = format_prompt(prefix, cwd, suffix);
 	return (prompt);
 }
