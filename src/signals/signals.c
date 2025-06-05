@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:13:28 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/04 14:40:02 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/05 15:34:35 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -36,6 +36,8 @@ void	set_signal_mode(int sig, t_sig_mode mode, t_sigenv *env)
 	sigemptyset(&sa.sa_mask);
 	if (mode == MINI_MODE)
 	{
+		// fprintf(stderr, "sig_mini %d\n", sig);
+		// fprintf(stderr, "mode_mini %d\n", env->current_mode);
 		if (sig == SIGINT)
 		{
 			sa.sa_handler = mini_sigint_handler;
@@ -52,12 +54,19 @@ void	set_signal_mode(int sig, t_sig_mode mode, t_sigenv *env)
 	}
 	if (mode == NORMAL_MODE)
 	{
-		sigaction(SIGINT, &env->def->sigint, NULL);
-		sigaction(SIGQUIT, &env->def->sigquit, NULL);
+		// fprintf(stderr, "sig_normal %d\n", sig);
+		// fprintf(stderr, "mode_normal %d\n", env->current_mode);
+		if (sig == SIGINT)
+			sigaction(SIGINT, &env->def->sigint, NULL);
+		else if (sig == SIGQUIT)
+			sigaction(SIGQUIT, &env->def->sigquit, NULL);
 		// g_glob_sig.current_mode = mode;
 	}
 	if (mode == CD)
 	{
+		
+		// fprintf(stderr, "sig_cd %d\n", sig);
+		// fprintf(stderr, "mode_cd %d\n", env->current_mode);
 		sigemptyset(&sa.sa_mask);
 		sa.sa_handler = NULL;
 		sa.sa_flags = SA_RESTART;

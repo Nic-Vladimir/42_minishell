@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 22:27:53 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/23 22:56:01 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/05 16:43:41 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/minishell.h"
 
@@ -25,17 +25,20 @@ static int	status_check(int *pipe_fds, int status, char *expanded, char *line)
 	return (0);
 }
 
-static int	process_heredoc_input(t_env *env, char *delimiter, int write_fd)
+int	process_heredoc_input(t_env *env, char *delimiter, int write_fd)
 {
 	char	*line;
 	char	*expanded;
 	ssize_t	status;
 
 	status = 0;
+	line = NULL;
 	while (1)
 	{
+		if(!line)
+			mini_sigint_handler(EOF);		
 		line = readline("heredoc> ");
-		if (!line || ft_strcmp(line, delimiter) == 0)
+		if (ft_strcmp(line, delimiter) == 0)
 		{
 			if (line)
 				free(line);
@@ -54,21 +57,21 @@ static int	process_heredoc_input(t_env *env, char *delimiter, int write_fd)
 	return (status);
 }
 
-int	collect_heredoc(t_env *env, char *delimiter, int *write_fd)
-{
-	int		pipe_fds[2];
-	ssize_t	status;
+// int	collect_heredoc(t_env *env, char *delimiter, int *write_fd)
+// {
+// 	int		pipe_fds[2];
+// 	ssize_t	status;
 
-	if (pipe(pipe_fds) == -1)
-	{
-		perror("pipe failed");
-		return (-1);
-	}
-	status = process_heredoc_input(env, delimiter, pipe_fds[1]);
-	close(pipe_fds[1]);
-	*write_fd = pipe_fds[0];
-	return (status);
-}
+// 	if (pipe(pipe_fds) == -1)
+// 	{
+// 		perror("pipe failed");
+// 		return (-1);
+// 	}
+// 	status = process_heredoc_input(env, delimiter, pipe_fds[1]);
+// 	close(pipe_fds[1]);
+// 	*write_fd = pipe_fds[0];
+// 	return (status);
+// }  ///lol//
 
 // int	collect_heredoc(t_env *env, char *delimiter, int *write_fd)
 //{

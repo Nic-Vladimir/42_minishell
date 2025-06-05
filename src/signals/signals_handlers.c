@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 10:16:04 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/04 14:48:02 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/05 16:18:15 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -97,16 +97,39 @@ void mini_sigint_handler(int sig) {
 // 		sig = SIGINT;
 // 	}
 // }
+// void herdoc_handler(int sig) {
+
+//     (void)sig;
+//     printf("Signal recognized\n");
+//     printf("exit\n");
+//     exit(EXIT_SUCCESS);
+// }
+
 void	get_env(void *arg)
 {
 	t_env	*env;
 
 	env = (t_env *)arg;
 	fprintf(stderr, "env addr2: %p\n", env);
-	free_env(env);
+	//free_env(env);
 	printf("here\n");
 }
+// void herdoc_hand(int sig) 
+// {
+//     struct sigaction	sa;
 
+//     sa.sa_handler = 
+//     sa.sa_flags = SA_RESTART;
+//     sigaction(SIGINT, &sa, NULL);
+// }
+void tst_handler(int sig) {
+
+    (void)sig;
+    printf("Signal recognized0\n");
+	printf("exit0\n");
+    exit(0);
+    
+}
 void	cd_handler(int sig, t_env *env)
 {
 	(void)sig;

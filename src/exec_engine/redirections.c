@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 18:20:38 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/04 13:30:04 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/04 17:16:41 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -37,11 +37,9 @@ static int	setup_redirection_fd(t_env *env, t_ast_node **node)
 	new_fd = -1;
 	if ((*node)->type == NODE_HEREDOC)
 	{
-		set_all_signals(NORMAL_MODE, env->sigenv);
 		delimiter = (*node)->args[0];
 		if (collect_heredoc(env, delimiter, &new_fd) == -1)
 			return (-1);
-		set_all_signals(MINI_MODE, env->sigenv);
 	}
 	else if ((*node)->type == NODE_REDIR_IN)
 		new_fd = open((*node)->args[0], O_RDONLY);

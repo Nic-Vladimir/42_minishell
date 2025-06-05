@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/24 17:17:55 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/05 14:41:37 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -49,11 +49,14 @@ typedef struct s_env			t_env;
 typedef struct s_ast_node		t_ast_node;
 typedef struct s_token			t_token;
 typedef struct s_tokenizer_data	t_tokenizer_data;
+typedef	struct s_child_data	t_child_data;
+typedef struct s_heredoc_data	t_heredoc_data;
 
 # include "ast.h"
 # include "env.h"
 # include "sig_hand.h"
 # include "tokenizer.h"
+# include "pedo.h"
 
 # define PROMPT_PREFIX_OK "\033[38;5;238m╭─\033[38;5;255;48;5;238m ₘᵢₙᵢ🐚 \033[38;5;238;48;5;42m ✔ \033[38;5;42;48;5;238m\033[38;5;255m  "
 # define PROMPT_PREFIX_KO "\033[38;5;238m╭─\033[38;5;255;48;5;238m ₘᵢₙᵢ🐚 \033[38;5;238;48;5;1m ✘ \033[38;5;1;48;5;238m\033[38;5;255m  "
@@ -119,8 +122,8 @@ void							format_envp(char **envp);
 char							*handle_quotes(t_ast_node *node, int *i);
 int								execute_redirections(t_env *env,
 									t_ast_node *node, int in_fd, int out_fd);
-int								collect_heredoc(t_env *env, char *delimiter,
-									int *write_fd);
+//int								collect_heredoc(t_env *env, char *delimiter,
+//									int *write_fd);
 char							*expand_var(t_env *env, const char *input);
 char							**copy_args(t_ast_node *node, int star_index,
 									char **expanded);
@@ -149,4 +152,11 @@ int								calculate_total_args(t_ast_node *node,
 									char **expanded, int *len_args,
 									int *len_expanded);
 
+
+int	process_heredoc_input(t_env *env, char *delimiter, int write_fd);
+int execute_in_child(t_child_data *child_data);
+int collect_heredoc(t_env *env, char *delimiter, int *write_fd);
+void init_structs(t_heredoc_data *hd, t_child_data *child);
+void child_linker(t_child_data *child, t_heredoc_data *data ,int (*func)(void *data));
+void herdoc_linker(t_heredoc_data *hd, t_env *env, char *delimiter);
 #endif

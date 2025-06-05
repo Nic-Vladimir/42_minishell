@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:09:02 by mgavorni          #+#    #+#             */
-/*   Updated: 2025/06/03 22:23:15 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/05 16:16:33 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -47,7 +47,7 @@ extern volatile sig_atomic_t sig;
 // extern t_sig_data g_glob_sig;
 
 void sig_malinit(t_sigenv **sigenv);
-
+void tst_handler(int sig);
 void set_signal_mode(int sig, t_sig_mode mode, t_sigenv *env);
 void set_all_signals(t_sig_mode mode, t_sigenv *sigenv);
 t_sig_def init_signal_handlers(void);

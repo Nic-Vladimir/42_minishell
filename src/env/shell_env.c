@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 18:06:34 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/04 17:00:22 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/04 17:01:56 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -65,8 +65,8 @@ static void insert_env_var(t_env *env, char *envp_entry)
         if (res) free_str_array(res);
         return;
     }
-    key = strdup(res[0]);
-    value = strdup(res[1]);
+    key = ft_strdup(res[0]);
+    value = ft_strdup(res[1]);
     if (key && value)
         hashmap_insert(env, key, value);
     free(key);
