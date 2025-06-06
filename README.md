@@ -13,7 +13,7 @@ typedef struct s_command_data
 <h2> 2) Define your function: </h2>
 
 ```C
-cstatic int command_child_func(void *data)
+static int command_child_func(void *data)
 {
     t_command_data *cmd = (t_command_data *)data;
     // Execute command logic
@@ -24,7 +24,7 @@ cstatic int command_child_func(void *data)
 <h2> 3)Use the generic executor: </h2>
 
 ```C
-cint execute_command(char **args, t_env *env)
+int execute_command(char **args, t_env *env)
 {
     t_command_data cmd_data = {args, env, fd_in, fd_out};
     t_child_data child_data = {&cmd_data, command_child_func, NULL, CHILD_SIG_DEFAULT};
