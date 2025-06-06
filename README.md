@@ -91,7 +91,7 @@ int command_child_func(void *data)
 
 ```
 
-<h2> 3. Your High-Level Interface (execute_simple_command)<\h2>
+<h2> 3. Your High-Level Interface (execute_simple_command)</h2>
 
 ```C
 int execute_simple_command(char **args)
