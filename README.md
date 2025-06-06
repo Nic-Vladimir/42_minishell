@@ -1,7 +1,7 @@
 <h2> 1)Define your data structure: </h2>
 
-```bash
-ctypedef struct s_command_data
+```C
+typedef struct s_command_data
 {
     char **args;
     t_env *env;
