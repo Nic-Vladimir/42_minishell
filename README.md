@@ -26,7 +26,7 @@ cstatic int command_child_func(void *data)
 ```C
 cint execute_command(char **args, t_env *env)
 {
-    t_command_data cmd_data = {args, env, 0, 1};
+    t_command_data cmd_data = {args, env, fd_in, fd_out};
     t_child_data child_data = {&cmd_data, command_child_func, NULL, CHILD_SIG_DEFAULT};
     
     return execute_in_child(&child_data);
