@@ -58,7 +58,7 @@ Instead of writing fork/wait code every time you want to execute a command,<p>
 you write it once in a generic function, then reuse it everywhere by passing <p>
 different functions to it.
 How It Works - Step by Step
-<h2> 1. The Generic Child Creator (execute_in_child) <\h2>
+<h2> 1. The Generic Child Creator (execute_in_child) </h2>
 
 ```C
 int execute_in_child(t_child_executor *executor)
