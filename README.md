@@ -12,7 +12,7 @@ typedef struct s_command_data
 
 <h2> 2) Define your function: </h2>
 
-```bash
+```C
 cstatic int command_child_func(void *data)
 {
     t_command_data *cmd = (t_command_data *)data;
@@ -23,7 +23,7 @@ cstatic int command_child_func(void *data)
 
 <h2> 3)Use the generic executor: </h2>
 
-```bash
+```C
 cint execute_command(char **args, t_env *env)
 {
     t_command_data cmd_data = {args, env, 0, 1};
