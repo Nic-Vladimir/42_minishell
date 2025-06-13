@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/04 14:48:32 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/11 22:22:39 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -65,7 +65,8 @@ void	handle_command(t_env *env, char *input)
 	env->tokenizer->tokens = token_head;
 	status = execute_ast(env, root);
 	free_tokens(env->tokenizer);
-	free_ast(root);
+	//env->root = 
+	free_ast(&env->root);
 	env->last_exit_code = status;
 	env->input = NULL;
 
@@ -108,7 +109,11 @@ int	main(int argc, char **argv, char **envp)
 		free(prompt);
 		if (check_input(env, input))
 			continue ;
-		handle_command(env, input);
+		if(sig <= 1 && input)
+		{
+			handle_command(env, input);
+		}
+		reset_terminal_for_readline();
 		free(input);
 		input = NULL;
 	}

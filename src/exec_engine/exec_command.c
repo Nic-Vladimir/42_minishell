@@ -6,13 +6,13 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 11:16:18 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/04 14:46:15 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/13 14:59:24 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "../../inc/minishell.h"
 
-static void	setup_child_fds(int in_fd, int out_fd)
+void	setup_child_fds(int in_fd, int out_fd)
 {
 	if (in_fd != STDIN_FILENO)
 	{
@@ -26,7 +26,7 @@ static void	setup_child_fds(int in_fd, int out_fd)
 	}
 }
 
-static void	execute_child_process(t_env *env, t_ast_node *node)
+ void	execute_child_process(t_env *env, t_ast_node *node)
 {
 	char	**envp;
 	char	*exec_path;
@@ -37,7 +37,7 @@ static void	execute_child_process(t_env *env, t_ast_node *node)
 	{
 		ft_printf("minishell: %s: Is not an executable binary\n",
 			node->args[0]);
-		free_ast(env->root);
+		free_ast(&env->root);
 		free_env(env);
 		free_envp(envp);
 		exit(127);
@@ -45,7 +45,7 @@ static void	execute_child_process(t_env *env, t_ast_node *node)
 	if (execve(exec_path, node->args, envp) == -1)
 	{
 		ft_printf("minishell: %s: Is not an executable binary\n", exec_path);
-		free_ast(env->root);
+		free_ast(&env->root);
 		free(exec_path);
 		free_envp(envp);
 		free_env(env);

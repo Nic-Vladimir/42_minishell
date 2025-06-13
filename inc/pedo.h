@@ -6,15 +6,14 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 12:42:02 by mgavornik         #+#    #+#             */
-/*   Updated: 2025/06/05 15:24:27 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/13 15:30:12 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #ifndef PEDO_H
 #define PEDO_H
 
-#define CHILD_SIG_DEFAULT 0
-#define CHILD_SIG_IGNORE 1
+#define CHILD_SIG_DEFAULT 1
 #define CHILD_SIG_CUSTOM 2
 
 #include "../inc/minishell.h"
@@ -35,10 +34,11 @@ typedef struct s_heredoc_data
 } t_heredoc_data;
 
 
-int execute_in_child(t_child_data *child_data);
-int collect_heredoc(t_env *env, char *delimiter, int *write_fd);
-void init_structs(t_heredoc_data *hd, t_child_data *child);
-void child_linker(t_child_data *child, t_heredoc_data *data ,int (*func)(void *data));
-void herdoc_linker(t_heredoc_data *hd, t_env *env, char *delimiter);
+
+// int execute_in_child(t_env *env, t_child_data *child_data);
+// int collect_heredoc(t_env *env, char *delimiter, int *write_fd);
+// void init_structs(t_heredoc_data *hd, t_child_data *child);
+// void child_linker(t_child_data *child, t_heredoc_data *data ,int (*func)(void *data));
+// void herdoc_linker(t_heredoc_data *hd, t_env *env, char *delimiter);
 
 #endif

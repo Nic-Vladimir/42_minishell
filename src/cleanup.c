@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 21:35:07 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/04 00:39:28 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/11 19:10:47 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -32,34 +32,36 @@ void	free_tokens(t_tokenizer_data *tokenizer)
 	tokenizer->tail = NULL;
 }
 
-void	free_ast(t_ast_node *node)
+void free_ast(t_ast_node **node_ptr)
 {
-	static t_ast_node *last_freed = NULL;
     int i;
-
-    if (!node || node == last_freed)
+	t_ast_node *node;
+	
+    if (!node_ptr || !*node_ptr)
 	{
         return;
 	}
-	last_freed = node;
-	if (node->left != NULL)
-		free_ast(node->left);
-	if (node->right != NULL)
-		free_ast(node->right);
-	if (node->args)
-	{
-		i = 0;
-		while (node->args[i])
-		{
-			free(node->args[i]);
-			i++;
-		}
-		free(node->args);
-	}
-	if (node->arg_types != NULL)
-		free(node->arg_types);
-	free(node);
+	node = *node_ptr;
+    if (node->left)
+        free_ast(&(node->left));
+    if (node->right)
+        free_ast(&(node->right));
+    if (node->args)
+    {
+        i = 0;
+        while (node->args[i])
+        {
+            free(node->args[i]);
+            i++;
+        }
+        free(node->args);
+    }
+    if (node->arg_types)
+        free(node->arg_types);
+    free(node);
+    *node_ptr = NULL;
 }
+
 
 static void	free_hashmap(t_hashmap *hashmap)
 {

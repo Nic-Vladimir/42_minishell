@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/05 14:41:37 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/13 19:35:39 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -78,7 +78,7 @@ char							*get_env_value(t_env *env, const char *key);
 char							*get_prompt(t_env *env);
 void							print_transient_prompt(char *command);
 void							free_tokens(t_tokenizer_data *tokenizer);
-void							free_ast(t_ast_node *node);
+void							free_ast(t_ast_node **node);
 void							free_env(t_env *env);
 char							*expand_wildcard(char *arg);
 int								execute_export(t_env *env, t_ast_node *node,
@@ -153,10 +153,18 @@ int								calculate_total_args(t_ast_node *node,
 									int *len_expanded);
 
 
+
 int	process_heredoc_input(t_env *env, char *delimiter, int write_fd);
-int execute_in_child(t_child_data *child_data);
+int execute_in_child(t_env *env, t_child_data *child_data, int in_fd, int out_fd);
 int collect_heredoc(t_env *env, char *delimiter, int *write_fd);
 void init_structs(t_heredoc_data *hd, t_child_data *child);
 void child_linker(t_child_data *child, t_heredoc_data *data ,int (*func)(void *data));
 void herdoc_linker(t_heredoc_data *hd, t_env *env, char *delimiter);
+void	setup_child_fds(int in_fd, int out_fd);
+void reset_terminal_for_readline(void);
+int execute_cleanup(t_env *env);
+void	execute_child_process(t_env *env, t_ast_node *node);
+void debug_print_heredoc_content(int read_fd);
+
+
 #endif

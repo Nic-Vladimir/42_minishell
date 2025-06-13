@@ -6,11 +6,12 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:02:59 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/03 22:31:45 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/11 21:36:30 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "../../inc/minishell.h"
+#include <termios.h>
 
 void	ft_free_split(char **res)
 {
@@ -31,13 +32,44 @@ void	clean_rl(void)
 	clear_history();
 	rl_deprep_terminal();
 }
-
-int	execute_exit(t_env *env)
+void reset_terminal_for_readline(void)
 {
-	if (env->root)
-		free_ast(env->root);
-	if(env)
+    struct termios term;
+    
+    if (tcgetattr(0, &term) == 0)
+    {
+        term.c_lflag |= (ICANON | ECHO);
+        
+        tcsetattr(0, TCSANOW, &term);
+    }
+    rl_on_new_line();
+    rl_replace_line("", 0);
+	write(STDOUT_FILENO, "\n", 1);
+	rl_redisplay();
+
+}
+int execute_exit(t_env *env)
+{
+	if (env)
+	{
+		if (env->root)
+			free_ast(&(env->root));
 		free_env(env);
+	}
 	clean_rl();
-	exit(0);
+	reset_terminal_for_readline();
+	exit(-1);
+}
+
+int execute_cleanup(t_env *env)
+{
+	if (env)
+	{
+		if (env->root)
+			free_ast(&(env->root));
+		free_env(env);
+	}
+	clean_rl();
+	reset_terminal_for_readline();
+	return (0);
 }

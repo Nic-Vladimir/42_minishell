@@ -6,7 +6,7 @@
 #    By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/06/05 14:33:16 by mgavornik        ###   ########.fr        #
+#    Updated: 2025/06/13 20:39:34 by mgavornik        ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -24,7 +24,7 @@ CLEAR	= \r\033[Ks
 
 # --- Vars ---
 NAME		= minishell
-CC			= gcc -g
+CC			= gcc -g 
 CFLAGS		= -Wall -Wextra -Werror -I $(INC_DIR)
 
 # --- Paths ---
@@ -44,7 +44,7 @@ SRC			= main.c \
 				env/hashmap.c \
 				exec_engine/exec_engine.c \
 				exec_engine/exec_command.c \
-				pedo.c\
+				signals/pedo.c\
 				exec_engine/heredoc.c \
 				exec_engine/redirections.c \
 				exec_engine/expand_variable.c \
