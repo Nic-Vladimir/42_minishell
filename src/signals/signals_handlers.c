@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 10:16:04 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/13 20:28:34 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/17 08:33:42 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -27,13 +27,14 @@ void custom_prompt_handler(void)
     {
         len = newline_pos - prompt; 
         write(STDOUT_FILENO, prompt, len);         
-		 write(STDOUT_FILENO, "\n", 1);    
+		write(STDOUT_FILENO, "\n", 1);    
     }
-    else
-        write(STDOUT_FILENO, "\n", 1);
     rl_replace_line("", 0);      
-	rl_on_new_line();                    
-	rl_redisplay();                 
+	rl_on_new_line();
+    if(ft_strcmp("heredoc> ", prompt) != 0)
+    {
+        rl_redisplay();
+    }            
 	if (current_input && *current_input)
         printf("%s", current_input);
     sig = SIGINT;
@@ -68,14 +69,6 @@ void	get_env(void *arg)
 	printf("here\n");
 }
 
-void tst_handler(int sig) {
-
-    fprintf(stderr, "tst_handlersig: %d\n", sig);
-    printf("Signal recognized0\n");
-	printf("exit0\n");
-    exit(1);
-    
-}
 void	cd_handler(int sig, t_env *env)
 {
 	(void)sig;

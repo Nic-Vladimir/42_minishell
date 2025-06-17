@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:02:59 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/11 21:36:30 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/17 08:36:11 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -57,19 +57,5 @@ int execute_exit(t_env *env)
 		free_env(env);
 	}
 	clean_rl();
-	reset_terminal_for_readline();
 	exit(-1);
-}
-
-int execute_cleanup(t_env *env)
-{
-	if (env)
-	{
-		if (env->root)
-			free_ast(&(env->root));
-		free_env(env);
-	}
-	clean_rl();
-	reset_terminal_for_readline();
-	return (0);
 }

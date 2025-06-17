@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/11 22:22:39 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/17 08:37:17 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -109,11 +109,7 @@ int	main(int argc, char **argv, char **envp)
 		free(prompt);
 		if (check_input(env, input))
 			continue ;
-		if(sig <= 1 && input)
-		{
-			handle_command(env, input);
-		}
-		reset_terminal_for_readline();
+		handle_command(env, input);
 		free(input);
 		input = NULL;
 	}

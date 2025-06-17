@@ -6,7 +6,7 @@
 #    By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/06/13 20:39:34 by mgavornik        ###   ########.fr        #
+#    Updated: 2025/06/17 09:07:45 by mgavornik        ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -44,7 +44,9 @@ SRC			= main.c \
 				env/hashmap.c \
 				exec_engine/exec_engine.c \
 				exec_engine/exec_command.c \
-				signals/pedo.c\
+				exec_engine/heredoc_utils.c \
+				exec_engine/pedo.c\
+				exec_engine/pedo_utils.c \
 				exec_engine/heredoc.c \
 				exec_engine/redirections.c \
 				exec_engine/expand_variable.c \

@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 12:42:02 by mgavornik         #+#    #+#             */
-/*   Updated: 2025/06/13 15:30:12 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/17 09:05:07 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -15,14 +15,19 @@
 
 #define CHILD_SIG_DEFAULT 1
 #define CHILD_SIG_CUSTOM 2
+#define _POSIX_C_SOURCE 200809L
 
 #include "../inc/minishell.h"
+#include <asm-generic/signal-defs.h>
+#include <bits/sigaction.h>
+#include <signal.h>
+
 typedef struct s_child_data
 {
-    void *data;                    //data for func
-    int (*func)(void *data);       //func execute in child
-    void (*cleanup)(void *data);   //cleanup function
-    int signal_behavior;       //handle signals
+    void *data;                    
+    int (*func)(void *data);       
+    void (*cleanup)(void *data);
+    int signal_behavior;
     void *sigenv;
 } t_child_data;
 
@@ -33,12 +38,5 @@ typedef struct s_heredoc_data
     int write_fd;
 } t_heredoc_data;
 
-
-
-// int execute_in_child(t_env *env, t_child_data *child_data);
-// int collect_heredoc(t_env *env, char *delimiter, int *write_fd);
-// void init_structs(t_heredoc_data *hd, t_child_data *child);
-// void child_linker(t_child_data *child, t_heredoc_data *data ,int (*func)(void *data));
-// void herdoc_linker(t_heredoc_data *hd, t_env *env, char *delimiter);
 
 #endif

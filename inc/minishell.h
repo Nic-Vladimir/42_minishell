@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/13 19:35:39 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/17 08:58:45 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -162,9 +162,8 @@ void child_linker(t_child_data *child, t_heredoc_data *data ,int (*func)(void *d
 void herdoc_linker(t_heredoc_data *hd, t_env *env, char *delimiter);
 void	setup_child_fds(int in_fd, int out_fd);
 void reset_terminal_for_readline(void);
-int execute_cleanup(t_env *env);
 void	execute_child_process(t_env *env, t_ast_node *node);
 void debug_print_heredoc_content(int read_fd);
-
+void	setup_child_signals(t_env *env, int behavior);
 
 #endif
