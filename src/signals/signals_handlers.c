@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 10:16:04 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/19 12:40:15 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/19 12:57:16 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ void	get_env(void *arg)
 	t_env	*env;
 
 	env = (t_env *)arg;
-	fprintf(stderr, "env addr2: %p\n", env);
 }
 
 void	cd_handler(int sig, t_env *env)

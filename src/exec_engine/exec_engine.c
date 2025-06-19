@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/03 18:59:15 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/19 12:57:53 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	execute_node(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 		return (execute_node(env, node->left, in_fd, out_fd));
 	else
 	{
-		fprintf(stderr, "Unknown node type in execution\n");
+		perror("Unknown node type in execution\n");
 		return (1);
 	}
 }
