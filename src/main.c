@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/19 11:38:02 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/19 12:41:10 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,6 @@ void	handle_command(t_env *env, char *input)
 		return ;
 	}
 	env->tokenizer->tokens = token_head;
-	// print_tokens(env->tokenizer);
-	// env->tokenizer->tokens = token_head;
 	root = parse(env->tokenizer);
 	env->root = root;
 	env->input = input;
@@ -75,7 +73,7 @@ int	check_input(t_env *env, char *input)
 	if (!input)
 	{
 		set_all_signals(CD, env->sigenv);
-		cd_handler(sig, env);
+		cd_handler(g_sig, env);
 		return (1);
 	}
 	if (check_empty(input))

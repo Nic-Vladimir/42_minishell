@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:13:28 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/19 12:09:20 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/19 12:39:15 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <bits/sigaction.h>
 #include <signal.h>
 
-volatile sig_atomic_t	sig = 0;
+volatile sig_atomic_t	g_sig = 0;
 
 static void	set_mini_mode(int sig)
 {

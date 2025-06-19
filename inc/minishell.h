@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/19 11:36:16 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/19 12:53:28 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,12 @@
 // # include <unistd.h>
 
 # include "../lib/libft/inc/libft.h"
+# include "ast.h"
 # include "colors.h"
+# include "env.h"
+# include "pedo.h"
+# include "sig_hand.h"
+# include "tokenizer.h"
 # include <dirent.h>
 # include <fcntl.h>
 # include <limits.h>
@@ -45,12 +50,6 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-# include "ast.h"
-# include "env.h"
-# include "pedo.h"
-# include "sig_hand.h"
-# include "tokenizer.h"
-
 typedef struct s_env			t_env;
 typedef struct s_ast_node		t_ast_node;
 typedef struct s_token			t_token;
@@ -58,11 +57,24 @@ typedef struct s_tokenizer_data	t_tokenizer_data;
 typedef struct s_child_data		t_child_data;
 typedef struct s_heredoc_data	t_heredoc_data;
 
+# define PROMPT_PREFIX_OK                                \
+	"\001\033[38;5;238m\002╭─"                   \
+	"\001\033[38;5;255;48;5;238m\002 ₘᵢₙᵢ🐚 " \
+	"\001\033[38;5;238;48;5;42m\002 ✔ "            \
+	"\001\033[38;5;42;48;5;238m\002"                 \
+	"\001\033[38;5;255m\002  "
 
+# define PROMPT_PREFIX_KO                        \
+	"\001\033[38;5;238m\002╭─"           \
+	"\001\033[38;5;255;48;5;238m\002 ₘᵢₙᵢ🐚 " \
+	"\001\033[38;5;238;48;5;1m\002 ✘ "     \
+	"\001\033[38;5;1;48;5;238m\002"          \
+	"\001\033[38;5;255m\002  "
 
-# define PROMPT_PREFIX_OK "\001\033[38;5;238m\002╭─\001\033[38;5;255;48;5;238m\002 ₘᵢₙᵢ🐚 \001\033[38;5;238;48;5;42m\002 ✔ \001\033[38;5;42;48;5;238m\002\001\033[38;5;255m\002  "
-# define PROMPT_PREFIX_KO "\001\033[38;5;238m\002╭─\001\033[38;5;255;48;5;238m\002 ₘᵢₙᵢ🐚 \001\033[38;5;238;48;5;1m\002 ✘ \001\033[38;5;1;48;5;238m\002\001\033[38;5;255m\002  "
-# define PROMPT_SUFFIX "\001\033[0m\002\001\033[38;5;238m\002\n╰─\001\033[0m\002 "
+# define PROMPT_SUFFIX                   \
+	"\001\033[0m\002"                   \
+	"\001\033[38;5;238m\002\n╰─" \
+	"\001\033[0m\002 "
 
 t_token							*tokenize(t_tokenizer_data *data, char *input);
 t_ast_node						*parse(t_tokenizer_data *data);
@@ -100,7 +112,6 @@ int								execute_unset(t_env *env, t_ast_node *node);
 void							clean_rl(void);
 void							ft_free_split(char **res);
 void							free_envp(char **envp);
-// void			init_t_ast(t_ast_node *node);
 
 char							*process_pipe(t_tokenizer_data *tok_data,
 									char *input);
@@ -110,14 +121,14 @@ char							*process_redir_in(t_tokenizer_data *tok_data,
 									char *input);
 char							*process_redir_out(t_tokenizer_data *tok_data,
 									char *input);
-char							*process_simple_token(t_tokenizer_data *tok_data,
-									char *input);
+char							*process_simple_token(
+									t_tokenizer_data *tok_data, char *input);
 void							add_token(t_tokenizer_data *tok_data,
 									t_token_type type, char *value, size_t len);
-char							*process_single_quotes(t_tokenizer_data *tok_data,
-									char *input);
-char							*process_double_quotes(t_tokenizer_data *tok_data,
-									char *input);
+char							*process_single_quotes(
+									t_tokenizer_data *tok_data, char *input);
+char							*process_double_quotes(
+									t_tokenizer_data *tok_data, char *input);
 char							*process_word_token(t_tokenizer_data *tok_data,
 									char *input);
 void							sort_envp(char **envp, int low, int high);
@@ -139,7 +150,8 @@ int								execute_builtin_command(t_env *env,
 t_ast_node						*ast_new_node(t_node_type type, char **args);
 t_ast_node						*parse_redirection(t_tokenizer_data *tok_data,
 									t_ast_node *cmd);
-t_ast_node						*parse_simple_command(t_tokenizer_data *tok_data);
+t_ast_node						*parse_simple_command(
+									t_tokenizer_data *tok_data);
 t_ast_node						*init_cmd_node(char **args, int arg_count);
 t_ast_node						*ast_node_insert(t_ast_node *root,
 									t_node_type type, char **args);

@@ -6,13 +6,11 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 05:47:09 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/19 11:50:31 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/19 12:42:27 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-
 
 static int	get_vars_num(t_env *env)
 {
@@ -49,10 +47,12 @@ static char	*get_env_var_string(char *key, char *value)
 
 static void	fill_envp_from_hashmap(char **envp, t_env *env)
 {
-	int			i = 0;
-	int			j = 0;
+	int			i;
+	int			j;
 	t_bucket	*current;
 
+	i = 0;
+	j = 0;
 	while (j < env->vars->size)
 	{
 		current = env->vars->buckets[j];

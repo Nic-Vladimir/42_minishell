@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 12:42:02 by mgavornik         #+#    #+#             */
-/*   Updated: 2025/06/17 15:05:19 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/19 12:53:56 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,3 @@ typedef struct s_heredoc_data
 }			t_heredoc_data;
 
 #endif
-

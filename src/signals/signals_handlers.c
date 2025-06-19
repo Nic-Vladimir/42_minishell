@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 10:16:04 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/17 14:50:10 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/19 12:40:15 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	custom_prompt_handler(void)
 	}
 	if (current_input && *current_input)
 		printf("%s", current_input);
-	sig = SIGINT;
+	g_sig = SIGINT;
 }
 
 void	mini_sigint_handler(int sig)

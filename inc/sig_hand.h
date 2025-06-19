@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:09:02 by mgavorni          #+#    #+#             */
-/*   Updated: 2025/06/17 14:52:31 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/19 12:54:12 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef struct s_sigenv
 	int							status;
 }								t_sigenv;
 
-extern volatile sig_atomic_t	sig;
+extern volatile sig_atomic_t	g_sig;
 
 void							sig_malinit(t_sigenv **sigenv);
 void							set_signal_mode(int sig, t_sig_mode mode,
@@ -51,4 +51,3 @@ void							cd_handler(int sig, t_env *env);
 void							mini_sigint_handler(int sig);
 
 #endif
-

@@ -3,19 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ast.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:35:58 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/03/10 08:46:44 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/19 12:44:36 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef AST_H
 # define AST_H
 
-#include "tokenizer.h"
+# include "tokenizer.h"
 
-typedef enum e_node_type {
+typedef enum e_node_type
+{
 	NODE_CMD,
 	NODE_PIPE,
 	NODE_REDIR_IN,
@@ -27,15 +28,15 @@ typedef enum e_node_type {
 	NODE_GROUP,
 	NODE_SGQ,
 	NODE_DBQ
-} t_node_type;
+}						t_node_type;
 
-typedef struct s_ast_node {
-	t_node_type type;
-	char **args;
-	t_token_type	*arg_types;
-	struct s_ast_node *left;
-	struct s_ast_node *right;
-} t_ast_node;
-
+typedef struct s_ast_node
+{
+	t_node_type			type;
+	char				**args;
+	t_token_type		*arg_types;
+	struct s_ast_node	*left;
+	struct s_ast_node	*right;
+}						t_ast_node;
 
 #endif
