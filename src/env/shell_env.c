@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 18:06:34 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/03 18:18:23 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/19 11:30:43 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,29 +34,27 @@ static t_tokenizer_data	*init_tok_data(void)
 	tok_data = (t_tokenizer_data *)malloc(sizeof(t_tokenizer_data));
 	if (!tok_data)
 		return (NULL);
-	tok_data->tokens = NULL;
-	tok_data->tail = NULL;
+	ft_memset(tok_data, 0, sizeof(t_tokenizer_data));
 	return (tok_data);
 }
 
 static void	insert_env_var(t_env *env, char *envp_entry)
 {
-	char	**res;
 	char	*key;
 	char	*value;
+	char	**res;
 
 	res = ft_split(envp_entry, '=');
 	if (!res || !res[0] || !res[1])
 	{
 		if (res)
-			free(res);
+			free_str_array(res);
 		return ;
 	}
-	key = malloc(strlen(res[0]) + 1);
-	value = malloc(strlen(res[1]) + 1);
-	strcpy(key, res[0]);
-	strcpy(value, res[1]);
-	hashmap_insert(env, key, value);
+	key = ft_strdup(res[0]);
+	value = ft_strdup(res[1]);
+	if (key && value)
+		hashmap_insert(env, key, value);
 	free(key);
 	free(value);
 	free_str_array(res);
@@ -71,10 +69,12 @@ static t_hashmap	*init_hashmap_vars(void)
 	vars = (t_hashmap *)malloc(sizeof(t_hashmap));
 	if (!vars)
 		return (NULL);
+	ft_memset(vars, 0, sizeof(t_hashmap));
 	vars->size = 100;
 	vars->buckets = (t_bucket **)malloc(vars->size * sizeof(t_bucket *));
 	if (vars->buckets == NULL)
 		return (NULL);
+	ft_memset(vars->buckets, 0, vars->size * sizeof(t_bucket *));
 	while (i < vars->size)
 		vars->buckets[i++] = NULL;
 	return (vars);

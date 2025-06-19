@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec_command.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 11:16:18 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/29 21:53:03 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/19 11:56:05 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static void	setup_child_fds(int in_fd, int out_fd)
+void	setup_child_fds(int in_fd, int out_fd)
 {
 	if (in_fd != STDIN_FILENO)
 	{
@@ -26,7 +26,7 @@ static void	setup_child_fds(int in_fd, int out_fd)
 	}
 }
 
-static void	execute_child_process(t_env *env, t_ast_node *node)
+void	execute_child_process(t_env *env, t_ast_node *node)
 {
 	char	**envp;
 	char	*exec_path;
@@ -37,7 +37,7 @@ static void	execute_child_process(t_env *env, t_ast_node *node)
 	{
 		ft_printf("minishell: %s: Is not an executable binary\n",
 			node->args[0]);
-		free_ast(env->root);
+		free_ast(&env->root);
 		free_env(env);
 		free_envp(envp);
 		exit(127);
@@ -45,7 +45,7 @@ static void	execute_child_process(t_env *env, t_ast_node *node)
 	if (execve(exec_path, node->args, envp) == -1)
 	{
 		ft_printf("minishell: %s: Is not an executable binary\n", exec_path);
-		free_ast(env->root);
+		free_ast(&env->root);
 		free(exec_path);
 		free_envp(envp);
 		free_env(env);
@@ -61,10 +61,14 @@ int	execute_command(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 	pid = fork();
 	if (pid == 0)
 	{
+		set_all_signals(NORMAL_MODE, env->sigenv);
 		setup_child_fds(in_fd, out_fd);
 		execute_child_process(env, node);
 	}
+	signal(SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
+	set_all_signals(MINI_MODE, env->sigenv);
+	write(STDOUT_FILENO, "\n", 1);
 	if (in_fd != STDIN_FILENO)
 		close(in_fd);
 	if (out_fd != STDOUT_FILENO)

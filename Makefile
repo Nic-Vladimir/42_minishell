@@ -1,14 +1,14 @@
-#******************************************************************************#
+# **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+         #
+#    By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/05/24 17:20:22 by mgavornik        ###   ########.fr        #
+#    Updated: 2025/06/19 11:28:30 by mgavorni         ###   ########.fr        #
 #                                                                              #
-#******************************************************************************#
+# **************************************************************************** #
 
 # --- Stfu make ---
 MAKEFLAGS += --no-print-directory
@@ -24,7 +24,7 @@ CLEAR	= \r\033[Ks
 
 # --- Vars ---
 NAME		= minishell
-CC			= gcc -g
+CC			= gcc -g 
 CFLAGS		= -Wall -Wextra -Werror -I $(INC_DIR)
 
 # --- Paths ---
@@ -41,9 +41,14 @@ SRC			= main.c \
 				ast/init_node.c \
 				env/shell_env.c \
 				env/env_utils.c \
+				env/hmap_insert.c\
+				env/free_hmap.c \
 				env/hashmap.c \
 				exec_engine/exec_engine.c \
 				exec_engine/exec_command.c \
+				exec_engine/heredoc_utils.c \
+				exec_engine/pedo.c\
+				exec_engine/pedo_utils.c \
 				exec_engine/heredoc.c \
 				exec_engine/redirections.c \
 				exec_engine/expand_variable.c \

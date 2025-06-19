@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/29 21:54:15 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/19 11:38:02 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	handle_command(t_env *env, char *input)
 	env->tokenizer->tokens = token_head;
 	status = execute_ast(env, root);
 	free_tokens(env->tokenizer);
-	free_ast(root);
+	free_ast(&env->root);
 	env->last_exit_code = status;
 	env->input = NULL;
 }

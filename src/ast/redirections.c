@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 16:59:00 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/28 17:00:16 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/19 11:13:51 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ static int	set_redirection_args(t_ast_node *redir_node,
 		args = (char **)malloc(2 * sizeof(char *));
 		if (!args)
 			return (0);
+		ft_memset(args, 0, 2 * sizeof(char *));
 		args[0] = ft_strdup(filename_token->value);
 		args[1] = NULL;
 		redir_node->args = args;

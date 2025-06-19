@@ -3,67 +3,65 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:13:28 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/28 18:05:40 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/19 12:09:20 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+#include <asm-generic/signal-defs.h>
+#include <bits/sigaction.h>
+#include <signal.h>
 
 volatile sig_atomic_t	sig = 0;
 
-// void	sig_handler(int sig)
-// {
-// 	(void)sig;
-// 	rl_catch_signals = 0;
-// 	g_glob_sig.sig = 1;
-// 	while (g_glob_sig.sig)
-// 	{
-// 		write(STDOUT_FILENO, "\n", 1);
-// 		rl_on_new_line();
-// 		rl_replace_line("", 0);
-// 		rl_redisplay();
-// 		g_glob_sig.sig = 0;
-// 	}
-// }
-
-void	set_signal_mode(int sig, t_sig_mode mode, t_sigenv *env)
+static void	set_mini_mode(int sig)
 {
 	struct sigaction	sa;
 
 	sigemptyset(&sa.sa_mask);
-	if (mode == MINI_MODE)
+	if (sig == SIGINT)
 	{
-		if (sig == SIGINT)
-		{
-			sa.sa_handler = mini_sigint_handler;
-			sa.sa_flags = SA_RESTART;
-			sigaction(sig, &sa, NULL);
-		}
-		else if (sig == SIGQUIT)
-		{
-			sa.sa_handler = SIG_IGN;
-			sa.sa_flags = 0;
-			sigaction(sig, &sa, NULL);
-		}
-		// g_glob_sig.current_mode = mode;
-	}
-	if (mode == NORMAL_MODE)
-	{
-		sigaction(SIGINT, &env->def->sigint, NULL);
-		sigaction(SIGQUIT, &env->def->sigquit, NULL);
-		// g_glob_sig.current_mode = mode;
-	}
-	if (mode == CD)
-	{
-		sigemptyset(&sa.sa_mask);
-		sa.sa_handler = NULL;
 		sa.sa_flags = SA_RESTART;
-		sigaction(sig, &sa, NULL);
-		// g_glob_sig.current_mode = mode;
+		sa.sa_handler = mini_sigint_handler;
 	}
+	else
+	{
+		sa.sa_flags = 0;
+		sa.sa_handler = SIG_IGN;
+	}
+	sigaction(sig, &sa, NULL);
+}
+
+static void	set_normal_mode(int sig, t_sigenv *env)
+{
+	if (sig == SIGINT)
+		sigaction(SIGINT, &env->def->sigint, NULL);
+	else if (sig == SIGQUIT)
+		sigaction(SIGQUIT, &env->def->sigquit, NULL);
+}
+
+static void	set_cd_mode(int sig, t_sigenv *env)
+{
+	struct sigaction	sa;
+
+	sigemptyset(&sa.sa_mask);
+	sa.sa_handler = NULL;
+	sa.sa_flags = SA_RESTART;
+	sigaction(sig, &sa, NULL);
+	env->status = 1;
+}
+
+void	set_signal_mode(int sig, t_sig_mode mode, t_sigenv *env)
+{
+	if (mode == MINI_MODE)
+		set_mini_mode(sig);
+	else if (mode == NORMAL_MODE)
+		set_normal_mode(sig, env);
+	else if (mode == CD)
+		set_cd_mode(sig, env);
 	env->current_mode = mode;
 }
 
@@ -87,22 +85,5 @@ void	sig_malinit(t_sigenv **sigenv)
 	(*sigenv)->env = NULL;
 	sigaction(SIGINT, NULL, &(*sigenv)->def->sigint);
 	sigaction(SIGQUIT, NULL, &(*sigenv)->def->sigquit);
-	set_all_signals(MINI_MODE, *sigenv);
+	set_all_signals(NORMAL_MODE, *sigenv);
 }
-
-void	set_all_signals(t_sig_mode mode, t_sigenv *sigenv)
-{
-	sigenv->current_mode = mode;
-	set_signal_mode(SIGINT, mode, sigenv);
-	set_signal_mode(SIGQUIT, mode, sigenv);
-}
-
-// t_sigenv init_signal_handlers(void)
-// {
-// 	t_sigenv defaults = NULL;
-
-// 	sigaction(SIGINT, NULL, &defaults.sigint);
-// 	sigaction(SIGQUIT, NULL, &defaults.sigquit);
-// 	set_all_signals(MINI_MODE, &defaults);
-// 	return (defaults);
-// }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   copy_args.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 18:51:34 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/03 18:52:50 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/19 11:32:16 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ char	**copy_args(t_ast_node *node, int star_index, char **expanded)
 	args_copy = malloc(sizeof(char *) * total_size);
 	if (!args_copy)
 		return (NULL);
+	ft_memset(args_copy, 0, sizeof(char *) * total_size);
 	copy_before_star(args_copy, node, star_index);
 	copy_expanded_section(args_copy, expanded, star_index, len_expanded);
 	copy_after_star(args_copy, node, star_index, star_index + len_expanded);

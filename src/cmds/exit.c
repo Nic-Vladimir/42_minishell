@@ -6,11 +6,12 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:02:59 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/21 17:11:41 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/19 11:09:49 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+#include <termios.h>
 
 void	ft_free_split(char **res)
 {
@@ -32,10 +33,29 @@ void	clean_rl(void)
 	rl_deprep_terminal();
 }
 
+void	reset_terminal_for_readline(void)
+{
+	struct termios	term;
+
+	if (tcgetattr(0, &term) == 0)
+	{
+		term.c_lflag |= (ICANON | ECHO);
+		tcsetattr(0, TCSANOW, &term);
+	}
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	write(STDOUT_FILENO, "\n", 1);
+	rl_redisplay();
+}
+
 int	execute_exit(t_env *env)
 {
-	free_ast(env->root);
-	free_env(env);
+	if (env)
+	{
+		if (env->root)
+			free_ast(&(env->root));
+		free_env(env);
+	}
 	clean_rl();
-	exit(0);
+	exit(-1);
 }

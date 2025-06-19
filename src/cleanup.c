@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 21:35:07 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/29 21:54:57 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/19 11:40:59 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,18 @@ void	free_tokens(t_tokenizer_data *tokenizer)
 	tokenizer->tail = NULL;
 }
 
-void	free_ast(t_ast_node *node)
+void	free_ast(t_ast_node **node_ptr)
 {
-	int	i;
+	int			i;
+	t_ast_node	*node;
 
-	if (!node)
+	if (!node_ptr || !*node_ptr)
 		return ;
-	free_ast(node->left);
-	free_ast(node->right);
+	node = *node_ptr;
+	if (node->left)
+		free_ast(&(node->left));
+	if (node->right)
+		free_ast(&(node->right));
 	if (node->args)
 	{
 		i = 0;
@@ -53,6 +57,7 @@ void	free_ast(t_ast_node *node)
 	if (node->arg_types)
 		free(node->arg_types);
 	free(node);
+	*node_ptr = NULL;
 }
 
 static void	free_hashmap(t_hashmap *hashmap)

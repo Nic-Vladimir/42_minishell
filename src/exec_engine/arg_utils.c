@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arg_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 23:30:55 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/03 18:53:31 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/19 11:31:40 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	update_arg_types(t_ast_node *node, int star_index, int len_args,
 	new_arg_types = malloc(sizeof(int) * new_size);
 	if (!new_arg_types)
 		return ;
+	ft_memset(new_arg_types, 0, sizeof(int) * new_size);
 	i = 0;
 	while (i < star_index)
 	{

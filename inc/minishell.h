@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/24 17:17:55 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/06/19 11:36:16 by mgavorni         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -45,15 +45,20 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
+# include "ast.h"
+# include "env.h"
+# include "pedo.h"
+# include "sig_hand.h"
+# include "tokenizer.h"
+
 typedef struct s_env			t_env;
 typedef struct s_ast_node		t_ast_node;
 typedef struct s_token			t_token;
 typedef struct s_tokenizer_data	t_tokenizer_data;
+typedef struct s_child_data		t_child_data;
+typedef struct s_heredoc_data	t_heredoc_data;
 
-# include "ast.h"
-# include "env.h"
-# include "sig_hand.h"
-# include "tokenizer.h"
+
 
 # define PROMPT_PREFIX_OK "\001\033[38;5;238m\002╭─\001\033[38;5;255;48;5;238m\002 ₘᵢₙᵢ🐚 \001\033[38;5;238;48;5;42m\002 ✔ \001\033[38;5;42;48;5;238m\002\001\033[38;5;255m\002  "
 # define PROMPT_PREFIX_KO "\001\033[38;5;238m\002╭─\001\033[38;5;255;48;5;238m\002 ₘᵢₙᵢ🐚 \001\033[38;5;238;48;5;1m\002 ✘ \001\033[38;5;1;48;5;238m\002\001\033[38;5;255m\002  "
@@ -76,7 +81,7 @@ char							*get_env_value(t_env *env, const char *key);
 char							*get_prompt(t_env *env);
 void							print_transient_prompt(char *command);
 void							free_tokens(t_tokenizer_data *tokenizer);
-void							free_ast(t_ast_node *node);
+void							free_ast(t_ast_node **node);
 void							free_env(t_env *env);
 char							*expand_wildcard(char *arg);
 int								execute_export(t_env *env, t_ast_node *node,
@@ -149,5 +154,26 @@ void							update_arg_types(t_ast_node *node,
 int								calculate_total_args(t_ast_node *node,
 									char **expanded, int *len_args,
 									int *len_expanded);
+
+int								process_heredoc_input(t_env *env,
+									char *delimiter, int write_fd);
+int								execute_in_child(t_env *env,
+									t_child_data *child_data, int in_fd,
+									int out_fd);
+int								collect_heredoc(t_env *env, char *delimiter,
+									int *write_fd);
+void							init_structs(t_heredoc_data *hd,
+									t_child_data *child);
+void							child_linker(t_child_data *child,
+									t_heredoc_data *data,
+									int (*func)(void *data));
+void							herdoc_linker(t_heredoc_data *hd, t_env *env,
+									char *delimiter);
+void							setup_child_fds(int in_fd, int out_fd);
+void							reset_terminal_for_readline(void);
+void							execute_child_process(t_env *env,
+									t_ast_node *node);
+void							setup_child_signals(t_env *env, int behavior);
+int								free_bucket(t_bucket *new_bucket);
 
 #endif
