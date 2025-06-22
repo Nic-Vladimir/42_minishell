@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 10:16:04 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/19 12:57:16 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/22 21:38:45 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,16 +37,20 @@ void	custom_prompt_handler(void)
 	}
 	if (current_input && *current_input)
 		printf("%s", current_input);
-	g_sig = SIGINT;
+	g_sig = 130;
 }
 
-void	mini_sigint_handler(int sig)
+void mini_sigint_handler(sig_atomic_t g_sig)
 {
+
 	static int	first_interrupt = 1;
 
 	rl_catch_signals = 0;
-	sig = 1;
-	if (sig)
+	// (void)ucontext;
+	// (void)info;
+	// //info->si_value.sival_int = 130;
+	// sig = g_sig;
+	if (g_sig)
 	{
 		if (first_interrupt)
 		{
@@ -58,21 +62,21 @@ void	mini_sigint_handler(int sig)
 		}
 		custom_prompt_handler();
 	}
+
 }
 
-void	get_env(void *arg)
-{
-	t_env	*env;
+// void	get_env(void *arg)
+// {
+// 	t_env	*env;
 
-	env = (t_env *)arg;
-}
+// 	env = (t_env *)arg;
+// }
 
-void	cd_handler(int sig, t_env *env)
+void	cd_handler(sig_atomic_t g_sig, t_env *env)
 {
-	(void)sig;
 	printf("Signal recognized\n");
 	printf("exit\n");
-	execute_exit(env);
+	execute_exit(env, g_sig);
 }
 
 void	set_all_signals(t_sig_mode mode, t_sigenv *sigenv)

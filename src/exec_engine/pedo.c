@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 12:39:37 by mgavornik         #+#    #+#             */
-/*   Updated: 2025/06/17 15:06:46 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/22 21:40:49 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	custom_handler(int sig, siginfo_t *info, void *ucontext)
 	if (sig == SIGINT)
 	{
 		mini_sigint_handler(sig);
-		execute_exit(env);
+		execute_exit(env, env->last_exit_code);
 	}
 }
 

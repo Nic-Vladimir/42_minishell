@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/19 12:57:53 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/22 20:23:15 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	execute_builtin_command(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 	if (ft_strncmp(node->args[0], "unset", 6) == 0)
 		return (execute_unset(env, node));
 	if (ft_strncmp(node->args[0], "exit", 6) == 0)
-		return (execute_exit(env));
+		return (execute_exit(env, env->last_exit_code));
 	return (execute_command(env, node, in_fd, out_fd));
 }
 

@@ -1,0 +1,347 @@
+==308436== Memcheck, a memory error detector
+==308436== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==308436== Using Valgrind-3.18.1-42b08ed5bd-20211015 and LibVEX; rerun with -h for copyright info
+==308436== Command: ./minishell
+==308436== Parent PID: 147465
+==308436== 
+--308436-- 
+--308436-- Valgrind options:
+--308436--    --tool=memcheck
+--308436--    --leak-check=full
+--308436--    --show-leak-kinds=all
+--308436--    --track-origins=yes
+--308436--    --verbose
+--308436--    --log-file=valgrind.log
+--308436--    --error-exitcode=1
+--308436--    --undef-value-errors=yes
+--308436--    --show-mismatched-frees=yes
+--308436--    --suppressions=readline.supp
+--308436-- Contents of /proc/version:
+--308436--   Linux version 6.8.0-52-generic (buildd@lcy02-amd64-099) (x86_64-linux-gnu-gcc-12 (Ubuntu 12.3.0-1ubuntu1~22.04) 12.3.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #53~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Wed Jan 15 19:18:46 UTC 2
+--308436-- 
+--308436-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-ssse3-avx-avx2-bmi-f16c-rdrand-rdseed
+--308436-- Page sizes: currently 4096, max supported 4096
+--308436-- Valgrind library directory: /usr/libexec/valgrind
+--308436-- Reading syms from /home/mgavorni/Student/42_minishell/minishell
+--308436-- Reading syms from /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+--308436--   Considering /usr/lib/debug/.build-id/e4/de036b19e4768e7591b596c4be9f9015f2d28a.debug ..
+--308436--   .. build-id is valid
+--308436-- Reading syms from /usr/libexec/valgrind/memcheck-amd64-linux
+--308436--    object doesn't have a symbol table
+--308436--    object doesn't have a dynamic symbol table
+--308436-- Scheduler: using generic scheduler lock implementation.
+--308436-- Reading suppressions file: readline.supp
+--308436-- Reading suppressions file: /usr/libexec/valgrind/default.supp
+==308436== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-308436-by-mgavorni-on-???
+==308436== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-308436-by-mgavorni-on-???
+==308436== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-308436-by-mgavorni-on-???
+==308436== 
+==308436== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==308436== don't want to do, unless you know exactly what you're doing,
+==308436== or are doing some strange experiment):
+==308436==   /usr/bin/vgdb --pid=308436 ...command...
+==308436== 
+==308436== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==308436==   /path/to/gdb ./minishell
+==308436== and then give GDB the following command
+==308436==   target remote | /usr/bin/vgdb --pid=308436
+==308436== --pid is optional if only one valgrind process is running
+==308436== 
+--308436-- REDIR: 0x402aa40 (ld-linux-x86-64.so.2:strlen) redirected to 0x580bcec2 (???)
+--308436-- REDIR: 0x402a810 (ld-linux-x86-64.so.2:index) redirected to 0x580bcedc (???)
+--308436-- Reading syms from /usr/libexec/valgrind/vgpreload_core-amd64-linux.so
+--308436--    object doesn't have a symbol table
+--308436-- Reading syms from /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so
+--308436--    object doesn't have a symbol table
+==308436== WARNING: new redirection conflicts with existing -- ignoring it
+--308436--     old: 0x0402aa40 (strlen              ) R-> (0000.0) 0x580bcec2 ???
+--308436--     new: 0x0402aa40 (strlen              ) R-> (2007.0) 0x0484ee30 strlen
+--308436-- REDIR: 0x4027220 (ld-linux-x86-64.so.2:strcmp) redirected to 0x484fcd0 (strcmp)
+--308436-- REDIR: 0x402afa0 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4853840 (mempcpy)
+--308436-- Reading syms from /usr/lib/x86_64-linux-gnu/libreadline.so.8.1
+--308436--    object doesn't have a symbol table
+--308436-- Reading syms from /usr/lib/x86_64-linux-gnu/libc.so.6
+--308436--   Considering /usr/lib/debug/.build-id/cd/410b710f0f094c6832edd95931006d883af48e.debug ..
+--308436--   .. build-id is valid
+==308436== WARNING: new redirection conflicts with existing -- ignoring it
+--308436--     old: 0x0496ac60 (memalign            ) R-> (1011.0) 0x0484e080 memalign
+--308436--     new: 0x0496ac60 (memalign            ) R-> (1017.0) 0x0484e050 aligned_alloc
+==308436== WARNING: new redirection conflicts with existing -- ignoring it
+--308436--     old: 0x0496ac60 (memalign            ) R-> (1011.0) 0x0484e080 memalign
+--308436--     new: 0x0496ac60 (memalign            ) R-> (1017.0) 0x0484e020 aligned_alloc
+==308436== WARNING: new redirection conflicts with existing -- ignoring it
+--308436--     old: 0x0496ac60 (memalign            ) R-> (1011.0) 0x0484e080 memalign
+--308436--     new: 0x0496ac60 (memalign            ) R-> (1017.0) 0x0484e050 aligned_alloc
+==308436== WARNING: new redirection conflicts with existing -- ignoring it
+--308436--     old: 0x0496ac60 (memalign            ) R-> (1011.0) 0x0484e080 memalign
+--308436--     new: 0x0496ac60 (memalign            ) R-> (1017.0) 0x0484e020 aligned_alloc
+--308436-- Reading syms from /usr/lib/x86_64-linux-gnu/libtinfo.so.6.3
+--308436--    object doesn't have a symbol table
+--308436-- REDIR: 0x496d720 (libc.so.6:strnlen) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496d9e0 (libc.so.6:strpbrk) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496d2e0 (libc.so.6:strcmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x498bcd0 (libc.so.6:wcsnlen) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496e6d0 (libc.so.6:memset) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x498a540 (libc.so.6:wcslen) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496ec10 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x498a370 (libc.so.6:wcschr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496d260 (libc.so.6:index) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496d960 (libc.so.6:rindex) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496e5a0 (libc.so.6:memmove) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+==308436== Preferring higher priority redirection:
+--308436--     old: 0x04a657c0 (__memcpy_avx_unalign) R-> (2018.0) 0x04850f90 __memcpy_avx_unaligned_erms
+--308436--     new: 0x04a657c0 (__memcpy_avx_unalign) R-> (2018.1) 0x04852880 memmove
+--308436-- REDIR: 0x498a3f0 (libc.so.6:wcscmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496e9e0 (libc.so.6:stpncpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x498a9b0 (libc.so.6:wmemchr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496d830 (libc.so.6:strncmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496ea70 (libc.so.6:strcasecmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496d420 (libc.so.6:strcspn) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x498a470 (libc.so.6:wcscpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496d1d0 (libc.so.6:strcat) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496eb60 (libc.so.6:strncasecmp_l) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496e480 (libc.so.6:bcmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x4976570 (libc.so.6:memrchr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x4970010 (libc.so.6:strchrnul) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496d390 (libc.so.6:strcpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496eb10 (libc.so.6:strcasecmp_l) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496d6a0 (libc.so.6:strlen) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496d8d0 (libc.so.6:strncpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496e950 (libc.so.6:stpcpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496e3f0 (libc.so.6:memchr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496db00 (libc.so.6:strspn) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496e7d0 (libc.so.6:mempcpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496eac0 (libc.so.6:strncasecmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496ff80 (libc.so.6:rawmemchr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496d7a0 (libc.so.6:strncat) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x49f9280 (libc.so.6:__memcpy_chk) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x496e310 (libc.so.6:strstr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--308436-- REDIR: 0x4a62610 (libc.so.6:__strrchr_avx2) redirected to 0x484e810 (rindex)
+--308436-- REDIR: 0x496a0a0 (libc.so.6:malloc) redirected to 0x4848820 (malloc)
+--308436-- REDIR: 0x4a627e0 (libc.so.6:__strlen_avx2) redirected to 0x484ed10 (strlen)
+--308436-- REDIR: 0x4a63cb0 (libc.so.6:__strcpy_avx2) redirected to 0x484ee60 (strcpy)
+--308436-- REDIR: 0x496a3e0 (libc.so.6:free) redirected to 0x484b210 (free)
+--308436-- REDIR: 0x4a5d940 (libc.so.6:__strcmp_avx2) redirected to 0x484fbd0 (strcmp)
+--308436-- REDIR: 0x4a657c0 (libc.so.6:__memcpy_avx_unaligned_erms) redirected to 0x4852880 (memmove)
+--308436-- REDIR: 0x4a62400 (libc.so.6:__strchrnul_avx2) redirected to 0x4853330 (strchrnul)
+--308436-- REDIR: 0x490a150 (libc.so.6:setenv) redirected to 0x48542d0 (setenv)
+--308436-- REDIR: 0x4a62180 (libc.so.6:__strchr_avx2) redirected to 0x484e9f0 (index)
+--308436-- REDIR: 0x4a5dd80 (libc.so.6:__strncmp_avx2) redirected to 0x484f3e0 (strncmp)
+--308436-- REDIR: 0x496a740 (libc.so.6:realloc) redirected to 0x484dc50 (realloc)
+--308436-- REDIR: 0x4a65780 (libc.so.6:__mempcpy_avx_unaligned_erms) redirected to 0x4853440 (mempcpy)
+--308436-- REDIR: 0x4a65f80 (libc.so.6:__memset_avx2_unaligned_erms) redirected to 0x4852770 (memset)
+--308436-- REDIR: 0x496b520 (libc.so.6:calloc) redirected to 0x484d9d0 (calloc)
+--308436-- REDIR: 0x4a62960 (libc.so.6:__strnlen_avx2) redirected to 0x484ecb0 (strnlen)
+--308436-- REDIR: 0x496dfc0 (libc.so.6:__GI_strstr) redirected to 0x4853ae0 (__strstr_sse2)
+--308436-- REDIR: 0x4a65790 (libc.so.6:__memcpy_chk_avx_unaligned_erms) redirected to 0x4853940 (__memcpy_chk)
+--308436-- REDIR: 0x4a64040 (libc.so.6:__strncpy_avx2) redirected to 0x484efe0 (strncpy)
+--308436-- REDIR: 0x4a5e2c0 (libc.so.6:__memchr_avx2) redirected to 0x484fd50 (memchr)
+--308436-- REDIR: 0x4a649a0 (libc.so.6:__stpcpy_avx2) redirected to 0x4852130 (stpcpy)
+--308436-- REDIR: 0x4a5f130 (libc.so.6:__strcasecmp_avx) redirected to 0x484f560 (strcasecmp)
+--308436-- REDIR: 0x4a607b0 (libc.so.6:__strncasecmp_avx) redirected to 0x484f640 (strncasecmp)
+--308436-- REDIR: 0x4a5ea80 (libc.so.6:__memcmp_avx2_movbe) redirected to 0x4852010 (bcmp)
+--308437-- REDIR: 0x4a5d800 (libc.so.6:__strspn_sse42) redirected to 0x4853d50 (strspn)
+--308437-- REDIR: 0x4a5d5a0 (libc.so.6:__strcspn_sse42) redirected to 0x4853c70 (strcspn)
+==308437== 
+==308437== HEAP SUMMARY:
+==308437==     in use at exit: 215,842 bytes in 490 blocks
+==308437==   total heap usage: 1,163 allocs, 673 frees, 246,653 bytes allocated
+==308437== 
+==308437== Searching for pointers to 490 not-freed blocks
+==308437== Checked 256,440 bytes
+==308437== 
+==308437== 2 bytes in 1 blocks are still reachable in loss record 3 of 83
+==308437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308437==    by 0x10B5FE: new_token (tokenizer.c:24)
+==308437==    by 0x10B698: add_token (tokenizer.c:39)
+==308437==    by 0x10B85D: process_word_token (tokenizer.c:81)
+==308437==    by 0x10BAE5: tokenize (tokenizer.c:128)
+==308437==    by 0x10A7F4: main (main.c:81)
+==308437== 
+==308437== 2 bytes in 1 blocks are still reachable in loss record 4 of 83
+==308437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308437==    by 0x110687: ft_strdup (ft_strdup.c:21)
+==308437==    by 0x10CD60: execute_command_filter (exec_engine.c:250)
+==308437==    by 0x10D03A: execute_node (exec_engine.c:287)
+==308437==    by 0x10D7D8: execute_ast (exec_engine.c:487)
+==308437==    by 0x10A8C3: main (main.c:98)
+==308437== 
+==308437== 4 bytes in 1 blocks are still reachable in loss record 5 of 83
+==308437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308437==    by 0x10AE55: init_cmd_node (ast.c:177)
+==308437==    by 0x10AF66: parse_simple_command (ast.c:209)
+==308437==    by 0x10B2BD: parse_group (ast.c:284)
+==308437==    by 0x10B0C3: parse_pipeline (ast.c:237)
+==308437==    by 0x10B14D: parse_logical_operators (ast.c:252)
+==308437==    by 0x10B2E3: parse (ast.c:291)
+==308437==    by 0x10A85B: main (main.c:89)
+==308437== 
+==308437== 16 bytes in 1 blocks are still reachable in loss record 14 of 83
+==308437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308437==    by 0x10BD76: init_env (shell_env.c:73)
+==308437==    by 0x10A73A: main (main.c:52)
+==308437== 
+==308437== 16 bytes in 1 blocks are still reachable in loss record 15 of 83
+==308437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308437==    by 0x10BB1E: init_tok_data (shell_env.c:18)
+==308437==    by 0x10BE8B: init_env (shell_env.c:91)
+==308437==    by 0x10A73A: main (main.c:52)
+==308437== 
+==308437== 16 bytes in 1 blocks are still reachable in loss record 17 of 83
+==308437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308437==    by 0x10AF2A: parse_simple_command (ast.c:204)
+==308437==    by 0x10B2BD: parse_group (ast.c:284)
+==308437==    by 0x10B0C3: parse_pipeline (ast.c:237)
+==308437==    by 0x10B14D: parse_logical_operators (ast.c:252)
+==308437==    by 0x10B2E3: parse (ast.c:291)
+==308437==    by 0x10A85B: main (main.c:89)
+==308437== 
+==308437== 24 bytes in 1 blocks are still reachable in loss record 21 of 83
+==308437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308437==    by 0x10B5D0: new_token (tokenizer.c:20)
+==308437==    by 0x10B698: add_token (tokenizer.c:39)
+==308437==    by 0x10B85D: process_word_token (tokenizer.c:81)
+==308437==    by 0x10BAE5: tokenize (tokenizer.c:128)
+==308437==    by 0x10A7F4: main (main.c:81)
+==308437== 
+==308437== 40 bytes in 1 blocks are still reachable in loss record 23 of 83
+==308437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308437==    by 0x10BD3F: init_env (shell_env.c:68)
+==308437==    by 0x10A73A: main (main.c:52)
+==308437== 
+==308437== 40 bytes in 1 blocks are still reachable in loss record 24 of 83
+==308437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308437==    by 0x10AE08: init_cmd_node (ast.c:169)
+==308437==    by 0x10AF66: parse_simple_command (ast.c:209)
+==308437==    by 0x10B2BD: parse_group (ast.c:284)
+==308437==    by 0x10B0C3: parse_pipeline (ast.c:237)
+==308437==    by 0x10B14D: parse_logical_operators (ast.c:252)
+==308437==    by 0x10B2E3: parse (ast.c:291)
+==308437==    by 0x10A85B: main (main.c:89)
+==308437== 
+==308437== 512 bytes in 1 blocks are still reachable in loss record 37 of 83
+==308437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308437==    by 0x10C3B2: get_envp_from_hashmap (hashmap.c:83)
+==308437==    by 0x10D0FB: execute_command (exec_engine.c:311)
+==308437==    by 0x10CFC4: execute_builtin_command (exec_engine.c:279)
+==308437==    by 0x10CDD8: execute_command_filter (exec_engine.c:258)
+==308437==    by 0x10D03A: execute_node (exec_engine.c:287)
+==308437==    by 0x10D7D8: execute_ast (exec_engine.c:487)
+==308437==    by 0x10A8C3: main (main.c:98)
+==308437== 
+==308437== 800 bytes in 1 blocks are still reachable in loss record 41 of 83
+==308437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308437==    by 0x10BDCF: init_env (shell_env.c:80)
+==308437==    by 0x10A73A: main (main.c:52)
+==308437== 
+==308437== 848 bytes in 63 blocks are still reachable in loss record 42 of 83
+==308437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308437==    by 0x110687: ft_strdup (ft_strdup.c:21)
+==308437==    by 0x10C25F: hashmap_insert (hashmap.c:43)
+==308437==    by 0x10BCA3: insert_env_var (shell_env.c:48)
+==308437==    by 0x10BE65: init_env (shell_env.c:90)
+==308437==    by 0x10A73A: main (main.c:52)
+==308437== 
+==308437== 1,372 bytes in 63 blocks are still reachable in loss record 52 of 83
+==308437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308437==    by 0x110687: ft_strdup (ft_strdup.c:21)
+==308437==    by 0x10C272: hashmap_insert (hashmap.c:44)
+==308437==    by 0x10BCA3: insert_env_var (shell_env.c:48)
+==308437==    by 0x10BE65: init_env (shell_env.c:90)
+==308437==    by 0x10A73A: main (main.c:52)
+==308437== 
+==308437== 1,512 bytes in 63 blocks are still reachable in loss record 53 of 83
+==308437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308437==    by 0x10C23E: hashmap_insert (hashmap.c:40)
+==308437==    by 0x10BCA3: insert_env_var (shell_env.c:48)
+==308437==    by 0x10BE65: init_env (shell_env.c:90)
+==308437==    by 0x10A73A: main (main.c:52)
+==308437== 
+==308437== 2,220 bytes in 63 blocks are still reachable in loss record 57 of 83
+==308437==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308437==    by 0x10C44A: get_envp_from_hashmap (hashmap.c:95)
+==308437==    by 0x10D0FB: execute_command (exec_engine.c:311)
+==308437==    by 0x10CFC4: execute_builtin_command (exec_engine.c:279)
+==308437==    by 0x10CDD8: execute_command_filter (exec_engine.c:258)
+==308437==    by 0x10D03A: execute_node (exec_engine.c:287)
+==308437==    by 0x10D7D8: execute_ast (exec_engine.c:487)
+==308437==    by 0x10A8C3: main (main.c:98)
+==308437== 
+==308437== LEAK SUMMARY:
+==308437==    definitely lost: 0 bytes in 0 blocks
+==308437==    indirectly lost: 0 bytes in 0 blocks
+==308437==      possibly lost: 0 bytes in 0 blocks
+==308437==    still reachable: 7,424 bytes in 263 blocks
+==308437==         suppressed: 208,418 bytes in 227 blocks
+==308437== 
+==308437== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+--308437-- 
+--308437-- used_suppression:     64 RL readline leaks readline.supp:2 suppressed: 204,364 bytes in 223 blocks
+--308437-- used_suppression:      4 RL add_history leaks readline.supp:8 suppressed: 4,054 bytes in 4 blocks
+==308437== 
+==308437== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==308436== 
+==308436== HEAP SUMMARY:
+==308436==     in use at exit: 212,972 bytes in 416 blocks
+==308436==   total heap usage: 1,156 allocs, 740 frees, 245,237 bytes allocated
+==308436== 
+==308436== Searching for pointers to 416 not-freed blocks
+==308436== Checked 253,792 bytes
+==308436== 
+==308436== 16 bytes in 1 blocks are still reachable in loss record 8 of 71
+==308436==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308436==    by 0x10BD76: init_env (shell_env.c:73)
+==308436==    by 0x10A73A: main (main.c:52)
+==308436== 
+==308436== 16 bytes in 1 blocks are still reachable in loss record 9 of 71
+==308436==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308436==    by 0x10BB1E: init_tok_data (shell_env.c:18)
+==308436==    by 0x10BE8B: init_env (shell_env.c:91)
+==308436==    by 0x10A73A: main (main.c:52)
+==308436== 
+==308436== 40 bytes in 1 blocks are still reachable in loss record 14 of 71
+==308436==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308436==    by 0x10BD3F: init_env (shell_env.c:68)
+==308436==    by 0x10A73A: main (main.c:52)
+==308436== 
+==308436== 800 bytes in 1 blocks are still reachable in loss record 30 of 71
+==308436==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308436==    by 0x10BDCF: init_env (shell_env.c:80)
+==308436==    by 0x10A73A: main (main.c:52)
+==308436== 
+==308436== 848 bytes in 63 blocks are still reachable in loss record 31 of 71
+==308436==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308436==    by 0x110687: ft_strdup (ft_strdup.c:21)
+==308436==    by 0x10C25F: hashmap_insert (hashmap.c:43)
+==308436==    by 0x10BCA3: insert_env_var (shell_env.c:48)
+==308436==    by 0x10BE65: init_env (shell_env.c:90)
+==308436==    by 0x10A73A: main (main.c:52)
+==308436== 
+==308436== 1,372 bytes in 63 blocks are still reachable in loss record 41 of 71
+==308436==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308436==    by 0x110687: ft_strdup (ft_strdup.c:21)
+==308436==    by 0x10C272: hashmap_insert (hashmap.c:44)
+==308436==    by 0x10BCA3: insert_env_var (shell_env.c:48)
+==308436==    by 0x10BE65: init_env (shell_env.c:90)
+==308436==    by 0x10A73A: main (main.c:52)
+==308436== 
+==308436== 1,512 bytes in 63 blocks are still reachable in loss record 42 of 71
+==308436==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==308436==    by 0x10C23E: hashmap_insert (hashmap.c:40)
+==308436==    by 0x10BCA3: insert_env_var (shell_env.c:48)
+==308436==    by 0x10BE65: init_env (shell_env.c:90)
+==308436==    by 0x10A73A: main (main.c:52)
+==308436== 
+==308436== LEAK SUMMARY:
+==308436==    definitely lost: 0 bytes in 0 blocks
+==308436==    indirectly lost: 0 bytes in 0 blocks
+==308436==      possibly lost: 0 bytes in 0 blocks
+==308436==    still reachable: 4,604 bytes in 193 blocks
+==308436==         suppressed: 208,368 bytes in 223 blocks
+==308436== 
+==308436== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+--308436-- 
+--308436-- used_suppression:     63 RL readline leaks readline.supp:2 suppressed: 204,352 bytes in 222 blocks
+--308436-- used_suppression:      1 RL add_history leaks readline.supp:8 suppressed: 4,016 bytes in 1 blocks
+==308436== 
+==308436== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

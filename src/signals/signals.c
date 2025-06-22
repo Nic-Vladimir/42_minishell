@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:13:28 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/19 12:39:15 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/22 22:17:57 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,13 @@
 
 volatile sig_atomic_t	g_sig = 0;
 
-static void	set_mini_mode(int sig)
+void	set_mini_mode(sig_atomic_t g_sig)
 {
 	struct sigaction	sa;
 
+	memset(&sa, 0, sizeof(sa));
 	sigemptyset(&sa.sa_mask);
-	if (sig == SIGINT)
+	if (g_sig == SIGINT)
 	{
 		sa.sa_flags = SA_RESTART;
 		sa.sa_handler = mini_sigint_handler;
@@ -32,36 +33,38 @@ static void	set_mini_mode(int sig)
 		sa.sa_flags = 0;
 		sa.sa_handler = SIG_IGN;
 	}
-	sigaction(sig, &sa, NULL);
+
+	sigaction(g_sig, &sa, NULL);
+
 }
 
-static void	set_normal_mode(int sig, t_sigenv *env)
+static void	set_normal_mode(sig_atomic_t g_sig, t_sigenv *env)
 {
-	if (sig == SIGINT)
+	if (g_sig == SIGINT)
 		sigaction(SIGINT, &env->def->sigint, NULL);
-	else if (sig == SIGQUIT)
+	else if (g_sig == SIGQUIT)
 		sigaction(SIGQUIT, &env->def->sigquit, NULL);
 }
 
-static void	set_cd_mode(int sig, t_sigenv *env)
+static void	set_cd_mode(sig_atomic_t g_sig, t_sigenv *env)
 {
 	struct sigaction	sa;
 
 	sigemptyset(&sa.sa_mask);
 	sa.sa_handler = NULL;
 	sa.sa_flags = SA_RESTART;
-	sigaction(sig, &sa, NULL);
+	sigaction(g_sig, &sa, NULL);
 	env->status = 1;
 }
 
-void	set_signal_mode(int sig, t_sig_mode mode, t_sigenv *env)
+void	set_signal_mode(sig_atomic_t g_sig, t_sig_mode mode, t_sigenv *env)
 {
 	if (mode == MINI_MODE)
-		set_mini_mode(sig);
+		set_mini_mode(g_sig);
 	else if (mode == NORMAL_MODE)
-		set_normal_mode(sig, env);
+		set_normal_mode(g_sig, env);
 	else if (mode == CD)
-		set_cd_mode(sig, env);
+		set_cd_mode(g_sig, env);
 	env->current_mode = mode;
 }
 

@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:02:59 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/19 11:09:49 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/22 20:37:39 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	reset_terminal_for_readline(void)
 	rl_redisplay();
 }
 
-int	execute_exit(t_env *env)
+int	execute_exit(t_env *env, sig_atomic_t g_sig)
 {
 	if (env)
 	{
@@ -57,5 +57,5 @@ int	execute_exit(t_env *env)
 		free_env(env);
 	}
 	clean_rl();
-	exit(-1);
+	exit(g_sig);
 }

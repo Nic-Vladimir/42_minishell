@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/19 12:53:28 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/22 20:22:35 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ int								execute_echo(t_env *env, t_ast_node *node,
 									int in_fd, int out_fd);
 int								execute_cd(t_env *env, t_ast_node *node,
 									int in_fd, int out_fd);
-int								execute_exit(t_env *env);
+int								execute_exit(t_env *env, int sig);
 int								execute_unset(t_env *env, t_ast_node *node);
 
 void							clean_rl(void);
