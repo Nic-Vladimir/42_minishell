@@ -33,25 +33,155 @@ int	execute_builtin_command(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 	return (execute_command(env, node, in_fd, out_fd));
 }
 
-static int	execute_pipeline(t_env *env, t_ast_node *node, int in_fd,
-		int out_fd)
+static t_ast_node	**collect_pipeline_commands(t_ast_node *node, int *count)
 {
-	int	pipefd[2];
-	int	left_status;
-	int	right_status;
+	t_ast_node	**commands;
+	int			i;
+	t_ast_node	*current;
 
-	if (pipe(pipefd) < 0)
+	commands = NULL;
+	i = 0;
+	// Count commands and allocate array
+	*count = 0;
+	current = node;
+	while (current && current->type == NODE_PIPE)
 	{
-		perror("pipe");
+		(*count)++;
+		current = current->left;
+	}
+	(*count)++; // Last command
+	commands = malloc(sizeof(t_ast_node *) * (*count));
+	if (!commands)
+		return (NULL);
+	// Collect commands (rightmost to leftmost)
+	current = node;
+	i = *count - 1;
+	while (current && current->type == NODE_PIPE)
+	{
+		commands[i--] = current->right;
+		current = current->left;
+	}
+	commands[i] = current; // Leftmost command
+	return (commands);
+}
+
+static int	execute_child(t_env *env, t_ast_node *cmd, int in_fd, int out_fd)
+{
+	if (in_fd != STDIN_FILENO)
+	{
+		dup2(in_fd, STDIN_FILENO);
+		close(in_fd);
+	}
+	if (out_fd != STDOUT_FILENO)
+	{
+		dup2(out_fd, STDOUT_FILENO);
+		close(out_fd);
+	}
+	// Execute the command (handles NODE_CMD, NODE_REDIR_*, etc.)
+	exit(execute_node(env, cmd, STDIN_FILENO, STDOUT_FILENO));
+}
+
+int	execute_pipeline(t_env *env, t_ast_node *node, int in_fd, int out_fd)
+{
+	int			count;
+	t_ast_node	**commands;
+	int			*pipefds;
+	pid_t		*pids;
+	int			child_in_fd;
+	int			child_out_fd;
+	int			status;
+
+	commands = collect_pipeline_commands(node, &count);
+	if (!commands)
+	{
+		perror("malloc");
 		return (1);
 	}
-	left_status = execute_node(env, node->left, in_fd, pipefd[1]);
-	(void)left_status;
-	close(pipefd[1]);
-	right_status = execute_node(env, node->right, pipefd[0], out_fd);
-	close(pipefd[0]);
-	env->last_exit_code = right_status;
-	return (right_status);
+	pipefds = malloc(sizeof(int) * 2 * (count - 1));
+	pids = malloc(sizeof(pid_t) * count);
+	if (!pipefds || !pids)
+	{
+		perror("malloc");
+		free(commands);
+		free(pipefds);
+		free(pids);
+		return (1);
+	}
+	// Create pipes
+	for (int i = 0; i < count - 1; i++)
+	{
+		if (pipe(pipefds + i * 2) < 0)
+		{
+			perror("pipe");
+			free(commands);
+			free(pipefds);
+			free(pids);
+			return (1);
+		}
+	}
+	// Fork for each command
+	for (int i = 0; i < count; i++)
+	{
+		pids[i] = fork();
+		if (pids[i] == -1)
+		{
+			perror("fork");
+			for (int j = 0; j < count - 1; j++)
+			{
+				close(pipefds[j * 2]);
+				close(pipefds[j * 2 + 1]);
+			}
+			free(commands);
+			free(pipefds);
+			free(pids);
+			return (1);
+		}
+		if (pids[i] == 0)
+		{
+			// Child process
+			signal(SIGINT, SIG_DFL); // Restore default SIGINT behavior
+			// Set input FD
+			child_in_fd = (i == 0) ? in_fd : pipefds[(i - 1) * 2];
+			// Set output FD
+			child_out_fd = (i == count - 1) ? out_fd : pipefds[i * 2 + 1];
+			// Close unused pipe FDs
+			for (int j = 0; j < count - 1; j++)
+			{
+				if (j != i - 1)
+					close(pipefds[j * 2]); // Close read ends
+				if (j != i)
+					close(pipefds[j * 2 + 1]); // Close write ends
+			}
+			execute_child(env, commands[i], child_in_fd, child_out_fd);
+		}
+	}
+	// Parent: Close all pipe FDs
+	for (int i = 0; i < count - 1; i++)
+	{
+		close(pipefds[i * 2]);
+		close(pipefds[i * 2 + 1]);
+	}
+	if (in_fd != STDIN_FILENO)
+		close(in_fd);
+	if (out_fd != STDOUT_FILENO)
+		close(out_fd);
+	// Wait for all children, capture last command's status
+	status = 0;
+	for (int i = 0; i < count; i++)
+	{
+		waitpid(pids[i], &status, 0);
+		if (i == count - 1) // Last command's status
+		{
+			if (WIFEXITED(status))
+				env->last_exit_code = WEXITSTATUS(status);
+			else
+				env->last_exit_code = 128 + WTERMSIG(status);
+		}
+	}
+	free(commands);
+	free(pipefds);
+	free(pids);
+	return (env->last_exit_code);
 }
 
 static int	execute_logical_op(t_env *env, t_ast_node *node, int in_fd,

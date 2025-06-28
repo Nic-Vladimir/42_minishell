@@ -23,7 +23,7 @@ int	execute_pwd(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 	cwd = get_env_value(env, "PWD");
 	if (node->args[1])
 	{
-		ft_printf(YELLOW "pwd: too many arguments\n" RESET);
+		ft_printf("pwd: too many arguments\n");
 		return (1);
 	}
 	else if (*cwd)

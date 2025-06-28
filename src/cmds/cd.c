@@ -12,12 +12,12 @@
 
 #include "../../inc/minishell.h"
 
-static char	*check_path(t_env *env, char *input_path)
+static char	*check_path(t_env *env, t_ast_node node)
 {
 	char	*path;
 	char	*home;
 
-	path = input_path;
+	path = node.args[1];
 	home = get_env_value(env, "HOME");
 	if (!path || ft_strcmp(path, "~") == 0)
 	{
@@ -25,13 +25,17 @@ static char	*check_path(t_env *env, char *input_path)
 			return (NULL);
 		path = home;
 	}
-	else if (ft_strcmp(path, "-") == 0)
+	else if (ft_strcmp(path, "-") == 0 && node.args[2] == NULL)
 	{
 		path = get_env_value(env, "OLDPWD");
 		if (!path)
 			return (NULL);
 	}
-	fancy_write(1, path, PURPLE);
+	else
+	{
+		ft_printf("cd: Too many arguments!\n");
+		return (NULL);
+	}
 	return (path);
 }
 
@@ -69,7 +73,7 @@ static int	update_env(t_env *env, char *old_pwd)
 		return (1);
 	}
 	if (old_pwd && hashmap_insert(env, "OLDPWD", old_pwd) != 0)
-		fancy_write(1, "cd: failed to update OLDPWD", RED);
+		ft_printf("cd: failed to update OLDPWD");
 	if (hashmap_insert(env, "PWD", new_pwd) != 0)
 		result = 1;
 	free(old_pwd);
@@ -86,7 +90,7 @@ int	execute_cd(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 	(void)in_fd;
 	(void)out_fd;
 	old_pwd = NULL;
-	path = check_path(env, node->args[1]);
+	path = check_path(env, *node);
 	if (!path)
 		return (1);
 	result = change_dir(path, &old_pwd);
