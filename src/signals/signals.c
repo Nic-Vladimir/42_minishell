@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:13:28 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/22 22:17:57 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/28 14:08:38 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,7 @@ void	set_mini_mode(sig_atomic_t g_sig)
 		sa.sa_flags = 0;
 		sa.sa_handler = SIG_IGN;
 	}
-
 	sigaction(g_sig, &sa, NULL);
-
 }
 
 static void	set_normal_mode(sig_atomic_t g_sig, t_sigenv *env)

@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 10:16:04 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/22 21:38:45 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/28 14:09:09 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,11 @@ void	custom_prompt_handler(void)
 	g_sig = 130;
 }
 
-void mini_sigint_handler(sig_atomic_t g_sig)
+void	mini_sigint_handler(sig_atomic_t g_sig)
 {
-
 	static int	first_interrupt = 1;
 
 	rl_catch_signals = 0;
-	// (void)ucontext;
-	// (void)info;
-	// //info->si_value.sival_int = 130;
-	// sig = g_sig;
 	if (g_sig)
 	{
 		if (first_interrupt)
@@ -62,15 +57,7 @@ void mini_sigint_handler(sig_atomic_t g_sig)
 		}
 		custom_prompt_handler();
 	}
-
 }
-
-// void	get_env(void *arg)
-// {
-// 	t_env	*env;
-
-// 	env = (t_env *)arg;
-// }
 
 void	cd_handler(sig_atomic_t g_sig, t_env *env)
 {

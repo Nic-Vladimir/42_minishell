@@ -3,26 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 17:45:18 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/01/20 11:42:09 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/28 14:14:31 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/libft.h"
 
-char	*ft_strjoin(const char *s1, const char *s2)
+static char	*join_strings(const char *s1, const char *s2, char *res)
 {
-	size_t	i = 0;
-	size_t	j = 0;
-	char	*res;
+	size_t	i;
+	size_t	j;
 
-	if (!s1 || !s2)
-		return (NULL);
-	res = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (!res)
-		return (NULL);
+	i = 0;
+	j = 0;
 	while (s1[i])
 	{
 		res[j] = s1[i];
@@ -37,5 +33,19 @@ char	*ft_strjoin(const char *s1, const char *s2)
 		j++;
 	}
 	res[j] = '\0';
+	return (res);
+}
+
+char	*ft_strjoin_free(char *s1, const char *s2)
+{
+	char	*res;
+
+	if (!s1 || !s2)
+		return (NULL);
+	res = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
+	if (!res)
+		return (NULL);
+	res = join_strings(s1, s2, res);
+	free(s1);
 	return (res);
 }

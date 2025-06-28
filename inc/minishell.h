@@ -6,30 +6,12 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/22 20:22:35 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/28 14:17:33 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
-// # include "../lib/libft/inc/libft.h"
-// # include "ast.h"
-// # include "colors.h"
-// # include "env.h"
-// # include "sig_hand.h"
-// # include "tokenizer.h"
-// # include <dirent.h>
-// # include <fcntl.h>
-// # include <limits.h>
-// # include <readline/history.h>
-// # include <readline/readline.h>
-// # include <stdbool.h>
-// # include <stdio.h>
-// # include <stdlib.h>
-// # include <string.h>
-// # include <sys/wait.h>
-// # include <unistd.h>
 
 # include "../lib/libft/inc/libft.h"
 # include "ast.h"
@@ -64,11 +46,11 @@ typedef struct s_heredoc_data	t_heredoc_data;
 	"\001\033[38;5;42;48;5;238m\002"                 \
 	"\001\033[38;5;255m\002  "
 
-# define PROMPT_PREFIX_KO                        \
-	"\001\033[38;5;238m\002╭─"           \
+# define PROMPT_PREFIX_KO                                \
+	"\001\033[38;5;238m\002╭─"                   \
 	"\001\033[38;5;255;48;5;238m\002 ₘᵢₙᵢ🐚 " \
-	"\001\033[38;5;238;48;5;1m\002 ✘ "     \
-	"\001\033[38;5;1;48;5;238m\002"          \
+	"\001\033[38;5;238;48;5;1m\002 ✘ "             \
+	"\001\033[38;5;1;48;5;238m\002"                  \
 	"\001\033[38;5;255m\002  "
 
 # define PROMPT_SUFFIX                   \
@@ -122,11 +104,11 @@ char							*process_redir_in(t_tokenizer_data *tok_data,
 char							*process_redir_out(t_tokenizer_data *tok_data,
 									char *input);
 char							*process_simple_token(
-									t_tokenizer_data *tok_data, char *input);
+									t_tokenizer_data *tok_data,	char *input);
 void							add_token(t_tokenizer_data *tok_data,
 									t_token_type type, char *value, size_t len);
 char							*process_single_quotes(
-									t_tokenizer_data *tok_data, char *input);
+									t_tokenizer_data *tok_data,	char *input);
 char							*process_double_quotes(
 									t_tokenizer_data *tok_data, char *input);
 char							*process_word_token(t_tokenizer_data *tok_data,
