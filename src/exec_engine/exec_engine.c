@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   exec_engine.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/22 20:23:15 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/28 13:53:33 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/minishell.h"
 
@@ -32,6 +32,7 @@ int	execute_builtin_command(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 		return (execute_exit(env, env->last_exit_code));
 	return (execute_command(env, node, in_fd, out_fd));
 }
+
 
 static int	execute_pipeline(t_env *env, t_ast_node *node, int in_fd,
 		int out_fd)
