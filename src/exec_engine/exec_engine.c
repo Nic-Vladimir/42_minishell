@@ -6,7 +6,11 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
+<<<<<<< Updated upstream
 /*   Updated: 2025/06/11 17:55:08 by mgavornik        ###   ########.fr       */
+=======
+/*   Updated: 2025/06/28 13:53:33 by mgavornik        ###   ########.fr       */
+>>>>>>> Stashed changes
 /*                                                                            */
 /******************************************************************************/
 
@@ -98,6 +102,7 @@ int	execute_builtin_command(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 	return (execute_command(env, node, in_fd, out_fd));
 }
 
+<<<<<<< Updated upstream
 int	execute_node(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 {
 	if (!node)
@@ -201,6 +206,8 @@ int	execute_node(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 //	else
 //		return (1);
 //}
+=======
+>>>>>>> Stashed changes
 
 static int	execute_pipeline(t_env *env, t_ast_node *node, int in_fd,
 		int out_fd)

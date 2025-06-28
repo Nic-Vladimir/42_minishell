@@ -6,7 +6,11 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 11:16:18 by vnicoles          #+#    #+#             */
+<<<<<<< Updated upstream
 /*   Updated: 2025/06/17 04:21:15 by mgavornik        ###   ########.fr       */
+=======
+/*   Updated: 2025/06/28 15:44:52 by mgavornik        ###   ########.fr       */
+>>>>>>> Stashed changes
 /*                                                                            */
 /******************************************************************************/
 

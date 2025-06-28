@@ -6,7 +6,11 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 12:39:37 by mgavornik         #+#    #+#             */
+<<<<<<< Updated upstream
 /*   Updated: 2025/06/17 09:10:45 by mgavornik        ###   ########.fr       */
+=======
+/*   Updated: 2025/06/28 15:42:28 by mgavornik        ###   ########.fr       */
+>>>>>>> Stashed changes
 /*                                                                            */
 /******************************************************************************/
 
@@ -38,7 +42,11 @@ static void	custom_handler(int sig, siginfo_t *info, void *ucontext)
 	if (sig == SIGINT)
 	{
 		mini_sigint_handler(sig);
+<<<<<<< Updated upstream
 		execute_exit(env);
+=======
+		execute_exit(env, 130);
+>>>>>>> Stashed changes
 	}
 }
 void	setup_child_signals(t_env *env, int behavior)
