@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
-#include "../inc/pedo.h"
+#include "../../inc/minishell.h"
+#include "../../inc/pedo.h"
 
 static void	child_process(t_env *env, t_child_data *child_data, int in_fd,
 		int out_fd)

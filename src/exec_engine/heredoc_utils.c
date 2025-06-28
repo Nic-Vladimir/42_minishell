@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
-#include "../inc/pedo.h"
+#include "../../inc/minishell.h"
+#include "../../inc/pedo.h"
 
 void	herdoc_linker(t_heredoc_data *hd, t_env *env, char *delimiter)
 {

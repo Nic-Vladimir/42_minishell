@@ -24,7 +24,7 @@ CLEAR	= \r\033[Ks
 
 # --- Vars ---
 NAME		= minishell
-CC			= gcc -g 
+CC			= cc -g 
 CFLAGS		= -Wall -Wextra -Werror -I $(INC_DIR)
 
 # --- Paths ---

@@ -72,6 +72,6 @@ int	execute_redirections(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 	if (node->type == NODE_HEREDOC)
 		status = execute_node(env, node->right, new_fd, out_fd);
 	else
-		status = execute_node(env, node->right, in_fd, new_fd);
+		status = execute_node(env, node->right, new_fd, out_fd);
 	return (status);
 }

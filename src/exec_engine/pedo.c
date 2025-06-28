@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
-#include "../inc/pedo.h"
+#include "../../inc/minishell.h"
+#include "../../inc/pedo.h"
 
 void	child_linker(t_child_data *child, t_heredoc_data *data,
 		int (*func)(void *data))
