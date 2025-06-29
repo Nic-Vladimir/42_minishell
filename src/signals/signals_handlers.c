@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   signals_handlers.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 10:16:04 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/28 14:09:09 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/29 02:56:35 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/minishell.h"
 
@@ -70,5 +70,6 @@ void	set_all_signals(t_sig_mode mode, t_sigenv *sigenv)
 {
 	sigenv->current_mode = mode;
 	set_signal_mode(SIGINT, mode, sigenv);
+	set_signal_mode(SIGPIPE, mode, sigenv);
 	set_signal_mode(SIGQUIT, mode, sigenv);
 }

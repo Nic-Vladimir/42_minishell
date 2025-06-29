@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:02:59 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/22 20:37:39 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/29 03:32:15 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/minishell.h"
 #include <termios.h>
@@ -48,7 +48,7 @@ void	reset_terminal_for_readline(void)
 	rl_redisplay();
 }
 
-int	execute_exit(t_env *env, sig_atomic_t g_sig)
+int		execute_exit(t_env *env, sig_atomic_t g_sig)
 {
 	if (env)
 	{

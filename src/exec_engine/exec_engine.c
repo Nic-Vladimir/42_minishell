@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   exec_engine.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/29 03:00:12 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/06/29 04:04:45 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/minishell.h"
 
@@ -53,6 +53,7 @@ static t_ast_node	**collect_pipeline_commands(t_ast_node *node, int *count)
 	commands = malloc(sizeof(t_ast_node *) * (*count));
 	if (!commands)
 		return (NULL);
+	ft_memset(commands, 0, sizeof(t_ast_node *) * (*count));
 	// Collect commands (rightmost to leftmost)
 	current = node;
 	i = *count - 1;
@@ -67,6 +68,8 @@ static t_ast_node	**collect_pipeline_commands(t_ast_node *node, int *count)
 
 static int	execute_child(t_env *env, t_ast_node *cmd, int in_fd, int out_fd)
 {
+	int	exit_status;
+
 	if (in_fd != STDIN_FILENO)
 	{
 		dup2(in_fd, STDIN_FILENO);
@@ -77,8 +80,13 @@ static int	execute_child(t_env *env, t_ast_node *cmd, int in_fd, int out_fd)
 		dup2(out_fd, STDOUT_FILENO);
 		close(out_fd);
 	}
-	// Execute the command (handles NODE_CMD, NODE_REDIR_*, etc.)
-	exit(execute_node(env, cmd, STDIN_FILENO, STDOUT_FILENO));
+	exit_status = execute_node(env, cmd, STDIN_FILENO, STDOUT_FILENO);
+	
+	if (env)
+	{
+		execute_exit(env, 128);
+	}
+	exit(exit_status);
 }
 
 int	execute_pipeline(t_env *env, t_ast_node *node, int in_fd, int out_fd)
@@ -107,6 +115,8 @@ int	execute_pipeline(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 		free(pids);
 		return (1);
 	}
+	ft_memset(pipefds, 0, sizeof(int) * 2 * (count - 1));
+	ft_memset(pids, 0, sizeof(pid_t) * count);
 	// Create pipes
 	for (int i = 0; i < count - 1; i++)
 	{
@@ -140,6 +150,7 @@ int	execute_pipeline(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 		{
 			// Child process
 			signal(SIGINT, SIG_DFL); // Restore default SIGINT behavior
+			signal(SIGPIPE, SIG_DFL); // Handle SIGPIPE with default behavior (terminate)
 			// Set input FD
 			child_in_fd = (i == 0) ? in_fd : pipefds[(i - 1) * 2];
 			// Set output FD
