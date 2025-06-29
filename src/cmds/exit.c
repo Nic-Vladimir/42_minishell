@@ -57,5 +57,5 @@ int	execute_exit(t_env *env, sig_atomic_t g_sig)
 		free_env(env);
 	}
 	clean_rl();
-	exit(g_sig);
+	_exit(g_sig);
 }

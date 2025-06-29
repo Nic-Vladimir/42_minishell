@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/28 14:17:33 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/06/29 03:04:52 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # include <string.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <stdint.h>
 
 typedef struct s_env			t_env;
 typedef struct s_ast_node		t_ast_node;
@@ -169,5 +170,7 @@ void							execute_child_process(t_env *env,
 									t_ast_node *node);
 void							setup_child_signals(t_env *env, int behavior);
 int								free_bucket(t_bucket *new_bucket);
+//void							heredoc_child_cleanup(t_env *env);
+//int								execute_pipeline(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 
 #endif

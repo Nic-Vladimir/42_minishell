@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+#include <readline/readline.h>
 
 static int	status_check(int *pipe_fds, int status, char *expanded, char *line)
 {
@@ -34,8 +35,8 @@ static bool	herdoc_stop(char *line, char *delimiter)
 	return (false);
 }
 
-static int	expanded_herdoc(char *expanded, ssize_t status,
-	int write_fd, char *line)
+static int	expanded_herdoc(char *expanded, ssize_t status, int write_fd,
+		char *line)
 {
 	status = write(write_fd, expanded, ft_strlen(expanded));
 	if (status == -1 || write(write_fd, "\n", 1) == -1)
@@ -55,12 +56,11 @@ int	process_heredoc_input(t_env *env, char *delimiter, int write_fd)
 	status = 0;
 	while (1)
 	{
-		line = readline("heredoc> ");
+		line = readline("> ");
 		if (herdoc_stop(line, delimiter))
 		{
 			if (!line)
-				printf("delimited by end-of-file (wanted `%s')\n",
-					delimiter);
+				printf("delimited by end-of-file (wanted `%s')\n", delimiter);
 			free(line);
 			break ;
 		}

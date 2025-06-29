@@ -13,6 +13,35 @@
 #include "../../inc/minishell.h"
 #include "../../inc/pedo.h"
 
+void	heredoc_child_cleanup(t_env *env)
+{
+	if (env)
+	{
+		if (env->root)
+			free_ast(&env->root);
+		if (env->tokenizer)
+			free_tokens(env->tokenizer);
+		free_env(env);
+	}
+}
+
+static void	heredoc_cleanup(void *data)
+{
+	t_heredoc_data	*hd;
+	t_env			*env;
+
+	hd = (t_heredoc_data *)data;
+	env = hd->env;
+	if (env)
+	{
+		if (env->root)
+			free_ast(&env->root);
+		if (env->tokenizer)
+			free_tokens(env->tokenizer);
+		free_env(env);
+	}
+}
+
 void	herdoc_linker(t_heredoc_data *hd, t_env *env, char *delimiter)
 {
 	hd->env = env;
@@ -43,6 +72,7 @@ int	collect_heredoc(t_env *env, char *delimiter, int *write_fd)
 	herdoc_linker(&hd_data, env, delimiter);
 	hd_data.write_fd = pipe_fds[1];
 	child_linker(&child_data, &hd_data, heredoc_child_func);
+	child_data.cleanup = heredoc_cleanup;
 	result = execute_in_child(env, &child_data, STDIN_FILENO, STDOUT_FILENO);
 	close(pipe_fds[1]);
 	if (result != 0)

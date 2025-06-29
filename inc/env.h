@@ -17,6 +17,7 @@
 # include "sig_hand.h"
 # include "tokenizer.h"
 # include <unistd.h>
+# include <stdbool.h>
 
 typedef struct s_bucket
 {
@@ -40,7 +41,8 @@ typedef struct s_env
 	t_ast_node			*root;
 	char				*input;
 	t_sigenv			*sigenv;
-
+	volatile sig_atomic_t should_exit_heredoc;
+	char __padding[64 - sizeof(volatile sig_atomic_t)];
 }						t_env;
 
 #endif
