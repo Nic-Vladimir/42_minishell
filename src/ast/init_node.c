@@ -1,24 +1,21 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   init_node.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:11:16 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/19 11:12:18 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/07/28 14:36:46 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/ast.h"
 #include "../../inc/minishell.h"
 
 static void	init_t_ast(t_ast_node *node)
 {
-	node->arg_types = NULL;
-	node->args = NULL;
-	node->left = NULL;
-	node->right = NULL;
+	ft_memset(node, 0, sizeof(t_ast_node));
 	node->type = NODE_CMD;
 }
 

@@ -1,25 +1,25 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   exec_command.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 11:16:18 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/07/28 11:19:01 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/07/28 18:56:41 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/minishell.h"
 
 void	setup_child_fds(int in_fd, int out_fd)
 {
-	if (in_fd != STDIN_FILENO)
+	if (in_fd != STDIN_FILENO && in_fd != -1)
 	{
 		dup2(in_fd, STDIN_FILENO);
 		close(in_fd);
 	}
-	if (out_fd != STDOUT_FILENO)
+	if (out_fd != STDOUT_FILENO && out_fd != -1)
 	{
 		dup2(out_fd, STDOUT_FILENO);
 		close(out_fd);

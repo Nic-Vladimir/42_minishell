@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/29 04:04:45 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/07/28 19:24:17 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -42,17 +42,16 @@ t_list	*build_cmd_list(t_env *env, t_ast_node *node)
 
 	(void)env;
 	pipeline = NULL;
-	while (node->left->type == NODE_PIPE)
+	if (!node)
+		return (NULL);
+	while (node && node->type == NODE_PIPE)
 	{
-		ft_lstadd_front(&pipeline, ft_lstnew(node->right));
-		if (node->left->left->type == NODE_PIPE)
-			node = node->left;
-		else
-		{
-			ft_lstadd_front(&pipeline, ft_lstnew(node->left));
-			break ;
-		}
+		if (node->right)
+			ft_lstadd_front(&pipeline, ft_lstnew(node->right));
+		node = node->left;
 	}
+	if (node)
+		ft_lstadd_front(&pipeline, ft_lstnew(node));
 	return (pipeline);
 }
 
@@ -61,21 +60,30 @@ pid_t	execute_one_pipeline_cmd(t_env *env, t_list *pipeline,
 {
 	pid_t	pid;
 
+	if (!pipeline || !pipeline->content)
+		return (-1);	
 	pid = fork();
 	if (pid != 0)
 		return (pid);
-	// set_signals
-	if (prev_read_end != -1)
-	{
-		dup2(prev_read_end, STDIN_FILENO);
-		close(prev_read_end);
-	}
-	if (pipeline->next != NULL)
-		dup2(pipe_fd[WRITE_END], STDOUT_FILENO);
-	close(pipe_fd[READ_END]);
-	close(pipe_fd[WRITE_END]);
+	//set_all_signals(NORMAL_MODE, env->sigenv);
+	setup_child_fds(prev_read_end, pipe_fd[WRITE_END]);
+	setup_child_signals(env, CHILD_SIG_CUSTOM);
+	// if (prev_read_end != -1)
+	// {
+	// 	dup2(prev_read_end, STDIN_FILENO);
+	// 	close(prev_read_end);
+	// }
+	// if (pipeline->next != NULL && pipe_fd[WRITE_END] != -1)
+	// {
+	// 	dup2(pipe_fd[WRITE_END], STDOUT_FILENO);
+	// 	close(pipe_fd[WRITE_END]);
+	// }
+	// pipe read end in child close
+	if (pipe_fd[READ_END] != -1)
+		close(pipe_fd[READ_END]);
 	execute(env, (t_ast_node *)pipeline->content, EXIT);
-	return (pid);
+	return(pid);
+	exit(127);
 }
 
 void	prep_for_next_cmd(t_env *env, int *prev_read_end, int *pipe_fd)
@@ -113,27 +121,71 @@ int	execute_pipeline_cmds(t_env *env, t_list *pipeline)
 	int		last_cmd_status;
 	int		pipeline_count;
 
+	if (!pipeline)
+		return (1);
 	pipeline_count = ft_lstsize(pipeline);
 	last_pid = 0;
 	prev_read_end = -1;
 	while (pipeline)
 	{
-		pipe(pipe_fd);
+		if (pipeline->next)
+		{
+			if (pipe(pipe_fd) == -1)
+			{
+				perror("pipe");
+				return (1);
+			}
+		}
+		else
+		{
+			pipe_fd[READ_END] = -1;
+			pipe_fd[WRITE_END] = -1;
+		}
 		last_pid = execute_one_pipeline_cmd(env, pipeline, prev_read_end,
 				pipe_fd);
-		prep_for_next_cmd(env, &prev_read_end, pipe_fd);
+		
+		if (last_pid == -1)
+		{
+			if (pipeline->next)
+			{
+				close(pipe_fd[READ_END]);
+				close(pipe_fd[WRITE_END]);
+			}
+			return (1);
+		}
+		if (pipeline->next)
+			prep_for_next_cmd(env, &prev_read_end, pipe_fd);
+		else if (prev_read_end != -1)
+			close(prev_read_end);
 		pipeline = pipeline->next;
 	}
 	last_cmd_status = wait_for_children(env, last_pid, pipeline_count);
 	return (last_cmd_status);
 }
 
+void	free_pipeline_list(t_list *pipeline)
+{
+	t_list	*tmp;
+
+	while (pipeline)
+	{
+		tmp = pipeline->next;
+		free(pipeline);
+		pipeline = tmp;
+	}
+}
+
 int	execute_pipeline(t_env *env, t_ast_node *node)
 {
 	t_list	*pipeline;
+	int		status;
 
 	pipeline = build_cmd_list(env, node);
-	return (execute_pipeline_cmds(env, pipeline));
+	if (!pipeline)
+		return (1);
+	status = execute_pipeline_cmds(env, pipeline);
+	free_pipeline_list(pipeline);
+	return (status);
 }
 
 bool	cmd_is_builtin(t_env *env, t_ast_node *node)
@@ -316,8 +368,11 @@ int	execute(t_env *env, t_ast_node *node, t_execute_type exec_type)
 	if (!node)
 		return (0);
 	if (node->type == NODE_CMD)
+	{
 		execute_command_expansion(env, node);
-	if (node->type == NODE_PIPE)
+		status = execute_command(env, node, exec_type);
+	}
+	else if (node->type == NODE_PIPE)
 		status = execute_pipeline(env, node);
 	else if (node->type == NODE_REDIR_IN || node->type == NODE_REDIR_OUT
 		|| node->type == NODE_REDIR_APPEND || node->type == NODE_HEREDOC)
@@ -326,8 +381,6 @@ int	execute(t_env *env, t_ast_node *node, t_execute_type exec_type)
 		status = execute_logical_op(env, node);
 	else if (node->type == NODE_GROUP)
 		status = execute_group(env, node->left);
-	else if (node->type == NODE_CMD)
-		status = execute_command(env, node, exec_type);
 	else
 	{
 		perror("Unknown node type in execution\n");
