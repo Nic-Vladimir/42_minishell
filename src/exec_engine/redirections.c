@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 18:20:38 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/19 12:06:35 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/07/28 14:30:03 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static int	setup_redirection_fd(t_env *env, t_ast_node **node)
 	return (new_fd);
 }
 
-int	execute_redirections(t_env *env, t_ast_node *node, int in_fd, int out_fd)
+int	execute_redirections(t_env *env, t_ast_node *node)
 {
 	int	new_fd;
 	int	status;
@@ -64,6 +64,7 @@ int	execute_redirections(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 	new_fd = setup_redirection_fd(env, &node);
 	if (new_fd == -1)
 		return (1);
+	/*
 	if (node->type == NODE_REDIR_IN && in_fd != STDIN_FILENO)
 		close(in_fd);
 	if ((node->type == NODE_REDIR_OUT || node->type == NODE_REDIR_APPEND)
@@ -72,6 +73,7 @@ int	execute_redirections(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 	if (node->type == NODE_HEREDOC)
 		status = execute_node(env, node->right, new_fd, out_fd);
 	else
-		status = execute_node(env, node->right, new_fd, out_fd);
+		*/
+	status = execute(env, node->right, RETURN);
 	return (status);
 }

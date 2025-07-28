@@ -19,6 +19,12 @@
 # include <unistd.h>
 # include <stdbool.h>
 
+typedef enum e_execute_type
+{
+	RETURN,
+	EXIT
+} t_execute_type;
+
 typedef struct s_bucket
 {
 	char				*key;

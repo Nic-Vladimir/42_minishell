@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:02:13 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/28 17:11:57 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/07/28 11:15:00 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,118 +15,6 @@
 #include "../../inc/tokenizer.h"
 
 t_ast_node	*parse_group(t_tokenizer_data *tok_data);
-
-void	ast_execute(t_ast_node *node)
-{
-	if (!node)
-		return ;
-	ast_execute(node->left);
-	ast_execute(node->right);
-}
-
-/*
-t_ast_node	*parse_redirection(t_tokenizer_data *tok_data, t_ast_node *cmd)
-{
-	t_token		*redir;
-	t_ast_node	*redir_node;
-	char		**args;
-
-	redir = tok_data->tokens;
-	tok_data->tokens = (*tok_data->tokens).next;
-	if (!tok_data->tokens || tok_data->tokens->type != TOK_WORD)
-	{
-		printf("Syntax error: expected filename after redirection\n");
-		return (NULL);
-	}
-	switch (redir->type)
-	{
-	case TOK_REDIR_IN:
-		redir_node = ast_new_node(NODE_REDIR_IN, NULL);
-		break ;
-	case TOK_REDIR_APPEND:
-		redir_node = ast_new_node(NODE_REDIR_APPEND, NULL);
-		break ;
-	case TOK_REDIR_OUT:
-		redir_node = ast_new_node(NODE_REDIR_OUT, NULL);
-		break ;
-	case TOK_HEREDOC:
-		redir_node = ast_new_node(NODE_HEREDOC, NULL);
-		break ;
-	default:
-		printf("Syntax error: unnexpected redirection type\n");
-		return (NULL);
-	}
-	redir_node->right = cmd;
-	if ((*tok_data->tokens).value)
-	{
-		args = (char **)malloc(2 * sizeof(char *));
-		if (!args)
-		{
-			free(redir_node);
-			return (NULL);
-		}
-		args[0] = ft_strdup(tok_data->tokens->value);
-		args[1] = NULL;
-		redir_node->args = args;
-	}
-	else
-		redir_node->args = NULL;
-	tok_data->tokens = tok_data->tokens->next;
-	return (redir_node);
-}
-*/
-
-/*
-t_ast_node	*parse_simple_command(t_tokenizer_data *tok_data)
-{
-	t_ast_node	*cmd;
-	char		**args;
-	int			arg_count;
-	t_token		*temp;
-	int			i;
-	t_token		*current;
-
-	arg_count = 0;
-	temp = tok_data->tokens;
-	while (temp && (temp->type == TOK_WORD || temp->type == TOK_SGQ_BLOCK
-			|| temp->type == TOK_DBQ_BLOCK))
-	{
-		arg_count++;
-		temp = temp->next;
-	}
-	args = malloc(sizeof(char *) * (arg_count + 1));
-	if (!args)
-		return (NULL);
-	// printf("Args: [%d]\n", arg_count);
-	// cmd = ast_new_node(NODE_CMD, args);
-	cmd = init_cmd_node(args, arg_count);
-	if (!cmd)
-	{
-		free(args);
-		return (NULL);
-	}
-	i = 0;
-	current = tok_data->tokens;
-	while (current && (current->type == TOK_WORD
-			|| current->type == TOK_SGQ_BLOCK
-			|| current->type == TOK_DBQ_BLOCK))
-	{
-		args[i] = ft_strdup(current->value);
-		cmd->arg_types[i++] = current->type;
-		current = current->next;
-	}
-	args[i] = NULL;
-	tok_data->tokens = current;
-	while (tok_data->tokens && (tok_data->tokens->type == TOK_REDIR_IN
-			|| tok_data->tokens->type == TOK_REDIR_OUT
-			|| tok_data->tokens->type == TOK_REDIR_APPEND
-			|| tok_data->tokens->type == TOK_HEREDOC))
-	{
-		cmd = parse_redirection(tok_data, cmd);
-	}
-	return (cmd);
-}
-*/
 
 t_ast_node	*parse_pipeline(t_tokenizer_data *tok_data)
 {
@@ -168,13 +56,13 @@ t_ast_node	*parse_logical_operators(t_tokenizer_data *tok_data)
 
 t_ast_node	*parse_group(t_tokenizer_data *tok_data)
 {
-	t_ast_node	*group;
+	t_ast_node	*subtree;
 	t_ast_node	*group_node;
 
 	if (tok_data->tokens && tok_data->tokens->type == TOK_GROUP_OPEN)
 	{
 		tok_data->tokens = tok_data->tokens->next;
-		group = parse_logical_operators(tok_data);
+		subtree = parse_logical_operators(tok_data);
 		if (!tok_data->tokens || tok_data->tokens->type != TOK_GROUP_CLOSE)
 		{
 			printf("Syntax error: expected closing ')'\n");
@@ -184,7 +72,7 @@ t_ast_node	*parse_group(t_tokenizer_data *tok_data)
 		group_node = ast_new_node(NODE_GROUP, NULL);
 		if (!group_node)
 			return (NULL);
-		group_node->left = group;
+		group_node->group = subtree;
 		return (group_node);
 	}
 	return (parse_simple_command(tok_data));

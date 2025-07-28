@@ -6,7 +6,7 @@
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 11:12:29 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/24 11:18:31 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/07/28 13:59:55 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	free_list(char **list)
 	free(list);
 }
 
-static int	handle_wildcard_expansion(t_ast_node *node, int i)
+static void	handle_wildcard_expansion(t_ast_node *node, int i)
 {
 	char	*temp;
 	char	*args_str;
@@ -35,17 +35,16 @@ static int	handle_wildcard_expansion(t_ast_node *node, int i)
 	temp = node->args[i];
 	args_str = expand_wildcard(temp);
 	if (!args_str)
-		return (1);
+		args_str = ft_strdup("");
 	args_list = ft_split(args_str, ' ');
 	free(args_str);
 	temp_args = copy_args(node, i, args_list);
 	free_list(node->args);
 	node->args = temp_args;
 	ft_free_split(args_list);
-	return (0);
 }
 
-static int	handle_variable_expansion(t_env *env, t_ast_node *node, int i)
+static void	handle_variable_expansion(t_env *env, t_ast_node *node, int i)
 {
 	char	*temp;
 	char	*expanded;
@@ -56,30 +55,23 @@ static int	handle_variable_expansion(t_env *env, t_ast_node *node, int i)
 	free(expanded);
 	free(temp);
 	if (!node->args[i])
-		return (1);
-	return (0);
+		node->args[i] = ft_strdup("");
 }
 
-int	execute_command_expansion(t_env *env, t_ast_node *node, int in_fd,
-		int out_fd)
+void	execute_command_expansion(t_env *env, t_ast_node *node)
 {
 	int	i;
 
+	if (!node || !node->args)
+		return ;
 	i = 0;
 	while (node->args[i] != NULL)
 	{
 		if (node->arg_types[i] == TOK_WORD && ft_strchr(node->args[i], '*'))
-		{
-			if (handle_wildcard_expansion(node, i) != 0)
-				return (1);
-		}
+			handle_wildcard_expansion(node, i);
 		else if (node->arg_types[i] == TOK_WORD
 			|| node->arg_types[i] == TOK_DBQ_BLOCK)
-		{
-			if (handle_variable_expansion(env, node, i) != 0)
-				return (1);
-		}
+			handle_variable_expansion(env, node, i);
 		i++;
 	}
-	return (execute_builtin_command(env, node, in_fd, out_fd));
 }

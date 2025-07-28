@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/29 03:04:52 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/07/28 13:49:09 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,9 @@ typedef struct s_tokenizer_data	t_tokenizer_data;
 typedef struct s_child_data		t_child_data;
 typedef struct s_heredoc_data	t_heredoc_data;
 
+# define READ_END 0
+# define WRITE_END 1
+
 # define PROMPT_PREFIX_OK                                \
 	"\001\033[38;5;238m\002╭─"                   \
 	"\001\033[38;5;255;48;5;238m\002 ₘᵢₙᵢ🐚 " \
@@ -68,7 +71,7 @@ int								hashmap_insert(t_env *env, char *key,
 									char *value);
 t_env							*init_env(char **envp);
 char							**get_envp_from_hashmap(t_env *env);
-int								execute_ast(t_env *env, t_ast_node *root);
+int								execute_ast(t_env *env, t_ast_node *root, t_execute_type exec_type);
 int								djb2_hash(const char *key);
 char							*find_executable(t_env *env,
 									const char *command);
@@ -79,16 +82,11 @@ void							free_tokens(t_tokenizer_data *tokenizer);
 void							free_ast(t_ast_node **node);
 void							free_env(t_env *env);
 char							*expand_wildcard(char *arg);
-int								execute_export(t_env *env, t_ast_node *node,
-									int in_fd, int out_fd);
-int								execute_env(t_env *env, t_ast_node *node,
-									int in_fd, int out_fd);
-int								execute_pwd(t_env *env, t_ast_node *node,
-									int in_fd, int out_fd);
-int								execute_echo(t_env *env, t_ast_node *node,
-									int in_fd, int out_fd);
-int								execute_cd(t_env *env, t_ast_node *node,
-									int in_fd, int out_fd);
+int								execute_export(t_env *env, t_ast_node *node);
+int								execute_env(t_env *env, t_ast_node *node);
+int								execute_pwd(t_env *env, t_ast_node *node);
+int								execute_echo(t_env *env, t_ast_node *node);
+int								execute_cd(t_env *env, t_ast_node *node);
 int								execute_exit(t_env *env, int sig);
 int								execute_unset(t_env *env, t_ast_node *node);
 
@@ -118,18 +116,17 @@ void							sort_envp(char **envp, int low, int high);
 void							format_envp(char **envp);
 char							*handle_quotes(t_ast_node *node, int *i);
 int								execute_redirections(t_env *env,
-									t_ast_node *node, int in_fd, int out_fd);
+									t_ast_node *node);
 int								collect_heredoc(t_env *env, char *delimiter,
 									int *write_fd);
 char							*expand_var(t_env *env, const char *input);
 char							**copy_args(t_ast_node *node, int star_index,
 									char **expanded);
-int								execute_command(t_env *env, t_ast_node *node,
-									int in_fd, int out_fd);
-int								execute_command_expansion(t_env *env,
-									t_ast_node *node, int in_fd, int out_fd);
+int								execute_command(t_env *env, t_ast_node *node, t_execute_type exec_type);
+void								execute_command_expansion(t_env *env,
+									t_ast_node *node);
 int								execute_builtin_command(t_env *env,
-									t_ast_node *node, int in_fd, int out_fd);
+									t_ast_node *node);
 t_ast_node						*ast_new_node(t_node_type type, char **args);
 t_ast_node						*parse_redirection(t_tokenizer_data *tok_data,
 									t_ast_node *cmd);
@@ -170,6 +167,8 @@ void							execute_child_process(t_env *env,
 									t_ast_node *node);
 void							setup_child_signals(t_env *env, int behavior);
 int								free_bucket(t_bucket *new_bucket);
+int								execute(t_env *env, t_ast_node *node, t_execute_type exec_type);
+int								execute_pipeline(t_env *env, t_ast_node *node);
 //void							heredoc_child_cleanup(t_env *env);
 //int								execute_pipeline(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 

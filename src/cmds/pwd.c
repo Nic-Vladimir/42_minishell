@@ -6,20 +6,19 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 20:05:11 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/21 17:12:11 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/07/28 11:33:01 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	execute_pwd(t_env *env, t_ast_node *node, int in_fd, int out_fd)
+int	execute_pwd(t_env *env, t_ast_node *node)
 {
 	char	*cwd;
 	ssize_t	len;
 	ssize_t	status;
 
 	status = 0;
-	(void)in_fd;
 	cwd = get_env_value(env, "PWD");
 	if (node->args[1])
 	{
@@ -29,8 +28,8 @@ int	execute_pwd(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 	else if (*cwd)
 	{
 		len = ft_strlen(cwd);
-		status = write(out_fd, cwd, len);
-		if (status == -1 || write(out_fd, "\n", 1) == -1)
+		status = write(STDOUT_FILENO, cwd, len);
+		if (status == -1 || write(STDOUT_FILENO, "\n", 1) == -1)
 			return (1);
 		return (0);
 	}

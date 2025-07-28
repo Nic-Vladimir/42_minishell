@@ -11,231 +11,332 @@
 /******************************************************************************/
 
 #include "../../inc/minishell.h"
+#include <unistd.h>
 
-int	execute_builtin_command(t_env *env, t_ast_node *node, int in_fd, int out_fd)
+int		check_process_child_exit(t_env *env, int status);
+
+int	execute_builtin_command(t_env *env, t_ast_node *node)
 {
 	if (node->args[0] == NULL)
 		return (1);
 	if (ft_strncmp(node->args[0], "cd", 3) == 0)
-		return (execute_cd(env, node, in_fd, out_fd));
+		return (execute_cd(env, node));
 	if (ft_strncmp(node->args[0], "echo", 5) == 0)
-		return (execute_echo(env, node, in_fd, out_fd));
+		return (execute_echo(env, node));
 	if (ft_strncmp(node->args[0], "pwd", 4) == 0)
-		return (execute_pwd(env, node, in_fd, out_fd));
+		return (execute_pwd(env, node));
 	if (ft_strncmp(node->args[0], "export", 7) == 0)
-		return (execute_export(env, node, in_fd, out_fd));
+		return (execute_export(env, node));
 	if (ft_strncmp(node->args[0], "env", 4) == 0)
-		return (execute_env(env, node, in_fd, out_fd));
+		return (execute_env(env, node));
 	if (ft_strncmp(node->args[0], "unset", 6) == 0)
 		return (execute_unset(env, node));
 	if (ft_strncmp(node->args[0], "exit", 6) == 0)
 		return (execute_exit(env, env->last_exit_code));
-	return (execute_command(env, node, in_fd, out_fd));
+	return (1);
 }
 
-static t_ast_node	**collect_pipeline_commands(t_ast_node *node, int *count)
+t_list	*build_cmd_list(t_env *env, t_ast_node *node)
 {
-	t_ast_node	**commands;
-	int			i;
-	t_ast_node	*current;
+	t_list	*pipeline;
 
-	commands = NULL;
-	i = 0;
-	// Count commands and allocate array
-	*count = 0;
-	current = node;
-	while (current && current->type == NODE_PIPE)
+	(void)env;
+	pipeline = NULL;
+	while (node->left->type == NODE_PIPE)
 	{
-		(*count)++;
-		current = current->left;
-	}
-	(*count)++; // Last command
-	commands = malloc(sizeof(t_ast_node *) * (*count));
-	if (!commands)
-		return (NULL);
-	ft_memset(commands, 0, sizeof(t_ast_node *) * (*count));
-	// Collect commands (rightmost to leftmost)
-	current = node;
-	i = *count - 1;
-	while (current && current->type == NODE_PIPE)
-	{
-		commands[i--] = current->right;
-		current = current->left;
-	}
-	commands[i] = current; // Leftmost command
-	return (commands);
-}
-
-static int	execute_child(t_env *env, t_ast_node *cmd, int in_fd, int out_fd)
-{
-	int	exit_status;
-
-	if (in_fd != STDIN_FILENO)
-	{
-		dup2(in_fd, STDIN_FILENO);
-		close(in_fd);
-	}
-	if (out_fd != STDOUT_FILENO)
-	{
-		dup2(out_fd, STDOUT_FILENO);
-		close(out_fd);
-	}
-	exit_status = execute_node(env, cmd, STDIN_FILENO, STDOUT_FILENO);
-	
-	if (env)
-	{
-		execute_exit(env, 128);
-	}
-	exit(exit_status);
-}
-
-int	execute_pipeline(t_env *env, t_ast_node *node, int in_fd, int out_fd)
-{
-	int			count;
-	t_ast_node	**commands;
-	int			*pipefds;
-	pid_t		*pids;
-	int			child_in_fd;
-	int			child_out_fd;
-	int			status;
-
-	commands = collect_pipeline_commands(node, &count);
-	if (!commands)
-	{
-		perror("malloc");
-		return (1);
-	}
-	pipefds = malloc(sizeof(int) * 2 * (count - 1));
-	pids = malloc(sizeof(pid_t) * count);
-	if (!pipefds || !pids)
-	{
-		perror("malloc");
-		free(commands);
-		free(pipefds);
-		free(pids);
-		return (1);
-	}
-	ft_memset(pipefds, 0, sizeof(int) * 2 * (count - 1));
-	ft_memset(pids, 0, sizeof(pid_t) * count);
-	// Create pipes
-	for (int i = 0; i < count - 1; i++)
-	{
-		if (pipe(pipefds + i * 2) < 0)
+		ft_lstadd_front(&pipeline, ft_lstnew(node->right));
+		if (node->left->left->type == NODE_PIPE)
+			node = node->left;
+		else
 		{
-			perror("pipe");
-			free(commands);
-			free(pipefds);
-			free(pids);
-			return (1);
+			ft_lstadd_front(&pipeline, ft_lstnew(node->left));
+			break ;
 		}
 	}
-	// Fork for each command
-	for (int i = 0; i < count; i++)
+	return (pipeline);
+}
+
+pid_t	execute_one_pipeline_cmd(t_env *env, t_list *pipeline,
+		int prev_read_end, int *pipe_fd)
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (pid != 0)
+		return (pid);
+	// set_signals
+	if (prev_read_end != -1)
 	{
-		pids[i] = fork();
-		if (pids[i] == -1)
-		{
-			perror("fork");
-			for (int j = 0; j < count - 1; j++)
+		dup2(prev_read_end, STDIN_FILENO);
+		close(prev_read_end);
+	}
+	if (pipeline->next != NULL)
+		dup2(pipe_fd[WRITE_END], STDOUT_FILENO);
+	close(pipe_fd[READ_END]);
+	close(pipe_fd[WRITE_END]);
+	execute(env, (t_ast_node *)pipeline->content, EXIT);
+	return (pid);
+}
+
+void	prep_for_next_cmd(t_env *env, int *prev_read_end, int *pipe_fd)
+{
+	(void)env;
+	if (*prev_read_end != -1)
+		close(*prev_read_end);
+	close(pipe_fd[WRITE_END]);
+	*prev_read_end = pipe_fd[READ_END];
+}
+
+int	wait_for_children(t_env *env, pid_t last_pid, int pipeline_count)
+{
+	pid_t	child_pid;
+	int		status;
+	int		last_cmd_status;
+
+	last_cmd_status = 0;
+	while (pipeline_count--)
+	{
+		child_pid = wait(&status);
+		if (child_pid == last_pid)
+			last_cmd_status = check_process_child_exit(env, status);
+		else
+			check_process_child_exit(env, status);
+	}
+	return (last_cmd_status);
+}
+
+int	execute_pipeline_cmds(t_env *env, t_list *pipeline)
+{
+	int		pipe_fd[2];
+	int		prev_read_end;
+	pid_t	last_pid;
+	int		last_cmd_status;
+	int		pipeline_count;
+
+	pipeline_count = ft_lstsize(pipeline);
+	last_pid = 0;
+	prev_read_end = -1;
+	while (pipeline)
+	{
+		pipe(pipe_fd);
+		last_pid = execute_one_pipeline_cmd(env, pipeline, prev_read_end,
+				pipe_fd);
+		prep_for_next_cmd(env, &prev_read_end, pipe_fd);
+		pipeline = pipeline->next;
+	}
+	last_cmd_status = wait_for_children(env, last_pid, pipeline_count);
+	return (last_cmd_status);
+}
+
+int	execute_pipeline(t_env *env, t_ast_node *node)
+{
+	t_list	*pipeline;
+
+	pipeline = build_cmd_list(env, node);
+	return (execute_pipeline_cmds(env, pipeline));
+}
+
+bool	cmd_is_builtin(t_env *env, t_ast_node *node)
+{
+	(void)env;
+	return (ft_strncmp(node->args[0], "cd", 3) == 0 || ft_strncmp(node->args[0],
+			"echo", 5) == 0 || ft_strncmp(node->args[0], "pwd", 4) == 0
+		|| ft_strncmp(node->args[0], "export", 7) == 0
+		|| ft_strncmp(node->args[0], "env", 4) == 0 || ft_strncmp(node->args[0],
+			"unset", 6) == 0 || ft_strncmp(node->args[0], "exit", 6) == 0);
+}
+
+void	handle_execve(t_env *env, t_ast_node *node)
+{
+	char	**envp;
+	char	*exec_path;
+
+	envp = get_envp_from_hashmap(env);
+	exec_path = find_executable(env, node->args[0]);
+	if (exec_path == NULL)
+	{
+		ft_printf("minishell: %s: Is not an executable binary\n",
+			node->args[0]);
+		free_ast(&env->root);
+		free_env(env);
+		free_envp(envp);
+		exit(127);
+	}
+	if (execve(exec_path, node->args, envp) == -1)
+	{
+		ft_printf("minishell: %s: Is not an executable binary\n", exec_path);
+		free_ast(&env->root);
+		free(exec_path);
+		free_envp(envp);
+		free_env(env);
+		exit(127);
+	}
+}
+
+int	check_process_child_exit(t_env *env, int status)
+{
+	int	signal;
+
+	(void)env;
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	else if (WIFSIGNALED(status))
+	{
+		signal = WTERMSIG(status);
+		/*
+			if (signal == SIGQUIT)
+				write_s("Quit: 3", STDERR_FILENO, sh);
+			if (signal == SIGQUIT || signal == SIGINT)
 			{
-				close(pipefds[j * 2]);
-				close(pipefds[j * 2 + 1]);
+				if (!new_line || (new_line && *new_line == false))
+					write_s("\n", STDERR_FILENO, sh);
+				if (new_line && *new_line == false)
+					*new_line = true;
 			}
-			free(commands);
-			free(pipefds);
-			free(pids);
-			return (1);
-		}
-		if (pids[i] == 0)
-		{
-			// Child process
-			signal(SIGINT, SIG_DFL); // Restore default SIGINT behavior
-			signal(SIGPIPE, SIG_DFL); // Handle SIGPIPE with default behavior (terminate)
-			// Set input FD
-			child_in_fd = (i == 0) ? in_fd : pipefds[(i - 1) * 2];
-			// Set output FD
-			child_out_fd = (i == count - 1) ? out_fd : pipefds[i * 2 + 1];
-			// Close unused pipe FDs
-			for (int j = 0; j < count - 1; j++)
-			{
-				if (j != i - 1)
-					close(pipefds[j * 2]); // Close read ends
-				if (j != i)
-					close(pipefds[j * 2 + 1]); // Close write ends
-			}
-			execute_child(env, commands[i], child_in_fd, child_out_fd);
-		}
+		*/
+		return (128 + signal);
 	}
-	// Parent: Close all pipe FDs
-	for (int i = 0; i < count - 1; i++)
-	{
-		close(pipefds[i * 2]);
-		close(pipefds[i * 2 + 1]);
-	}
-	if (in_fd != STDIN_FILENO)
-		close(in_fd);
-	if (out_fd != STDOUT_FILENO)
-		close(out_fd);
-	// Wait for all children, capture last command's status
+	else
+		return (EXIT_FAILURE);
+}
+
+int	execute_external_command(t_env *env, t_ast_node *node,
+		t_execute_type exec_type)
+{
+	pid_t	pid;
+	int		status;
+
 	status = 0;
-	for (int i = 0; i < count; i++)
+	if (exec_type == EXIT)
+		handle_execve(env, node);
+	else
 	{
-		waitpid(pids[i], &status, 0);
-		if (i == count - 1) // Last command's status
+		pid = fork();
+		if (pid == 0)
 		{
-			if (WIFEXITED(status))
-				env->last_exit_code = WEXITSTATUS(status);
-			else
-				env->last_exit_code = 128 + WTERMSIG(status);
+			set_all_signals(NORMAL_MODE, env->sigenv);
+			handle_execve(env, node);
 		}
+		signal(SIGINT, SIG_IGN);
+		waitpid(pid, &status, 0);
+		set_all_signals(MINI_MODE, env->sigenv);
+		// write(STDOUT_FILENO, "\n", 1);
+		if (WIFEXITED(status))
+			return (WEXITSTATUS(status));
+		else
+			return (128 + WTERMSIG(status));
 	}
-	free(commands);
-	free(pipefds);
-	free(pids);
-	return (env->last_exit_code);
+	return (status);
 }
 
-static int	execute_logical_op(t_env *env, t_ast_node *node, int in_fd,
-		int out_fd)
+int	execute_command(t_env *env, t_ast_node *node, t_execute_type exec_type)
+{
+	int	status;
+
+	if (cmd_is_builtin(env, node))
+		status = execute_builtin_command(env, node);
+	else
+		status = execute_external_command(env, node, exec_type);
+	return (status);
+}
+
+int	execute_logical_op(t_env *env, t_ast_node *node)
 {
 	int	left_status;
 	int	right_status;
 
-	left_status = execute_node(env, node->left, in_fd, out_fd);
-	*&env->last_exit_code = left_status;
-	if ((node->type == NODE_AND && left_status == 0) || (node->type == NODE_OR
-			&& left_status != 0))
+	left_status = execute(env, node->left, RETURN);
+	env->last_exit_code = left_status;
+	if (node->type == NODE_AND)
 	{
-		right_status = execute_node(env, node->right, in_fd, out_fd);
-		*&env->last_exit_code = right_status;
-		return (right_status);
+		if (left_status == 0)
+		{
+			right_status = execute(env, node->right, RETURN);
+			return (right_status);
+		}
+		return (left_status);
 	}
-	return (left_status);
+	else if (node->type == NODE_OR)
+	{
+		if (left_status != 0)
+		{
+			right_status = execute(env, node->right, RETURN);
+			return (right_status);
+		}
+		return (left_status);
+	}
+	return (1);
 }
 
-int	execute_node(t_env *env, t_ast_node *node, int in_fd, int out_fd)
+int	execute_group(t_env *env, t_ast_node *node)
 {
+	pid_t	pid;
+	int		status;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		// signals
+		execute(env, node->group, EXIT);
+	}
+	wait(&status);
+	status = check_process_child_exit(env, status);
+	return (status);
+}
+
+/*
+int	redirect_input(t_env *env, t_ast *node)
+{
+	int	input_fd;
+	int	original_stdin;
+	int	status;
+
+	input_fd = open()
+}
+
+int	execute_redirections(t_env *env, t_ast_node *node)
+{
+	int	status;
+
+	status = EXIT_FAILURE;
+	if (node->type == NODE_REDIR_IN || node->type == NODE_HEREDOC)
+		status = redirect_input(env, node);
+	else if (node->type == NODE_REDIR_OUT)
+		status = redirect_output(env, node);
+	else if (node->type == NODE_REDIR_APPEND)
+		status = append_output(env, node);
+	return (status);
+}
+*/
+
+int	execute(t_env *env, t_ast_node *node, t_execute_type exec_type)
+{
+	int	status;
+
 	if (!node)
 		return (0);
 	if (node->type == NODE_CMD)
-		return (execute_command_expansion(env, node, in_fd, out_fd));
-	else if (node->type == NODE_PIPE)
-		return (execute_pipeline(env, node, in_fd, out_fd));
+		execute_command_expansion(env, node);
+	if (node->type == NODE_PIPE)
+		status = execute_pipeline(env, node);
 	else if (node->type == NODE_REDIR_IN || node->type == NODE_REDIR_OUT
 		|| node->type == NODE_REDIR_APPEND || node->type == NODE_HEREDOC)
-		return (execute_redirections(env, node, in_fd, out_fd));
+		status = execute_redirections(env, node);
 	else if (node->type == NODE_AND || node->type == NODE_OR)
-		return (execute_logical_op(env, node, in_fd, out_fd));
+		status = execute_logical_op(env, node);
 	else if (node->type == NODE_GROUP)
-		return (execute_node(env, node->left, in_fd, out_fd));
+		status = execute_group(env, node->left);
+	else if (node->type == NODE_CMD)
+		status = execute_command(env, node, exec_type);
 	else
 	{
 		perror("Unknown node type in execution\n");
 		return (1);
 	}
+	return (status);
 }
 
-int	execute_ast(t_env *env, t_ast_node *root)
+int	execute_ast(t_env *env, t_ast_node *root, t_execute_type exec_type)
 {
-	return (execute_node(env, root, STDIN_FILENO, STDOUT_FILENO));
+	return (execute(env, root, exec_type));
 }

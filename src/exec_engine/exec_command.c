@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 11:16:18 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/22 20:14:04 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/07/28 11:19:01 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ void	execute_child_process(t_env *env, t_ast_node *node)
 		exit(127);
 	}
 }
-
-int	execute_command(t_env *env, t_ast_node *node, int in_fd, int out_fd)
+/*
+int	execute_command(t_env *env, t_ast_node *node)
 {
 	pid_t	pid;
 	int		status;
@@ -78,3 +78,4 @@ int	execute_command(t_env *env, t_ast_node *node, int in_fd, int out_fd)
 	else
 		return (128 + WTERMSIG(status));
 }
+*/

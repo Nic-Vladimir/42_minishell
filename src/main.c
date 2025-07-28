@@ -61,7 +61,7 @@ void	handle_command(t_env *env, char *input)
 	env->root = root;
 	env->input = input;
 	env->tokenizer->tokens = token_head;
-	status = execute_ast(env, root);
+	status = execute_ast(env, root, RETURN);
 	free_tokens(env->tokenizer);
 	free_ast(&env->root);
 	env->last_exit_code = status;

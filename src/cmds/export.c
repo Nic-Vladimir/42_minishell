@@ -6,13 +6,13 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 02:17:49 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/23 19:39:24 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/07/28 11:31:47 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static int	print_sorted_envp(t_env *env, int out_fd)
+static int	print_sorted_envp(t_env *env)
 {
 	int		i;
 	char	**envp;
@@ -27,8 +27,8 @@ static int	print_sorted_envp(t_env *env, int out_fd)
 	i = 0;
 	while (envp[i])
 	{
-		write_status = write(out_fd, envp[i], ft_strlen(envp[i]));
-		if (write_status == -1 || write(out_fd, "\n", 1) == -1)
+		write_status = write(STDOUT_FILENO, envp[i], ft_strlen(envp[i]));
+		if (write_status == -1 || write(STDOUT_FILENO, "\n", 1) == -1)
 		{
 			free_envp(envp);
 			return (1);
@@ -65,17 +65,16 @@ static int	extract_key_value(char *temp, char **key, char **value)
 	return (0);
 }
 
-int	execute_export(t_env *env, t_ast_node *node, int in_fd, int out_fd)
+int	execute_export(t_env *env, t_ast_node *node)
 {
 	char	*temp;
 	char	*key;
 	char	*value;
 	int		i;
 
-	(void)in_fd;
 	i = 1;
 	if (!node->args[i])
-		return (print_sorted_envp(env, out_fd));
+		return (print_sorted_envp(env));
 	while (node->args[i])
 	{
 		temp = handle_quotes(node, &i);

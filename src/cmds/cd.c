@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 20:03:32 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/21 17:06:24 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/07/28 11:27:16 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,14 +81,12 @@ static int	update_env(t_env *env, char *old_pwd)
 	return (result);
 }
 
-int	execute_cd(t_env *env, t_ast_node *node, int in_fd, int out_fd)
+int	execute_cd(t_env *env, t_ast_node *node)
 {
 	char	*path;
 	char	*old_pwd;
 	int		result;
 
-	(void)in_fd;
-	(void)out_fd;
 	old_pwd = NULL;
 	path = check_path(env, *node);
 	if (!path)

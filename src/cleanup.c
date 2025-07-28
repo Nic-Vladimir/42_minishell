@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 21:35:07 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/19 11:40:59 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/07/28 11:17:04 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,13 @@ void	free_ast(t_ast_node **node_ptr)
 		free_ast(&(node->left));
 	if (node->right)
 		free_ast(&(node->right));
+	if (node->group)
+		free_ast(&(node->group));
 	if (node->args)
 	{
 		i = 0;
 		while (node->args[i])
-		{
-			free(node->args[i]);
-			i++;
-		}
+			free(node->args[i++]);
 		free(node->args);
 	}
 	if (node->arg_types)
