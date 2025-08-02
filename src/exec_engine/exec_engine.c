@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/07/28 19:24:17 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/02 20:09:14 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -59,15 +59,28 @@ pid_t	execute_one_pipeline_cmd(t_env *env, t_list *pipeline,
 		int prev_read_end, int *pipe_fd)
 {
 	pid_t	pid;
+	int dummyfd;
 
+	dummyfd = open("/dev/null", O_WRONLY);
 	if (!pipeline || !pipeline->content)
-		return (-1);	
+		return (-1);
+	
+	t_ast_node *node = (t_ast_node *)pipeline->content;
+	fprintf(stderr, "DEBUG: About to execute: %s, prev_read_end=%d, pipe_write=%d, pipe_read=%d, has_next=%s\n", 
+        node->args[0], prev_read_end, pipe_fd[WRITE_END], pipe_fd[READ_END], 
+        pipeline->next ? "yes" : "no");	
+	
 	pid = fork();
 	if (pid != 0)
+	{
+		fprintf(stderr, "DEBUG: Parent created child %d for command: %s\n", pid, node->args[0]);
 		return (pid);
+	}
+	fprintf(stderr, "DEBUG: Child %d starting for command: %s\n", getpid(), node->args[0]);
+	
 	//set_all_signals(NORMAL_MODE, env->sigenv);
-	setup_child_fds(prev_read_end, pipe_fd[WRITE_END]);
 	setup_child_signals(env, CHILD_SIG_CUSTOM);
+
 	// if (prev_read_end != -1)
 	// {
 	// 	dup2(prev_read_end, STDIN_FILENO);
@@ -80,7 +93,20 @@ pid_t	execute_one_pipeline_cmd(t_env *env, t_list *pipeline,
 	// }
 	// pipe read end in child close
 	if (pipe_fd[READ_END] != -1)
+	{
+		fprintf(stderr, "DEBUG: Child %d closing read end %d\n", getpid(), pipe_fd[READ_END]);
 		close(pipe_fd[READ_END]);
+	}
+
+	fprintf(stderr, "DEBUG: Child %d setting up FDs: input=%d, output=%d\n", 
+        getpid(), prev_read_end, pipe_fd[WRITE_END]);
+	
+	setup_child_fds(prev_read_end, pipe_fd[WRITE_END]);
+	if (dummyfd != -1) 
+	{
+    	dup2(dummyfd, STDERR_FILENO);
+    	close(dummyfd);
+	}
 	execute(env, (t_ast_node *)pipeline->content, EXIT);
 	return(pid);
 	exit(127);
@@ -160,6 +186,7 @@ int	execute_pipeline_cmds(t_env *env, t_list *pipeline)
 		pipeline = pipeline->next;
 	}
 	last_cmd_status = wait_for_children(env, last_pid, pipeline_count);
+	printf("\n");
 	return (last_cmd_status);
 }
 
