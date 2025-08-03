@@ -146,7 +146,6 @@ void							update_arg_types(t_ast_node *node,
 int								calculate_total_args(t_ast_node *node,
 									char **expanded, int *len_args,
 									int *len_expanded);
-
 int								process_heredoc_input(t_env *env,
 									char *delimiter, int write_fd);
 int								execute_in_child(t_env *env,
@@ -170,6 +169,9 @@ int								free_bucket(t_bucket *new_bucket);
 int								execute(t_env *env, t_ast_node *node, t_execute_type exec_type);
 int								execute_pipeline(t_env *env, t_ast_node *node);
 void							free_pipeline_list(t_list **pipeline);
+int								execute_pipeline(t_env *env, t_ast_node *node);
+int								check_process_child_exit(t_env *env, int status);
+int								wait_for_children(t_env *env, pid_t last_pid, int pipeline_count);
 
 //void							heredoc_child_cleanup(t_env *env);
 //int								execute_pipeline(t_env *env, t_ast_node *node, int in_fd, int out_fd);

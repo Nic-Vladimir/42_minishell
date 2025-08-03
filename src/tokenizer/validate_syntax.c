@@ -12,14 +12,6 @@
 
 #include "../../inc/minishell.h"
 
-/*
-static bool	is_valid_operator_sequence(t_token_type prev, t_token_type current)
-{
-	if (prev == TOK_GROUP_OPEN && current == TOK_GROUP_CLOSE)
-		return (true);
-	return (false);
-}
-*/
 static bool	validate_pipe_and_logical_rules(t_token *current, t_token *prev)
 {
 	if (current->type == TOK_PIPE)
@@ -36,6 +28,8 @@ static bool	validate_pipe_and_logical_rules(t_token *current, t_token *prev)
 			return (false);
 		if (prev->type == TOK_AND || prev->type == TOK_OR
 			|| prev->type == TOK_PIPE)
+			return (false);
+		if (current->type == TOK_AND && ft_strlen(current->value) == 1)
 			return (false);
 	}
 	return (true);

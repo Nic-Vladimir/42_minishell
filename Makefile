@@ -55,6 +55,8 @@ SRC			= main.c \
 				exec_engine/expand_command.c \
 				exec_engine/arg_utils.c \
 				exec_engine/copy_args.c \
+				exec_engine/exec_pipeline.c \
+				exec_engine/exec_pipeline_utils.c \
 				utils/prompt.c \
 				utils/wildcard.c \
 				cmds/export.c \

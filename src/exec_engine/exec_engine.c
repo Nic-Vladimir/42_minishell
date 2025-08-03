@@ -37,138 +37,6 @@ int	execute_builtin_command(t_env *env, t_ast_node *node)
 	return (1);
 }
 
-t_list	*build_cmd_list(t_env *env, t_ast_node *node)
-{
-	t_list	*pipeline;
-
-	(void)env;
-	pipeline = NULL;
-	if (!node)
-		return (NULL);
-	while (node && node->type == NODE_PIPE)
-	{
-		if (node->right)
-			ft_lstadd_front(&pipeline, ft_lstnew(node->right));
-		node = node->left;
-	}
-	if (node)
-		ft_lstadd_front(&pipeline, ft_lstnew(node));
-	return (pipeline);
-}
-
-pid_t	execute_one_pipeline_cmd(t_env *env, t_list *pipeline,
-		int prev_read_end, int *pipe_fd)
-{
-	pid_t		pid;
-	// t_ast_node	*node;
-	int			status;
-
-	status = EXIT_FAILURE;
-	// int			dummyfd;
-	// dummyfd = open("/dev/null", O_WRONLY);
-	if (!pipeline || !pipeline->content)
-		return (-1);
-	// node = (t_ast_node *)pipeline->content;
-	pid = fork();
-	if (pid != 0)
-	{
-		return (pid);
-	}
-	setup_child_signals(env, CHILD_SIG_CUSTOM);
-	if (pipe_fd[READ_END] != -1)
-	{
-		close(pipe_fd[READ_END]);
-	}
-	setup_child_fds(prev_read_end, pipe_fd[WRITE_END]);
-	/*
-	if (dummyfd != -1)
-	{
-		dup2(dummyfd, STDERR_FILENO);
-		close(dummyfd);
-	}
-	*/
-	status = execute(env, (t_ast_node *)pipeline->content, EXIT);
-	exit(status);
-}
-
-void	prep_for_next_cmd(t_env *env, int *prev_read_end, int *pipe_fd)
-{
-	(void)env;
-	if (*prev_read_end != -1)
-		close(*prev_read_end);
-	close(pipe_fd[WRITE_END]);
-	*prev_read_end = pipe_fd[READ_END];
-}
-
-int	wait_for_children(t_env *env, pid_t last_pid, int pipeline_count)
-{
-	pid_t	child_pid;
-	int		status;
-	int		last_cmd_status;
-
-	last_cmd_status = 0;
-	while (pipeline_count--)
-	{
-		child_pid = wait(&status);
-		if (child_pid == last_pid)
-			last_cmd_status = check_process_child_exit(env, status);
-		else
-			check_process_child_exit(env, status);
-	}
-	return (last_cmd_status);
-}
-
-int	execute_pipeline_cmds(t_env *env, t_list *pipeline)
-{
-	int		pipe_fd[2];
-	int		prev_read_end;
-	pid_t	last_pid;
-	int		last_cmd_status;
-	int		pipeline_count;
-
-	if (!pipeline)
-		return (1);
-	pipeline_count = ft_lstsize(pipeline);
-	last_pid = 0;
-	prev_read_end = -1;
-	env->pipeline = pipeline;
-	while (pipeline)
-	{
-		if (pipeline->next)
-		{
-			if (pipe(pipe_fd) == -1)
-			{
-				perror("pipe");
-				return (1);
-			}
-		}
-		else
-		{
-			pipe_fd[READ_END] = -1;
-			pipe_fd[WRITE_END] = -1;
-		}
-		last_pid = execute_one_pipeline_cmd(env, pipeline, prev_read_end,
-				pipe_fd);
-		if (last_pid == -1)
-		{
-			if (pipeline->next)
-			{
-				close(pipe_fd[READ_END]);
-				close(pipe_fd[WRITE_END]);
-			}
-			return (1);
-		}
-		if (pipeline->next)
-			prep_for_next_cmd(env, &prev_read_end, pipe_fd);
-		else if (prev_read_end != -1)
-			close(prev_read_end);
-		pipeline = pipeline->next;
-	}
-	last_cmd_status = wait_for_children(env, last_pid, pipeline_count);
-	printf("\n");
-	return (last_cmd_status);
-}
-
 void	free_pipeline_list(t_list **pipeline)
 {
 	t_list	*tmp;
@@ -180,20 +48,6 @@ void	free_pipeline_list(t_list **pipeline)
 		*pipeline = tmp;
 	}
 	*pipeline = NULL;
-}
-
-int	execute_pipeline(t_env *env, t_ast_node *node)
-{
-	t_list	*pipeline;
-	int		status;
-
-	pipeline = build_cmd_list(env, node);
-	if (!pipeline)
-		return (1);
-	status = execute_pipeline_cmds(env, pipeline);
-	if (env->pipeline != NULL)
-		free_pipeline_list(&env->pipeline);
-	return (status);
 }
 
 bool	cmd_is_builtin(t_env *env, t_ast_node *node)
@@ -215,8 +69,8 @@ void	handle_execve(t_env *env, t_ast_node *node)
 	exec_path = find_executable(env, node->args[0]);
 	if (exec_path == NULL)
 	{
-		ft_printf("minishell: %s: Is not an executable binary\n",
-			node->args[0]);
+		perror("minishell");
+		free_pipeline_list(&env->pipeline);
 		free_ast(&env->root);
 		free_env(env);
 		free_envp(envp);
@@ -225,39 +79,13 @@ void	handle_execve(t_env *env, t_ast_node *node)
 	if (execve(exec_path, node->args, envp) == -1)
 	{
 		ft_printf("minishell: %s: Is not an executable binary\n", exec_path);
+		free_pipeline_list(&env->pipeline);
 		free_ast(&env->root);
 		free(exec_path);
 		free_envp(envp);
 		free_env(env);
 		exit(127);
 	}
-}
-
-int	check_process_child_exit(t_env *env, int status)
-{
-	int	signal;
-
-	(void)env;
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	else if (WIFSIGNALED(status))
-	{
-		signal = WTERMSIG(status);
-		/*
-			if (signal == SIGQUIT)
-				write_s("Quit: 3", STDERR_FILENO, sh);
-			if (signal == SIGQUIT || signal == SIGINT)
-			{
-				if (!new_line || (new_line && *new_line == false))
-					write_s("\n", STDERR_FILENO, sh);
-				if (new_line && *new_line == false)
-					*new_line = true;
-			}
-		*/
-		return (128 + signal);
-	}
-	else
-		return (EXIT_FAILURE);
 }
 
 int	execute_external_command(t_env *env, t_ast_node *node,
