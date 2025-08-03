@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/02 20:09:14 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/03 16:01:26 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -417,6 +417,7 @@ int	execute(t_env *env, t_ast_node *node, t_execute_type exec_type)
 		perror("Unknown node type in execution\n");
 		return (1);
 	}
+	EXIT_SUCCESS;
 	return (status);
 }
 
