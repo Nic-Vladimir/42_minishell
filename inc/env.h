@@ -18,6 +18,7 @@
 # include "tokenizer.h"
 # include <unistd.h>
 # include <stdbool.h>
+# include "../lib/libft/inc/libft.h"
 
 typedef enum e_execute_type
 {
@@ -37,12 +38,6 @@ typedef struct s_hashmap
 	t_bucket			**buckets;
 	ssize_t				size;
 }						t_hashmap;
-
-typedef struct s_list
-{
-	void			*content;
-	struct s_list	*next;
-}					t_list;
 
 typedef struct s_env
 {
