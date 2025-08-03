@@ -11,6 +11,7 @@
 /******************************************************************************/
 
 #include "../../inc/minishell.h"
+#include <stdlib.h>
 #include <unistd.h>
 
 int		check_process_child_exit(t_env *env, int status);
@@ -60,7 +61,9 @@ pid_t	execute_one_pipeline_cmd(t_env *env, t_list *pipeline,
 {
 	pid_t		pid;
 	t_ast_node	*node;
+	int			status;
 
+	status = EXIT_FAILURE;
 	// int			dummyfd;
 	// dummyfd = open("/dev/null", O_WRONLY);
 	if (!pipeline || !pipeline->content)
@@ -100,8 +103,8 @@ pid_t	execute_one_pipeline_cmd(t_env *env, t_list *pipeline,
 		close(dummyfd);
 	}
 	*/
-	execute(env, (t_ast_node *)pipeline->content, EXIT);
-	exit(127);
+	status = execute(env, (t_ast_node *)pipeline->content, EXIT);
+	exit(status);
 }
 
 void	prep_for_next_cmd(t_env *env, int *prev_read_end, int *pipe_fd)
