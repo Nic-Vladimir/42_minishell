@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/07/28 13:49:09 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/08/03 20:47:50 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -169,7 +169,8 @@ void							setup_child_signals(t_env *env, int behavior);
 int								free_bucket(t_bucket *new_bucket);
 int								execute(t_env *env, t_ast_node *node, t_execute_type exec_type);
 int								execute_pipeline(t_env *env, t_ast_node *node);
-void	free_pipeline_list(t_list **pipeline);
+void							free_pipeline_list(t_list **pipeline);
+
 //void							heredoc_child_cleanup(t_env *env);
 //int								execute_pipeline(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 

@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 22:27:53 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/17 15:03:47 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/03 20:49:42 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/minishell.h"
 #include <readline/readline.h>
@@ -49,10 +49,14 @@ static int	expanded_herdoc(char *expanded, ssize_t status, int write_fd,
 
 int	process_heredoc_input(t_env *env, char *delimiter, int write_fd)
 {
-	char	*line;
-	char	*expanded;
-	ssize_t	status;
+	char			*line;
+	char			*expanded;
+	ssize_t			status;
 
+	rl_instream = stdin;
+	rl_outstream = stdout;
+	
+	rl_forced_update_display();
 	status = 0;
 	while (1)
 	{
@@ -74,3 +78,4 @@ int	process_heredoc_input(t_env *env, char *delimiter, int write_fd)
 	}
 	return (0);
 }
+
