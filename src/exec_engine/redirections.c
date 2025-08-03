@@ -207,7 +207,11 @@ int	redirect_input(t_env *env, t_ast_node *node)
 			in_fd);
 	}
 	if (in_fd == -1)
+	{
+		fprintf(stderr, "minishell: %s: No such file or directory\n",
+			node->args[0]);
 		return (status);
+	}
 	og_in_fd = dup(STDIN_FILENO);
 	dup2(in_fd, STDIN_FILENO);
 	close(in_fd);
