@@ -58,29 +58,33 @@ t_list	*build_cmd_list(t_env *env, t_ast_node *node)
 pid_t	execute_one_pipeline_cmd(t_env *env, t_list *pipeline,
 		int prev_read_end, int *pipe_fd)
 {
-	pid_t	pid;
-	int dummyfd;
+	pid_t		pid;
+	int			dummyfd;
+	t_ast_node	*node;
 
 	dummyfd = open("/dev/null", O_WRONLY);
 	if (!pipeline || !pipeline->content)
 		return (-1);
-	
-	t_ast_node *node = (t_ast_node *)pipeline->content;
-	fprintf(stderr, "DEBUG: About to execute: %s, prev_read_end=%d, pipe_write=%d, pipe_read=%d, has_next=%s\n", 
-        node->args[0], prev_read_end, pipe_fd[WRITE_END], pipe_fd[READ_END], 
-        pipeline->next ? "yes" : "no");	
-	
+	node = (t_ast_node *)pipeline->content;
+	fprintf(stderr,
+			"DEBUG: About to execute: %s, prev_read_end=%d, \
+		pipe_write=%d, pipe_read=%d, has_next=%s\n",
+			node->args[0],
+			prev_read_end,
+			pipe_fd[WRITE_END],
+			pipe_fd[READ_END],
+			pipeline->next ? "yes" : "no");
 	pid = fork();
 	if (pid != 0)
 	{
-		fprintf(stderr, "DEBUG: Parent created child %d for command: %s\n", pid, node->args[0]);
+		fprintf(stderr, "DEBUG: Parent created child %d for command: %s\n", pid,
+			node->args[0]);
 		return (pid);
 	}
-	fprintf(stderr, "DEBUG: Child %d starting for command: %s\n", getpid(), node->args[0]);
-	
-	//set_all_signals(NORMAL_MODE, env->sigenv);
+	fprintf(stderr, "DEBUG: Child %d starting for command: %s\n", getpid(),
+		node->args[0]);
+	// set_all_signals(NORMAL_MODE, env->sigenv);
 	setup_child_signals(env, CHILD_SIG_CUSTOM);
-
 	// if (prev_read_end != -1)
 	// {
 	// 	dup2(prev_read_end, STDIN_FILENO);
@@ -94,21 +98,20 @@ pid_t	execute_one_pipeline_cmd(t_env *env, t_list *pipeline,
 	// pipe read end in child close
 	if (pipe_fd[READ_END] != -1)
 	{
-		fprintf(stderr, "DEBUG: Child %d closing read end %d\n", getpid(), pipe_fd[READ_END]);
+		fprintf(stderr, "DEBUG: Child %d closing read end %d\n", getpid(),
+			pipe_fd[READ_END]);
 		close(pipe_fd[READ_END]);
 	}
-
-	fprintf(stderr, "DEBUG: Child %d setting up FDs: input=%d, output=%d\n", 
-        getpid(), prev_read_end, pipe_fd[WRITE_END]);
-	
+	fprintf(stderr, "DEBUG: Child %d setting up FDs: input=%d, output=%d\n",
+		getpid(), prev_read_end, pipe_fd[WRITE_END]);
 	setup_child_fds(prev_read_end, pipe_fd[WRITE_END]);
-	if (dummyfd != -1) 
+	if (dummyfd != -1)
 	{
-    	dup2(dummyfd, STDERR_FILENO);
-    	close(dummyfd);
+		dup2(dummyfd, STDERR_FILENO);
+		close(dummyfd);
 	}
 	execute(env, (t_ast_node *)pipeline->content, EXIT);
-	return(pid);
+	return (pid);
 	exit(127);
 }
 
@@ -169,7 +172,6 @@ int	execute_pipeline_cmds(t_env *env, t_list *pipeline)
 		}
 		last_pid = execute_one_pipeline_cmd(env, pipeline, prev_read_end,
 				pipe_fd);
-		
 		if (last_pid == -1)
 		{
 			if (pipeline->next)
@@ -352,11 +354,15 @@ int	execute_group(t_env *env, t_ast_node *node)
 	pid_t	pid;
 	int		status;
 
+	status = 0;
 	pid = fork();
 	if (pid == 0)
 	{
 		// signals
-		execute(env, node->group, EXIT);
+		status = execute(env, node->group, EXIT);
+		free_ast(&env->root);
+		free_env(env);
+		exit(status);
 	}
 	wait(&status);
 	status = check_process_child_exit(env, status);
@@ -407,7 +413,7 @@ int	execute(t_env *env, t_ast_node *node, t_execute_type exec_type)
 	else if (node->type == NODE_AND || node->type == NODE_OR)
 		status = execute_logical_op(env, node);
 	else if (node->type == NODE_GROUP)
-		status = execute_group(env, node->left);
+		status = execute_group(env, node);
 	else
 	{
 		perror("Unknown node type in execution\n");
