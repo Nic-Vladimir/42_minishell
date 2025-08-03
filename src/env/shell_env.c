@@ -104,5 +104,6 @@ t_env	*init_env(char **envp)
 		insert_env_var(env, envp[i++]);
 	env->tokenizer = init_tok_data();
 	env->root = NULL;
+	env->pipeline = NULL;
 	return (env);
 }

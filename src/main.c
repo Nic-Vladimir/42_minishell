@@ -62,6 +62,8 @@ void	handle_command(t_env *env, char *input)
 	env->input = input;
 	env->tokenizer->tokens = token_head;
 	status = execute_ast(env, root, RETURN);
+	if (env->pipeline != NULL)
+		free_pipeline_list(&env->pipeline);
 	free_tokens(env->tokenizer);
 	free_ast(&env->root);
 	env->last_exit_code = status;

@@ -169,6 +169,7 @@ void							setup_child_signals(t_env *env, int behavior);
 int								free_bucket(t_bucket *new_bucket);
 int								execute(t_env *env, t_ast_node *node, t_execute_type exec_type);
 int								execute_pipeline(t_env *env, t_ast_node *node);
+void	free_pipeline_list(t_list **pipeline);
 //void							heredoc_child_cleanup(t_env *env);
 //int								execute_pipeline(t_env *env, t_ast_node *node, int in_fd, int out_fd);
 

@@ -59,10 +59,10 @@ pid_t	execute_one_pipeline_cmd(t_env *env, t_list *pipeline,
 		int prev_read_end, int *pipe_fd)
 {
 	pid_t		pid;
-	int			dummyfd;
 	t_ast_node	*node;
 
-	dummyfd = open("/dev/null", O_WRONLY);
+	// int			dummyfd;
+	// dummyfd = open("/dev/null", O_WRONLY);
 	if (!pipeline || !pipeline->content)
 		return (-1);
 	node = (t_ast_node *)pipeline->content;
@@ -83,19 +83,7 @@ pid_t	execute_one_pipeline_cmd(t_env *env, t_list *pipeline,
 	}
 	fprintf(stderr, "DEBUG: Child %d starting for command: %s\n", getpid(),
 		node->args[0]);
-	// set_all_signals(NORMAL_MODE, env->sigenv);
 	setup_child_signals(env, CHILD_SIG_CUSTOM);
-	// if (prev_read_end != -1)
-	// {
-	// 	dup2(prev_read_end, STDIN_FILENO);
-	// 	close(prev_read_end);
-	// }
-	// if (pipeline->next != NULL && pipe_fd[WRITE_END] != -1)
-	// {
-	// 	dup2(pipe_fd[WRITE_END], STDOUT_FILENO);
-	// 	close(pipe_fd[WRITE_END]);
-	// }
-	// pipe read end in child close
 	if (pipe_fd[READ_END] != -1)
 	{
 		fprintf(stderr, "DEBUG: Child %d closing read end %d\n", getpid(),
@@ -105,13 +93,14 @@ pid_t	execute_one_pipeline_cmd(t_env *env, t_list *pipeline,
 	fprintf(stderr, "DEBUG: Child %d setting up FDs: input=%d, output=%d\n",
 		getpid(), prev_read_end, pipe_fd[WRITE_END]);
 	setup_child_fds(prev_read_end, pipe_fd[WRITE_END]);
+	/*
 	if (dummyfd != -1)
 	{
 		dup2(dummyfd, STDERR_FILENO);
 		close(dummyfd);
 	}
+	*/
 	execute(env, (t_ast_node *)pipeline->content, EXIT);
-	return (pid);
 	exit(127);
 }
 
@@ -155,6 +144,7 @@ int	execute_pipeline_cmds(t_env *env, t_list *pipeline)
 	pipeline_count = ft_lstsize(pipeline);
 	last_pid = 0;
 	prev_read_end = -1;
+	env->pipeline = pipeline;
 	while (pipeline)
 	{
 		if (pipeline->next)
@@ -192,16 +182,17 @@ int	execute_pipeline_cmds(t_env *env, t_list *pipeline)
 	return (last_cmd_status);
 }
 
-void	free_pipeline_list(t_list *pipeline)
+void	free_pipeline_list(t_list **pipeline)
 {
 	t_list	*tmp;
 
-	while (pipeline)
+	while (*pipeline)
 	{
-		tmp = pipeline->next;
-		free(pipeline);
-		pipeline = tmp;
+		tmp = (*pipeline)->next;
+		free(*pipeline);
+		*pipeline = tmp;
 	}
+	*pipeline = NULL;
 }
 
 int	execute_pipeline(t_env *env, t_ast_node *node)
@@ -213,7 +204,8 @@ int	execute_pipeline(t_env *env, t_ast_node *node)
 	if (!pipeline)
 		return (1);
 	status = execute_pipeline_cmds(env, pipeline);
-	free_pipeline_list(pipeline);
+	if (env->pipeline != NULL)
+		free_pipeline_list(&env->pipeline);
 	return (status);
 }
 
@@ -318,6 +310,12 @@ int	execute_command(t_env *env, t_ast_node *node, t_execute_type exec_type)
 		status = execute_builtin_command(env, node);
 	else
 		status = execute_external_command(env, node, exec_type);
+	if (env->pipeline != NULL)
+	{
+		free_pipeline_list(&env->pipeline);
+		free_ast(&env->root);
+		free_env(env);
+	}
 	return (status);
 }
 

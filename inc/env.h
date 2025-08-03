@@ -38,6 +38,12 @@ typedef struct s_hashmap
 	ssize_t				size;
 }						t_hashmap;
 
+typedef struct s_list
+{
+	void			*content;
+	struct s_list	*next;
+}					t_list;
+
 typedef struct s_env
 {
 	t_hashmap			*vars;
@@ -45,6 +51,7 @@ typedef struct s_env
 	pid_t				shell_pid;
 	t_tokenizer_data	*tokenizer;
 	t_ast_node			*root;
+	t_list				*pipeline;
 	char				*input;
 	t_sigenv			*sigenv;
 	volatile sig_atomic_t should_exit_heredoc;
