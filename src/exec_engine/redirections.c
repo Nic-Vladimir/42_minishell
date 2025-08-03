@@ -64,71 +64,110 @@ static int	setup_redirection_fd(t_env *env, t_ast_node *node)
 	return (new_fd);
 }
 */
+
+static t_ast_node	*get_command_node(t_ast_node *node)
+{
+	int	temp_fd;
+
+	while (node->right->type == NODE_REDIR_OUT
+		|| node->right->type == NODE_REDIR_APPEND)
+	{
+		node = node->right;
+		if (node->type == NODE_REDIR_OUT)
+			temp_fd = open(node->args[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		else
+			temp_fd = open(node->args[0], O_WRONLY | O_CREAT | O_APPEND, 0644);
+		close(temp_fd);
+	}
+	return (node);
+}
+
 int	append_output(t_env *env, t_ast_node *node)
 {
-	int	out_fd;
-	int	og_out_fd;
-	int	status;
+	int			out_fd;
+	int			og_out_fd;
+	int			status;
+	t_ast_node	*target_node;
 
-	fprintf(stderr, "DEBUG: append_output() called with file: %s\n", 
-		node->args[0] ? node->args[0] : "NULL");
+	target_node = node;
+	fprintf(stderr, "DEBUG: append_output() called with file: %s\n",
+		target_node->args[0] ? node->args[0] : "NULL");
 	status = EXIT_FAILURE;
-	out_fd = open(node->args[0], O_WRONLY | O_CREAT | O_APPEND, 0644);
+	out_fd = open(target_node->args[0], O_WRONLY | O_CREAT | O_APPEND, 0644);
 	fprintf(stderr, "DEBUG: append_output() open() returned fd: %d\n", out_fd);
 	if (out_fd == -1)
 	{
-		fprintf(stderr, "DEBUG: append_output() failed to open file: %s\n", 
-			node->args[0]);
+		fprintf(stderr, "DEBUG: append_output() failed to open file: %s\n",
+			target_node->args[0]);
 		return (status);
 	}
-	fprintf(stderr, "DEBUG: append_output() duplicating stdout, original fd: %d\n", 
-		STDOUT_FILENO);
+	fprintf(stderr,
+			"DEBUG: append_output() duplicating stdout, original fd:\
+		%d\n",
+			STDOUT_FILENO);
 	og_out_fd = dup(STDOUT_FILENO);
-	fprintf(stderr, "DEBUG: append_output() dup() returned fd: %d\n", og_out_fd);
+	fprintf(stderr, "DEBUG: append_output() dup() returned fd: %d\n",
+		og_out_fd);
 	dup2(out_fd, STDOUT_FILENO);
-	fprintf(stderr, "DEBUG: append_output() redirected stdout to fd: %d\n", out_fd);
+	fprintf(stderr, "DEBUG: append_output() redirected stdout to fd: %d\n",
+		out_fd);
 	close(out_fd);
-	fprintf(stderr, "DEBUG: append_output() calling execute() on right node\n");
+	fprintf(stderr,
+		"DEBUG: append_output() calling execute() on right target_node\n");
+	node = get_command_node(target_node);
 	status = execute(env, node->right, RETURN);
-	fprintf(stderr, "DEBUG: append_output() execute() returned status: %d\n", status);
+	fprintf(stderr, "DEBUG: append_output() execute() returned status: %d\n",
+		status);
 	dup2(og_out_fd, STDOUT_FILENO);
 	fprintf(stderr, "DEBUG: append_output() restored stdout\n");
 	close(og_out_fd);
-	fprintf(stderr, "DEBUG: append_output() finished, returning status: %d\n", status);
+	fprintf(stderr, "DEBUG: append_output() finished, returning status: %d\n",
+		status);
 	return (status);
 }
 
 int	redirect_output(t_env *env, t_ast_node *node)
 {
-	int	out_fd;
-	int	og_out_fd;
-	int	status;
+	int			out_fd;
+	int			og_out_fd;
+	int			status;
+	t_ast_node	*target_node;
 
-	fprintf(stderr, "DEBUG: redirect_output() called with file: %s\n", 
+	target_node = node;
+	fprintf(stderr, "DEBUG: redirect_output() called with file: %s\n",
 		node->args[0] ? node->args[0] : "NULL");
 	status = EXIT_FAILURE;
 	out_fd = open(node->args[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	fprintf(stderr, "DEBUG: redirect_output() open() returned fd: %d\n", out_fd);
+	fprintf(stderr, "DEBUG: redirect_output() open() returned fd: %d\n",
+		out_fd);
 	if (out_fd == -1)
 	{
-		fprintf(stderr, "DEBUG: redirect_output() failed to open file: %s\n", 
+		fprintf(stderr, "DEBUG: redirect_output() failed to open file: %s\n",
 			node->args[0]);
 		return (status);
 	}
-	fprintf(stderr, "DEBUG: redirect_output() duplicating stdout, original fd: %d\n", 
-		STDOUT_FILENO);
+	fprintf(stderr,
+			"DEBUG: redirect_output() duplicating stdout, original fd:\
+		%d\n",
+			STDOUT_FILENO);
 	og_out_fd = dup(STDOUT_FILENO);
-	fprintf(stderr, "DEBUG: redirect_output() dup() returned fd: %d\n", og_out_fd);
+	fprintf(stderr, "DEBUG: redirect_output() dup() returned fd: %d\n",
+		og_out_fd);
 	dup2(out_fd, STDOUT_FILENO);
-	fprintf(stderr, "DEBUG: redirect_output() redirected stdout to fd: %d\n", out_fd);
+	fprintf(stderr, "DEBUG: redirect_output() redirected stdout to fd: %d\n",
+		out_fd);
 	close(out_fd);
-	fprintf(stderr, "DEBUG: redirect_output() calling execute() on right node\n");
+	fprintf(stderr,
+		"DEBUG: redirect_output() calling execute() on right node\n");
+	node = get_command_node(target_node);
 	status = execute(env, node->right, RETURN);
-	fprintf(stderr, "DEBUG: redirect_output() execute() returned status: %d\n", status);
+	fprintf(stderr, "DEBUG: redirect_output() execute() returned status: %d\n",
+		status);
 	dup2(og_out_fd, STDOUT_FILENO);
 	fprintf(stderr, "DEBUG: redirect_output() restored stdout\n");
 	close(og_out_fd);
-	fprintf(stderr, "DEBUG: redirect_output() finished, returning status: %d\n", status);
+	fprintf(stderr, "DEBUG: redirect_output() finished, returning status: %d\n",
+		status);
 	return (status);
 }
 
@@ -139,26 +178,33 @@ int	redirect_input(t_env *env, t_ast_node *node)
 	int		status;
 	char	*delimiter;
 
-	fprintf(stderr, "DEBUG: redirect_input() called with node type: %d\n", node->type);
+	fprintf(stderr, "DEBUG: redirect_input() called with node type: %d\n",
+		node->type);
 	status = EXIT_FAILURE;
 	if (node->type == NODE_HEREDOC)
 	{
 		delimiter = node->args[0];
-		fprintf(stderr, "DEBUG: redirect_input() processing heredoc with delimiter: %s\n", 
+		fprintf(stderr,
+			"DEBUG: redirect_input() processing heredoc with delimiter: %s\n",
 			delimiter ? delimiter : "NULL");
 		if (collect_heredoc(env, delimiter, &in_fd) == -1)
 		{
-			fprintf(stderr, "DEBUG: redirect_input() collect_heredoc() failed\n");
+			fprintf(stderr,
+				"DEBUG: redirect_input() collect_heredoc() failed\n");
 			return (status);
 		}
-		fprintf(stderr, "DEBUG: redirect_input() collect_heredoc() returned fd: %d\n", in_fd);
+		fprintf(stderr,
+				"DEBUG: redirect_input() collect_heredoc() returned fd:\
+			%d\n",
+				in_fd);
 	}
 	else if (node->type == NODE_REDIR_IN)
 	{
-		fprintf(stderr, "DEBUG: redirect_input() opening file: %s\n", 
+		fprintf(stderr, "DEBUG: redirect_input() opening file: %s\n",
 			node->args[0] ? node->args[0] : "NULL");
 		in_fd = open(node->args[0], O_RDONLY);
-		fprintf(stderr, "DEBUG: redirect_input() open() returned fd: %d\n", in_fd);
+		fprintf(stderr, "DEBUG: redirect_input() open() returned fd: %d\n",
+			in_fd);
 	}
 	if (in_fd == -1)
 		return (status);
