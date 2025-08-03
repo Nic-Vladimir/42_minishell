@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 20:03:32 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/07/28 11:27:16 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/08/03 18:17:21 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/minishell.h"
 
@@ -25,12 +25,14 @@ static char	*check_path(t_env *env, t_ast_node node)
 			return (NULL);
 		path = home;
 	}
-	else if (ft_strcmp(path, "-") == 0 && node.args[2] == NULL)
+	else if (ft_strcmp(path, "-") == 0)
 	{
 		path = get_env_value(env, "OLDPWD");
 		if (!path)
 			return (NULL);
 	}
+	else if (node.args[2] == NULL)
+		return (path);
 	else
 	{
 		ft_printf("cd: Too many arguments!\n");
