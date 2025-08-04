@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/03 20:15:55 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/04 09:25:28 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -213,16 +213,23 @@ int	execute(t_env *env, t_ast_node *node, t_execute_type exec_type)
 
 	if (!node)
 		return (0);
+	printf("[DEBUG] Executing node type: %d\n", node->type);
 	if (node->type == NODE_CMD)
 	{
 		execute_command_expansion(env, node);
 		status = execute_command(env, node, exec_type);
 	}
 	else if (node->type == NODE_PIPE)
+	{
+		printf("[DEBUG] Executing pipeline\n");
 		status = execute_pipeline(env, node);
+	}
 	else if (node->type == NODE_REDIR_IN || node->type == NODE_REDIR_OUT
 		|| node->type == NODE_REDIR_APPEND || node->type == NODE_HEREDOC)
+	{
+		printf("[DEBUG] Executing redirection, type: %d\n", node->type);
 		status = execute_redirections(env, node);
+	}
 	else if (node->type == NODE_AND || node->type == NODE_OR)
 		status = execute_logical_op(env, node);
 	else if (node->type == NODE_GROUP)
@@ -233,6 +240,7 @@ int	execute(t_env *env, t_ast_node *node, t_execute_type exec_type)
 		return (1);
 	}
 	EXIT_SUCCESS;
+	printf("[DEBUG] Execution completed with status: %d\n", status);
 	return (status);
 }
 

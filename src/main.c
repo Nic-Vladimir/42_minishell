@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/29 03:53:53 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/04 09:25:40 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -68,6 +68,10 @@ void	handle_command(t_env *env, char *input)
 	free_ast(&env->root);
 	env->last_exit_code = status;
 	env->input = NULL;
+	env->tokenizer->tokens = NULL;
+	env->root = NULL;
+	env->pipeline = NULL;
+	(void)status;
 }
 
 int	check_input(t_env *env, char *input)
@@ -111,5 +115,6 @@ int	main(int argc, char **argv, char **envp)
 		free(input);
 		input = NULL;
 	}
+	free_everything(&env);
 	return (0);
 }

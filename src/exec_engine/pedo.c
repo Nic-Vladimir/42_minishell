@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   pedo.c                                             :+:      :+:    :+:   */
@@ -6,10 +6,11 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 12:39:37 by mgavornik         #+#    #+#             */
-/*   Updated: 2025/06/29 01:58:03 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/08/04 08:56:32 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
+#define _GNU_SOURCE
 #include "../../inc/minishell.h"
 #include "../../inc/pedo.h"
 
@@ -36,24 +37,29 @@ static void	custom_handler(int sig, siginfo_t *info, void *ucontext)
 	env_struct = (t_env *)(uintptr_t)g_sig;
 	(void)ucontext;
 	(void)info;
-	ft_printf("Executed custom handler for %d\n", sig);
+	ft_printf("Executed custom handler for %d in PID %d\n", sig, getpid());
 	if (sig == SIGINT)
 	{
 		mini_sigint_handler(sig);
-		execute_exit(env_struct, 130);
+		
+		// Clean up inherited data structures using comprehensive function
+		if (env_struct)
+		{
+			comprehensive_cleanup(&env_struct);
+		}
+		
+		// Use child-specific exit function
+		child_exit(130);
 	}
 }
 
 void	setup_child_signals(t_env *env, int behavior)
 {
 	struct sigaction	sa;
-	union sigval		value;
 
 	if (behavior == CHILD_SIG_CUSTOM)
 	{
 		memset(&sa, 0, sizeof(sa));
-		memset(&value, 0, sizeof(value));
-		value.sival_ptr = env;
 		g_sig = (sig_atomic_t)(uintptr_t)env;
 		sa.sa_sigaction = custom_handler;
 		sa.sa_flags = SA_RESTART | SA_SIGINFO;

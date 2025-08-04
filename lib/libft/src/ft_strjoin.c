@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 17:45:18 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/28 14:14:31 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/04 05:55:02 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../inc/libft.h"
 
@@ -36,7 +36,7 @@ static char	*join_strings(const char *s1, const char *s2, char *res)
 	return (res);
 }
 
-char	*ft_strjoin_free(char *s1, const char *s2)
+char	*ft_strjoin(const char *s1, const char *s2)
 {
 	char	*res;
 
@@ -46,6 +46,5 @@ char	*ft_strjoin_free(char *s1, const char *s2)
 	if (!res)
 		return (NULL);
 	res = join_strings(s1, s2, res);
-	free(s1);
 	return (res);
 }

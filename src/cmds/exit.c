@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:02:59 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/29 03:32:15 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/04 09:04:05 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -50,12 +50,23 @@ void	reset_terminal_for_readline(void)
 
 int		execute_exit(t_env *env, sig_atomic_t g_sig)
 {
+	// Debug printing BEFORE freeing structures
 	if (env)
 	{
-		if (env->root)
-			free_ast(&(env->root));
-		free_env(env);
+		free_everything(&env);
 	}
+	else
+	{
+		fprintf(stderr, "[DEBUG] execute_exit called with NULL env pointer\n");
+		fprintf(stderr, "[DEBUG] g_sig (exit code): %d\n", (int)g_sig);
+	}
+
 	clean_rl();
-	_exit(g_sig);
+	exit(g_sig);
+}
+
+void	child_exit(int exit_code)
+{
+	fprintf(stderr, "[DEBUG] Child process %d exiting with code %d\n", getpid(), exit_code);
+	exit(exit_code);
 }

@@ -1,14 +1,14 @@
-# **************************************************************************** #
+#******************************************************************************#
 #                                                                              #
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+         #
+#    By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/06/29 03:00:46 by vnicoles         ###   ########.fr        #
+#    Updated: 2025/08/04 09:27:24 by mgavornik        ###   ########.fr        #
 #                                                                              #
-# **************************************************************************** #
+#******************************************************************************#
 
 # --- Stfu make ---
 MAKEFLAGS += --no-print-directory
@@ -76,7 +76,7 @@ SRC			= main.c \
 				tokenizer/tokenizer_utils.c \
 				tokenizer/validate_syntax.c \
 				tokenizer/validate_syntax_utils.c \
-				cleanup.c
+				cleanup.c 
 
 OBJ			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 HEADERS		= $(INC_DIR)minishell.h

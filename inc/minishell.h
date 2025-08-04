@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/03 20:47:50 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/04 09:25:43 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -88,11 +88,17 @@ int								execute_pwd(t_env *env, t_ast_node *node);
 int								execute_echo(t_env *env, t_ast_node *node);
 int								execute_cd(t_env *env, t_ast_node *node);
 int								execute_exit(t_env *env, int sig);
+void							child_exit(int exit_code);
 int								execute_unset(t_env *env, t_ast_node *node);
 
 void							clean_rl(void);
 void							ft_free_split(char **res);
 void							free_envp(char **envp);
+void							comprehensive_cleanup(t_env **env);
+void							child_comprehensive_cleanup(t_env *env);
+void							report_memory_usage(t_env *env);
+void							force_cleanup_all_memory(t_env **env);
+void							free_everything(t_env **env);
 
 char							*process_pipe(t_tokenizer_data *tok_data,
 									char *input);
@@ -169,11 +175,27 @@ int								free_bucket(t_bucket *new_bucket);
 int								execute(t_env *env, t_ast_node *node, t_execute_type exec_type);
 int								execute_pipeline(t_env *env, t_ast_node *node);
 void							free_pipeline_list(t_list **pipeline);
+<<<<<<< Updated upstream
 int								execute_pipeline(t_env *env, t_ast_node *node);
 int								check_process_child_exit(t_env *env, int status);
 int								wait_for_children(t_env *env, pid_t last_pid, int pipeline_count);
 
+=======
+void	free_hashmap(t_hashmap *hashmap);
+>>>>>>> Stashed changes
 //void							heredoc_child_cleanup(t_env *env);
 //int								execute_pipeline(t_env *env, t_ast_node *node, int in_fd, int out_fd);
+
+
+
+// // Simple cleanup (use this most of the time)
+// free_everything(&env);
+
+// // Check memory before cleanup
+// report_memory_usage(env);
+// comprehensive_cleanup(&env);
+
+// // In signal handlers for child processes
+// child_comprehensive_cleanup(env);
 
 #endif

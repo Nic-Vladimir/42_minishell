@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 18:20:38 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/03 20:08:56 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/04 05:55:08 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -52,8 +52,13 @@ static int	setup_redirection_fd(t_env *env, t_ast_node *node)
 	if (node->type == NODE_HEREDOC)
 	{
 		delimiter = node->args[0];
+		printf("[DEBUG] Processing heredoc redirection with delimiter: '%s'\n", delimiter);
 		if (collect_heredoc(env, delimiter, &new_fd) == -1)
+		{
+			printf("[DEBUG] collect_heredoc failed\n");
 			return (-1);
+		}
+		printf("[DEBUG] collect_heredoc succeeded, fd=%d\n", new_fd);
 	}
 	else if (node->type == NODE_REDIR_IN)
 		new_fd = open(node->args[0], O_RDONLY);
