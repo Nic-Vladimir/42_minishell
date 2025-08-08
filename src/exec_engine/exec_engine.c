@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/03 16:01:26 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/08 17:55:35 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -60,7 +60,7 @@ pid_t	execute_one_pipeline_cmd(t_env *env, t_list *pipeline,
 		int prev_read_end, int *pipe_fd)
 {
 	pid_t		pid;
-	t_ast_node	*node;
+	// t_ast_node	*node;
 	int			status;
 
 	status = EXIT_FAILURE;
@@ -68,33 +68,17 @@ pid_t	execute_one_pipeline_cmd(t_env *env, t_list *pipeline,
 	// dummyfd = open("/dev/null", O_WRONLY);
 	if (!pipeline || !pipeline->content)
 		return (-1);
-	node = (t_ast_node *)pipeline->content;
-	fprintf(stderr,
-			"DEBUG: About to execute: %s, prev_read_end=%d, \
-		pipe_write=%d, pipe_read=%d, has_next=%s\n",
-			node->args[0],
-			prev_read_end,
-			pipe_fd[WRITE_END],
-			pipe_fd[READ_END],
-			pipeline->next ? "yes" : "no");
+	// node = (t_ast_node *)pipeline->content;
 	pid = fork();
 	if (pid != 0)
 	{
-		fprintf(stderr, "DEBUG: Parent created child %d for command: %s\n", pid,
-			node->args[0]);
 		return (pid);
 	}
-	fprintf(stderr, "DEBUG: Child %d starting for command: %s\n", getpid(),
-		node->args[0]);
 	setup_child_signals(env, CHILD_SIG_CUSTOM);
 	if (pipe_fd[READ_END] != -1)
 	{
-		fprintf(stderr, "DEBUG: Child %d closing read end %d\n", getpid(),
-			pipe_fd[READ_END]);
 		close(pipe_fd[READ_END]);
 	}
-	fprintf(stderr, "DEBUG: Child %d setting up FDs: input=%d, output=%d\n",
-		getpid(), prev_read_end, pipe_fd[WRITE_END]);
 	setup_child_fds(prev_read_end, pipe_fd[WRITE_END]);
 	/*
 	if (dummyfd != -1)

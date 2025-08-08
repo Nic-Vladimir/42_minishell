@@ -1,14 +1,14 @@
-# **************************************************************************** #
+#******************************************************************************#
 #                                                                              #
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+         #
+#    By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/06/29 03:00:46 by vnicoles         ###   ########.fr        #
+#    Updated: 2025/08/08 17:34:55 by mgavornik        ###   ########.fr        #
 #                                                                              #
-# **************************************************************************** #
+#******************************************************************************#
 
 # --- Stfu make ---
 MAKEFLAGS += --no-print-directory
@@ -55,6 +55,7 @@ SRC			= main.c \
 				exec_engine/expand_command.c \
 				exec_engine/arg_utils.c \
 				exec_engine/copy_args.c \
+				utils/ft_fd.c \
 				utils/prompt.c \
 				utils/wildcard.c \
 				cmds/export.c \
