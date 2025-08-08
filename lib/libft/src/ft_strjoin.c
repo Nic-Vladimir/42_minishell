@@ -1,51 +1,41 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 17:45:18 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/28 14:14:31 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/08 18:05:22 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../inc/libft.h"
 
-static char	*join_strings(const char *s1, const char *s2, char *res)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
 	size_t	i;
 	size_t	j;
+	char	*new_s;
 
 	i = 0;
 	j = 0;
+	if (!(s1) || !(s2))
+		return (NULL);
+	new_s = (char *)malloc(((ft_strlen(s1)) + (ft_strlen(s2)) + 1)
+			* (sizeof(char)));
+	if (!new_s)
+		return (NULL);
 	while (s1[i])
 	{
-		res[j] = s1[i];
+		new_s[i] = s1[i];
 		i++;
-		j++;
 	}
-	i = 0;
-	while (s2[i])
+	while (s2[j])
 	{
-		res[j] = s2[i];
-		i++;
+		new_s[i + j] = s2[j];
 		j++;
 	}
-	res[j] = '\0';
-	return (res);
-}
-
-char	*ft_strjoin_free(char *s1, const char *s2)
-{
-	char	*res;
-
-	if (!s1 || !s2)
-		return (NULL);
-	res = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (!res)
-		return (NULL);
-	res = join_strings(s1, s2, res);
-	free(s1);
-	return (res);
+	new_s[i + j] = '\0';
+	return (new_s);
 }
