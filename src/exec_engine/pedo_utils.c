@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 08:54:24 by mgavornik         #+#    #+#             */
-/*   Updated: 2025/07/28 18:40:06 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/11 15:54:30 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -34,6 +34,7 @@ static int	parent_process(pid_t pid, t_env *env, int in_fd, int out_fd)
 	signal(SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
 	set_all_signals(MINI_MODE, env->sigenv);
+	execute_cleaning(env);
 	if (in_fd != STDIN_FILENO)
 		close(in_fd);
 	if (out_fd != STDOUT_FILENO)

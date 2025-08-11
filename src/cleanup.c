@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 21:35:07 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/07/28 18:53:29 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/11 16:07:34 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -56,6 +56,7 @@ void	free_ast(t_ast_node **node_ptr)
 	if (node->arg_types)
 		free(node->arg_types);
 	free(node);
+	node = NULL;
 	*node_ptr = NULL;
 }
 

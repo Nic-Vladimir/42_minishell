@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:02:59 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/29 03:32:15 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/11 15:55:27 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -50,12 +50,23 @@ void	reset_terminal_for_readline(void)
 
 int		execute_exit(t_env *env, sig_atomic_t g_sig)
 {
-	if (env)
+	execute_cleaning(env);
+	clean_rl();
+	exit(g_sig);
+}
+
+int execute_cleaning(t_env *env)
+{
+	if(env)
 	{
 		if (env->root)
 			free_ast(&(env->root));
+		if (env->tokenizer)
+			free_tokens(env->tokenizer);
+		if (env->pipeline)
+			free_pipeline_list(&env->pipeline);
+		// if(flag == 1)
 		free_env(env);
 	}
-	clean_rl();
-	_exit(g_sig);
+	return (0);
 }

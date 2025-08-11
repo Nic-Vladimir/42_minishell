@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 18:20:38 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/08 17:55:15 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/11 16:16:50 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -170,15 +170,18 @@ int	execute_redirections(t_env *env, t_ast_node *node)
 	int	status;
 
 	status = EXIT_FAILURE;
-	if (node->type == NODE_REDIR_IN || node->type == NODE_HEREDOC)
-		status = redirect_input(env, node);
-	else if (node->type == NODE_REDIR_OUT)
+	if(env != NULL && node != NULL)
 	{
-		status = redirect_output(env, node);
-	}
-	else if (node->type == NODE_REDIR_APPEND)
-	{
-		status = append_output(env, node);
+		if (node->type == NODE_REDIR_IN || node->type == NODE_HEREDOC)
+			status = redirect_input(env, node);
+		else if (node->type == NODE_REDIR_OUT)
+		{
+			status = redirect_output(env, node);
+		}
+		else if (node->type == NODE_REDIR_APPEND)
+		{
+			status = append_output(env, node);
+		}
 	}
 	return (status);
 }
