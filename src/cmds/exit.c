@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:02:59 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/13 14:51:03 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/13 17:21:43 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -66,8 +66,6 @@ int execute_cleaning(t_env *env)
 			free_tokens(env->tokenizer);
 		if (env->pipeline)
 			free_pipeline_list(&env->pipeline);
-		// if(flag == 1)
 	}
-	//close(0);
 	return (0);
-}		// free_env(env);
+}	
