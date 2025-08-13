@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/11 15:54:27 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/13 16:39:19 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -173,5 +173,12 @@ void	free_pipeline_list(t_list **pipeline);
 int execute_cleaning(t_env *env);
 //void							heredoc_child_cleanup(t_env *env);
 //int								execute_pipeline(t_env *env, t_ast_node *node, int in_fd, int out_fd);
+//TEST
+
+void	free_everything(t_env **env);
+void	force_cleanup_all_memory(t_env **env);
+void	report_memory_usage(t_env *env);
+void	child_comprehensive_cleanup(t_env *env);
+void	comprehensive_cleanup(t_env **env);
 
 #endif

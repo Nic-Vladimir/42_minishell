@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:02:59 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/11 15:55:27 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/13 14:51:03 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -52,6 +52,7 @@ int		execute_exit(t_env *env, sig_atomic_t g_sig)
 {
 	execute_cleaning(env);
 	clean_rl();
+	free_env(env);
 	exit(g_sig);
 }
 
@@ -66,7 +67,7 @@ int execute_cleaning(t_env *env)
 		if (env->pipeline)
 			free_pipeline_list(&env->pipeline);
 		// if(flag == 1)
-		free_env(env);
 	}
+	//close(0);
 	return (0);
-}
+}		// free_env(env);

@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/29 03:53:53 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/13 17:13:03 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -62,10 +62,7 @@ void	handle_command(t_env *env, char *input)
 	env->input = input;
 	env->tokenizer->tokens = token_head;
 	status = execute_ast(env, root, RETURN);
-	if (env->pipeline != NULL)
-		free_pipeline_list(&env->pipeline);
-	free_tokens(env->tokenizer);
-	free_ast(&env->root);
+	child_comprehensive_cleanup(env);
 	env->last_exit_code = status;
 	env->input = NULL;
 }
@@ -89,17 +86,9 @@ int	check_input(t_env *env, char *input)
 	return (0);
 }
 
-int	main(int argc, char **argv, char **envp)
+int main_loop(char *prompt, char *input, t_env *env)
 {
-	char	*input;
-	char	*prompt;
-	t_env	*env;
 
-	(void)argc;
-	(void)argv;
-	env = init_env(envp);
-	env->sigenv->env = env;
-	set_all_signals(MINI_MODE, env->sigenv);
 	while (1)
 	{
 		prompt = get_prompt(env);
@@ -108,8 +97,28 @@ int	main(int argc, char **argv, char **envp)
 		if (check_input(env, input))
 			continue ;
 		handle_command(env, input);
-		free(input);
-		input = NULL;
+		//report_memory_usage(env);
+		//free(input);
+		//input = NULL;
 	}
+	comprehensive_cleanup(&env);
+	return (0);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	char	*input;
+	char	*prompt;
+	t_env	*env;
+
+	(void)argc;
+	(void)argv;
+	input = NULL;
+	prompt = NULL;
+	env = init_env(envp);
+	env->sigenv->env = env;
+	set_all_signals(MINI_MODE, env->sigenv);
+	main_loop(prompt, input, env);
+	free_everything(&env);
 	return (0);
 }

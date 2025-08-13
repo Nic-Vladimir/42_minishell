@@ -6,7 +6,7 @@
 #    By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/08/08 17:34:55 by mgavornik        ###   ########.fr        #
+#    Updated: 2025/08/13 16:40:28 by mgavornik        ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -75,7 +75,7 @@ SRC			= main.c \
 				tokenizer/tokenizer_utils.c \
 				tokenizer/validate_syntax.c \
 				tokenizer/validate_syntax_utils.c \
-				cleanup.c
+				cleanup_copy.c
 
 OBJ			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 HEADERS		= $(INC_DIR)minishell.h
