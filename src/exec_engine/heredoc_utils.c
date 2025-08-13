@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 09:02:04 by mgavornik         #+#    #+#             */
-/*   Updated: 2025/08/11 15:38:00 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/14 00:54:59 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -117,7 +117,6 @@ int	collect_heredoc(t_env *env, char *delimiter, int *write_fd)
 	child_data.cleanup = heredoc_cleanup;
 	result = execute_in_child(env, &child_data, STDIN_FILENO, STDOUT_FILENO);
 	close(pipe_fds[1]);
-
 	if (result != 0)
 	{
 		close(pipe_fds[0]);

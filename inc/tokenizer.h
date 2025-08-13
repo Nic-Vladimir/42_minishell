@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:33:51 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/21 17:00:38 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/08/14 00:53:01 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #ifndef TOKENIZER_H
 # define TOKENIZER_H
@@ -45,4 +45,6 @@ typedef struct s_tokenizer_data
 	t_token			*tail;
 }					t_tokenizer_data;
 
+void free_tok_data(t_tokenizer_data *tok_data);
+void clear_tok_data(t_tokenizer_data *tok_data);
 #endif

@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/08 17:55:35 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/13 23:45:35 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -343,7 +343,7 @@ int	execute_group(t_env *env, t_ast_node *node)
 	pid = fork();
 	if (pid == 0)
 	{
-		// signals
+		setup_child_signals(env, CHILD_SIG_CUSTOM);
 		status = execute(env, node->group, EXIT);
 		free_ast(&env->root);
 		free_env(env);

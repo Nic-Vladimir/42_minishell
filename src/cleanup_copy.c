@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 21:35:07 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/13 17:11:54 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/14 00:52:49 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -242,22 +242,31 @@ void	child_comprehensive_cleanup(t_env *env)
 		
 	fprintf(stderr, "[DEBUG] Child %d: Starting inherited structure cleanup...\n", getpid());
 	
-	if (env->root)
-	{
-		free_ast(&(env->root));
-		env->root = NULL;
-	}
-	if (env->pipeline)
-	{
-		free_pipeline_list(&(env->pipeline));
-		env->pipeline = NULL;
-	}
+       if (env->root)
+       {
+	       free_ast(&(env->root));
+	       env->root = NULL;
+       }
+       if (env->pipeline)
+       {
+	       free_pipeline_list(&(env->pipeline));
+	       env->pipeline = NULL;
+       }
+
+       if (env->tokenizer)
+       {
+	    	clear_tok_data(env->tokenizer);
+	    	//env->tokenizer = NULL;
+
+       }
+
+       if (env->input)
+       {
+	       free(env->input);
+	       env->input = NULL;
+       }
+
 	
-	if (env->input)
-	{
-		free(env->input);
-		env->input = NULL;
-	}
 		
 	fprintf(stderr, "[DEBUG] Child %d: Inherited structure cleanup completed.\n", getpid());
 }

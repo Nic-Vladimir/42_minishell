@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/13 17:13:03 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/14 00:52:40 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -96,10 +96,18 @@ int main_loop(char *prompt, char *input, t_env *env)
 		free(prompt);
 		if (check_input(env, input))
 			continue ;
+	
 		handle_command(env, input);
-		//report_memory_usage(env);
+		
+		
+		// if(env)
+		// {
+		// 	report_memory_usage(env);
+		// 	comprehensive_cleanup(&env);
+		// }
+		//rl_cleanup_after_signal();
 		//free(input);
-		//input = NULL;
+		input = NULL;	
 	}
 	comprehensive_cleanup(&env);
 	return (0);

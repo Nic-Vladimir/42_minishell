@@ -6,7 +6,7 @@
 #    By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/08/13 16:40:28 by mgavornik        ###   ########.fr        #
+#    Updated: 2025/08/14 00:12:09 by mgavornik        ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -75,6 +75,7 @@ SRC			= main.c \
 				tokenizer/tokenizer_utils.c \
 				tokenizer/validate_syntax.c \
 				tokenizer/validate_syntax_utils.c \
+				tokenizer/free_tok_data.c \
 				cleanup_copy.c
 
 OBJ			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
