@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/14 03:07:03 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/14 10:30:47 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -300,12 +300,12 @@ int	execute_command(t_env *env, t_ast_node *node, t_execute_type exec_type)
 		status = execute_builtin_command(env, node);
 	else
 		status = execute_external_command(env, node, exec_type);
-	if (env->pipeline != NULL)
-	{
-		free_pipeline_list(&env->pipeline);
-		free_ast(&env->root);
-		free_env(env);
-	}
+	// if (env->pipeline != NULL)
+	// {
+	// 	free_pipeline_list(&env->pipeline);
+	// 	free_ast(&env->root);
+	// 	free_env(env);
+	// }
 	return (status);
 }
 

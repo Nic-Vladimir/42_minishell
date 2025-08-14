@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/14 02:54:48 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/14 10:28:05 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -107,7 +107,7 @@ int main_loop(char *prompt, char *input, t_env *env)
 		// }
 		//rl_cleanup_after_signal();
 		//free(input);
-		//input = NULL;	
+		input = NULL;	
 	}
 	comprehensive_cleanup(&env);
 	return (0);
