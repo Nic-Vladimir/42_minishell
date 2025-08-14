@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 18:20:38 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/11 16:16:50 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/14 18:29:34 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -152,8 +152,8 @@ int	redirect_input(t_env *env, t_ast_node *node)
 	}
 	if (in_fd == -1)
 	{
-		fprintf(stderr, "minishell: %s: No such file or directory\n",
-			node->args[0]);
+		//fprintf(stderr, "minishell: %s: No such file or directory\n",
+		//	node->args[0]);
 		return (status);
 	}
 	og_in_fd = dup(STDIN_FILENO);

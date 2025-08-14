@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:54:09 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/14 13:20:28 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/14 18:29:39 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -86,7 +86,7 @@ char	*process_simple_token(t_tokenizer_data *tok_data, char *input)
 char *process_invalid_character(t_tokenizer_data *tok_data, char *input)
 {
     // Optionally: print a warning or error
-    fprintf(stderr, "Warning: Invalid character encountered: 0x%02x ('%c')\n", (unsigned char)*input, *input);
+   // fprintf(stderr, "Warning: Invalid character encountered: 0x%02x ('%c')\n", (unsigned char)*input, *input);
 
 	//(void)tok_data;
     // Optionally: add a special token or just skip

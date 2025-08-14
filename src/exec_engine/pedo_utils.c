@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 08:54:24 by mgavornik         #+#    #+#             */
-/*   Updated: 2025/08/14 03:03:18 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/14 18:29:25 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -51,7 +51,7 @@ int	execute_in_child(t_env *env, t_child_data *child_data, int in_fd,
 	pid_t	pid;
 
 	pid = fork();
-	fprintf(stderr, "[PID]execute_in_child(): %d\n", pid);
+	//fprintf(stderr, "[PID]execute_in_child(): %d\n", pid);
 	if (pid == -1)
 	{
 		perror("fork failed");

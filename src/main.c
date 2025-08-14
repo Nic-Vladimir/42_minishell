@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/14 10:28:05 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/14 18:28:39 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -56,7 +56,7 @@ void	handle_command(t_env *env, char *input)
 		printf("minishell: Syntax error\n");
 		return ;
 	}
-	fprintf(stderr,"[PID] handle_command() %d\n", env->shell_pid);
+	//fprintf(stderr,"[PID] handle_command() %d\n", env->shell_pid);
 	env->tokenizer->tokens = token_head;
 	root = parse(env->tokenizer);
 	env->root = root;
@@ -98,7 +98,7 @@ int main_loop(char *prompt, char *input, t_env *env)
 		if (check_input(env, input))
 			continue ;
 		handle_command(env, input);
-		fprintf(stderr, "[PID]main_loop() %d\n", env->shell_pid); //env->shell_pid
+		//(stderr, "[PID]main_loop() %d\n", env->shell_pid); //env->shell_pid
 		
 		// if(env)
 		// {
@@ -127,7 +127,7 @@ int	main(int argc, char **argv, char **envp)
 	env->sigenv->env = env;
 	set_all_signals(MINI_MODE, env->sigenv);
 	main_loop(prompt, input, env);
-	fprintf(stderr, "[PID]main() %d\n", env->shell_pid);
+	//(stderr, "[PID]main() %d\n", env->shell_pid);
 	free_everything(&env);
 	return (0);
 }

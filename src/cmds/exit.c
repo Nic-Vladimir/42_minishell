@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:02:59 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/14 10:45:16 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/14 18:28:56 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -51,17 +51,17 @@ void	reset_terminal_for_readline(void)
 int		execute_exit(t_env *env, sig_atomic_t g_sig)
 {
 	if (!env) {
-		fprintf(stderr, "[EXIT DEBUG] PID %d: env is NULL, exiting.\n", getpid());
+		//fprintf(stderr, "[EXIT DEBUG] PID %d: env is NULL, exiting.\n", getpid());
 		exit(g_sig);
 	}
 	if (env->shell_pid == getpid()) {
-		fprintf(stderr, "[EXIT DEBUG] PID %d (parent): running full cleanup and exit.\n", getpid());
+		//fprintf(stderr, "[EXIT DEBUG] PID %d (parent): running full cleanup and exit.\n", getpid());
 		comprehensive_cleanup(&env); //execute_cleaning(env);
 		clean_rl();
 		//free_env(env);
 		exit(g_sig);
 	} else {
-		fprintf(stderr, "[EXIT DEBUG] PID %d (child): running full cleanup and exit.\n", getpid());
+		//fprintf(stderr, "[EXIT DEBUG] PID %d (child): running full cleanup and exit.\n", getpid());
 		comprehensive_cleanup(&env);
 		exit(g_sig);
 	}

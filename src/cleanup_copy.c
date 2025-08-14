@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 21:35:07 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/14 00:52:49 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/14 18:32:43 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -168,12 +168,12 @@ void	comprehensive_cleanup(t_env **env)
 	if (!env || !*env)
 		return;
 	
-	fprintf(stderr, "[DEBUG] Starting comprehensive cleanup...\n");
+	//fprintf(stderr, "[DEBUG] Starting comprehensive cleanup...\n");
 	
 	//Free AST structures
 	if ((*env)->root)
 	{
-		fprintf(stderr, "[DEBUG] Freeing AST...\n");
+		//fprintf(stderr, "[DEBUG] Freeing AST...\n");
 		free_ast(&((*env)->root));
 		(*env)->root = NULL;
 	}
@@ -181,7 +181,7 @@ void	comprehensive_cleanup(t_env **env)
 	//Free tokenizer structures
 	if ((*env)->tokenizer)
 	{
-		fprintf(stderr, "[DEBUG] Freeing tokenizer...\n");
+		//fprintf(stderr, "[DEBUG] Freeing tokenizer...\n");
 		free_tokens((*env)->tokenizer);
 		free((*env)->tokenizer);
 		(*env)->tokenizer = NULL;
@@ -190,7 +190,7 @@ void	comprehensive_cleanup(t_env **env)
 	//Free pipeline list
 	if ((*env)->pipeline)
 	{
-		fprintf(stderr, "[DEBUG] Freeing pipeline...\n");
+		//fprintf(stderr, "[DEBUG] Freeing pipeline...\n");
 		free_pipeline_list(&((*env)->pipeline));
 		(*env)->pipeline = NULL;
 	}
@@ -198,7 +198,7 @@ void	comprehensive_cleanup(t_env **env)
 	//Free input string
 	if ((*env)->input)
 	{
-		fprintf(stderr, "[DEBUG] Freeing input string...\n");
+		//fprintf(stderr, "[DEBUG] Freeing input string...\n");
 		free((*env)->input);
 		(*env)->input = NULL;
 	}
@@ -206,7 +206,7 @@ void	comprehensive_cleanup(t_env **env)
 	//Free hashmap
 	if ((*env)->vars)
 	{
-		fprintf(stderr, "[DEBUG] Freeing hashmap...\n");
+		//fprintf(stderr, "[DEBUG] Freeing hashmap...\n");
 		free_hashmap((*env)->vars);
 		(*env)->vars = NULL;
 	}
@@ -214,7 +214,7 @@ void	comprehensive_cleanup(t_env **env)
 	//Free signal environment
 	if ((*env)->sigenv)
 	{
-		fprintf(stderr, "[DEBUG] Freeing signal environment...\n");
+		//fprintf(stderr, "[DEBUG] Freeing signal environment...\n");
 		if ((*env)->sigenv->env && (*env)->sigenv->env == *env)
 			(*env)->sigenv->env = NULL;
 		free_sig((*env)->sigenv);
@@ -222,15 +222,15 @@ void	comprehensive_cleanup(t_env **env)
 	}
 	
 	//Free the main env structure
-	fprintf(stderr, "[DEBUG] Freeing main env structure...\n");
+	//fprintf(stderr, "[DEBUG] Freeing main env structure...\n");
 	free(*env);
 	*env = NULL;
 	
 	//Clean up readline
-	fprintf(stderr, "[DEBUG] Cleaning readline...\n");
+	//fprintf(stderr, "[DEBUG] Cleaning readline...\n");
 	clean_rl();
 	
-	fprintf(stderr, "[DEBUG] Comprehensive cleanup completed.\n");
+	//fprintf(stderr, "[DEBUG] Comprehensive cleanup completed.\n");
 }
 
 
@@ -240,7 +240,7 @@ void	child_comprehensive_cleanup(t_env *env)
 	if (!env)
 		return;
 		
-	fprintf(stderr, "[DEBUG] Child %d: Starting inherited structure cleanup...\n", getpid());
+	//fprintf(stderr, "[DEBUG] Child %d: Starting inherited structure cleanup...\n", getpid());
 	
        if (env->root)
        {
@@ -268,7 +268,7 @@ void	child_comprehensive_cleanup(t_env *env)
 
 	
 		
-	fprintf(stderr, "[DEBUG] Child %d: Inherited structure cleanup completed.\n", getpid());
+	//fprintf(stderr, "[DEBUG] Child %d: Inherited structure cleanup completed.\n", getpid());
 }
 
 /**
@@ -281,63 +281,68 @@ void	report_memory_usage(t_env *env)
 	
 	if (!env)
 	{
-		fprintf(stderr, "[MEMORY] env is NULL\n");
+		//fprintf(stderr, "[MEMORY] env is NULL\n");
 		return;
 	}
 	
-	fprintf(stderr, "[MEMORY] === Memory Usage Report ===\n");
-	fprintf(stderr, "[MEMORY] env pointer: %p\n", (void*)env);
+	//fprintf(stderr, "[MEMORY] === Memory Usage Report ===\n");
+	//fprintf(stderr, "[MEMORY] env pointer: %p\n", (void*)env);
 	
 	if (env->vars)
 	{
-		fprintf(stderr, "[MEMORY] hashmap: %p (ALLOCATED)\n", (void*)env->vars);
+		//fprintf(stderr, "[MEMORY] hashmap: %p (ALLOCATED)\n", (void*)env->vars);
 		count++;
 	}
 	else
-		fprintf(stderr, "[MEMORY] hashmap: NULL\n");
-		
+	{
+		;//fprintf(stderr, "[MEMORY] hashmap: NULL\n");
+	}
 	if (env->tokenizer)
 	{
-		fprintf(stderr, "[MEMORY] tokenizer: %p (ALLOCATED)\n", (void*)env->tokenizer);
+		////fprintf(stderr, "[MEMORY] tokenizer: %p (ALLOCATED)\n", (void*)env->tokenizer);
 		count++;
 	}
 	else
-		fprintf(stderr, "[MEMORY] tokenizer: NULL\n");
+		//fprintf(stderr, "[MEMORY] tokenizer: NULL\n");
 		
 	if (env->root)
 	{
-		fprintf(stderr, "[MEMORY] AST root: %p (ALLOCATED)\n", (void*)env->root);
+		//fprintf(stderr, "[MEMORY] AST root: %p (ALLOCATED)\n", (void*)env->root);
 		count++;
 	}
 	else
-		fprintf(stderr, "[MEMORY] AST root: NULL\n");
-		
+	{
+		;//fprintf(stderr, "[MEMORY] AST root: NULL\n");
+	}	
 	if (env->pipeline)
 	{
-		fprintf(stderr, "[MEMORY] pipeline: %p (ALLOCATED)\n", (void*)env->pipeline);
+		//fprintf(stderr, "[MEMORY] pipeline: %p (ALLOCATED)\n", (void*)env->pipeline);
 		count++;
 	}
 	else
-		fprintf(stderr, "[MEMORY] pipeline: NULL\n");
-		
+	{
+		;//fprintf(stderr, "[MEMORY] pipeline: NULL\n");
+	}
 	if (env->input)
 	{
-		fprintf(stderr, "[MEMORY] input: %p -> \"%s\" (ALLOCATED)\n", (void*)env->input, env->input);
+		//fprintf(stderr, "[MEMORY] input: %p -> \"%s\" (ALLOCATED)\n", (void*)env->input, env->input);
 		count++;
 	}
 	else
-		fprintf(stderr, "[MEMORY] input: NULL\n");
-		
+	{
+		;//fprintf(stderr, "[MEMORY] input: NULL\n");
+	}
 	if (env->sigenv)
 	{
-		fprintf(stderr, "[MEMORY] sigenv: %p (ALLOCATED)\n", (void*)env->sigenv);
+		//fprintf(stderr, "[MEMORY] sigenv: %p (ALLOCATED)\n", (void*)env->sigenv);
 		count++;
 	}
 	else
-		fprintf(stderr, "[MEMORY] sigenv: NULL\n");
-	
-	fprintf(stderr, "[MEMORY] Total allocated structures: %d\n", count);
-	fprintf(stderr, "[MEMORY] === End Report ===\n");
+	{
+		;//fprintf(stderr, "[MEMORY] sigenv: NULL\n");
+	}
+	//fprintf(stderr, "[MEMORY] Total allocated structures: %d\n", count);
+	//fprintf(stderr, "[MEMORY] === End Report ===\n");
 }
 
 /**
@@ -348,27 +353,27 @@ void	force_cleanup_all_memory(t_env **env)
 {
 	if (!env || !*env)
 	{
-		fprintf(stderr, "[FORCE_CLEANUP] Nothing to clean up - env is NULL\n");
+		//fprintf(stderr, "[FORCE_CLEANUP] Nothing to clean up - env is NULL\n");
 		return;
 	}
 	
-	fprintf(stderr, "[FORCE_CLEANUP] Starting FORCE cleanup of all memory...\n");
+	//fprintf(stderr, "[FORCE_CLEANUP] Starting FORCE cleanup of all memory...\n");
 	
 	report_memory_usage(*env);
 	comprehensive_cleanup(env);
 	rl_clear_history();
-	fprintf(stderr, "[FORCE_CLEANUP] FORCE cleanup completed.\n");
+	//fprintf(stderr, "[FORCE_CLEANUP] FORCE cleanup completed.\n");
 }
 
 void	free_everything(t_env **env)
 {
 	if (!env)
 	{
-		fprintf(stderr, "[FREE_EVERYTHING] Warning: env parameter is NULL\n");
+		//fprintf(stderr, "[FREE_EVERYTHING] Warning: env parameter is NULL\n");
 		return;
 	}
 	
-	fprintf(stderr, "[FREE_EVERYTHING] Freeing all malloc'd structures...\n");
+	//fprintf(stderr, "[FREE_EVERYTHING] Freeing all malloc'd structures...\n");
 	force_cleanup_all_memory(env);
-	fprintf(stderr, "[FREE_EVERYTHING] All memory freed.\n");
+	//fprintf(stderr, "[FREE_EVERYTHING] All memory freed.\n");
 }
