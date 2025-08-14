@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   tokenizer_filters.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:54:09 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/21 16:55:25 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/08/14 13:20:28 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/minishell.h"
 #include "../../inc/tokenizer.h"
@@ -81,4 +81,17 @@ char	*process_simple_token(t_tokenizer_data *tok_data, char *input)
 		add_token(tok_data, TOK_GROUP_CLOSE, ")", 1);
 	input++;
 	return (input);
+}
+
+char *process_invalid_character(t_tokenizer_data *tok_data, char *input)
+{
+    // Optionally: print a warning or error
+    fprintf(stderr, "Warning: Invalid character encountered: 0x%02x ('%c')\n", (unsigned char)*input, *input);
+
+	//(void)tok_data;
+    // Optionally: add a special token or just skip
+    add_token(tok_data, TOK_INVALID, input, 1);
+
+    // Move to the next character
+    return input + 1;
 }

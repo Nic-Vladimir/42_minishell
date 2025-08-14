@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:33:51 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/14 00:53:01 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/14 13:21:43 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -29,7 +29,8 @@ typedef enum e_token_type
 	TOK_GROUP_CLOSE,
 	TOK_EOF,
 	TOK_SGQ_BLOCK,
-	TOK_DBQ_BLOCK
+	TOK_DBQ_BLOCK,
+	TOK_INVALID
 }					t_token_type;
 
 typedef struct s_token

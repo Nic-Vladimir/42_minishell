@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:40:49 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/14 00:48:17 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/14 13:15:07 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -35,6 +35,18 @@ static t_token	*validate_tokens(t_token *tokens)
 		return (NULL);
 	return (tokens);
 }
+bool is_valid_token_char(char curent_char)
+{
+	return (curent_char == '|'
+		|| curent_char == '&'
+		|| curent_char == '<'
+		|| curent_char == '>'
+		|| curent_char == '('
+		|| curent_char == ')'
+		|| curent_char == '\''
+		|| curent_char == '\"'
+		|| isspace(curent_char));
+}
 
 t_token	*tokenize(t_tokenizer_data *tok_data, char *input)
 {
@@ -60,6 +72,8 @@ t_token	*tokenize(t_tokenizer_data *tok_data, char *input)
 			input = process_double_quotes(tok_data, input);
 		else if (!isspace(curr_char))
 			input = process_word_token(tok_data, input);
+		else if (!is_valid_token_char(curr_char))
+			input = process_invalid_character(tok_data, input);
 		else
 			input++;
 	}

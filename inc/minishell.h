@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/13 16:39:19 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/14 13:17:38 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -94,6 +94,10 @@ void							clean_rl(void);
 void							ft_free_split(char **res);
 void							free_envp(char **envp);
 
+bool 							is_valid_token_char(char curent_char);
+
+char							*process_invalid_character(t_tokenizer_data *tok_data, 
+									char *input);
 char							*process_pipe(t_tokenizer_data *tok_data,
 									char *input);
 char							*process_ampersand(t_tokenizer_data *tok_data,
