@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/14 00:52:40 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/14 02:54:48 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -43,9 +43,9 @@ int	check_empty(const char *input)
 
 void	handle_command(t_env *env, char *input)
 {
-	t_token		*token_head;
-	t_ast_node	*root;
-	int			status;
+	t_token		*token_head = NULL;
+	t_ast_node	*root = NULL;
+	int			status = 0;
 
 	print_transient_prompt(input);
 	token_head = tokenize(env->tokenizer, input);
@@ -56,6 +56,7 @@ void	handle_command(t_env *env, char *input)
 		printf("minishell: Syntax error\n");
 		return ;
 	}
+	fprintf(stderr,"[PID] handle_command() %d\n", env->shell_pid);
 	env->tokenizer->tokens = token_head;
 	root = parse(env->tokenizer);
 	env->root = root;
@@ -96,9 +97,8 @@ int main_loop(char *prompt, char *input, t_env *env)
 		free(prompt);
 		if (check_input(env, input))
 			continue ;
-	
 		handle_command(env, input);
-		
+		fprintf(stderr, "[PID]main_loop() %d\n", env->shell_pid); //env->shell_pid
 		
 		// if(env)
 		// {
@@ -107,7 +107,7 @@ int main_loop(char *prompt, char *input, t_env *env)
 		// }
 		//rl_cleanup_after_signal();
 		//free(input);
-		input = NULL;	
+		//input = NULL;	
 	}
 	comprehensive_cleanup(&env);
 	return (0);
@@ -127,6 +127,7 @@ int	main(int argc, char **argv, char **envp)
 	env->sigenv->env = env;
 	set_all_signals(MINI_MODE, env->sigenv);
 	main_loop(prompt, input, env);
+	fprintf(stderr, "[PID]main() %d\n", env->shell_pid);
 	free_everything(&env);
 	return (0);
 }

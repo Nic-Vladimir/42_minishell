@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/13 23:45:35 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/14 03:07:03 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -70,6 +70,7 @@ pid_t	execute_one_pipeline_cmd(t_env *env, t_list *pipeline,
 		return (-1);
 	// node = (t_ast_node *)pipeline->content;
 	pid = fork();
+	fprintf(stderr, "[PID]execute_one_pipeline_cmd(): %d\n", pid);
 	if (pid != 0)
 	{
 		return (pid);
@@ -88,6 +89,7 @@ pid_t	execute_one_pipeline_cmd(t_env *env, t_list *pipeline,
 	}
 	*/
 	status = execute(env, (t_ast_node *)pipeline->content, EXIT);
+	comprehensive_cleanup(&env);
 	exit(status);
 }
 
@@ -272,6 +274,7 @@ int	execute_external_command(t_env *env, t_ast_node *node,
 	else
 	{
 		pid = fork();
+		fprintf(stderr, "[PID]execute_external_command(): %d\n", pid);
 		if (pid == 0)
 		{
 			set_all_signals(NORMAL_MODE, env->sigenv);
@@ -341,6 +344,7 @@ int	execute_group(t_env *env, t_ast_node *node)
 
 	status = 0;
 	pid = fork();
+	fprintf(stderr, "[PID]execute_group(): %d\n", pid);
 	if (pid == 0)
 	{
 		setup_child_signals(env, CHILD_SIG_CUSTOM);

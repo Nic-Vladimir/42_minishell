@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:02:59 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/13 17:21:43 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/14 02:40:46 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -50,10 +50,21 @@ void	reset_terminal_for_readline(void)
 
 int		execute_exit(t_env *env, sig_atomic_t g_sig)
 {
-	execute_cleaning(env);
-	clean_rl();
-	free_env(env);
-	exit(g_sig);
+	if (!env) {
+		fprintf(stderr, "[EXIT DEBUG] PID %d: env is NULL, exiting.\n", getpid());
+		exit(g_sig);
+	}
+	if (env->shell_pid == getpid()) {
+		fprintf(stderr, "[EXIT DEBUG] PID %d (parent): running full cleanup and exit.\n", getpid());
+		comprehensive_cleanup(&env); //execute_cleaning(env);
+		clean_rl();
+		//free_env(env);
+		exit(g_sig);
+	} else {
+		fprintf(stderr, "[EXIT DEBUG] PID %d (child): running full cleanup and exit.\n", getpid());
+		comprehensive_cleanup(&env);
+		exit(g_sig);
+	}
 }
 
 int execute_cleaning(t_env *env)
@@ -66,6 +77,7 @@ int execute_cleaning(t_env *env)
 			free_tokens(env->tokenizer);
 		if (env->pipeline)
 			free_pipeline_list(&env->pipeline);
+		
 	}
 	return (0);
 }	
