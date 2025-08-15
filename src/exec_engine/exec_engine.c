@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/14 18:29:18 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/15 13:01:52 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -33,7 +33,7 @@ int	execute_builtin_command(t_env *env, t_ast_node *node)
 	if (ft_strncmp(node->args[0], "unset", 6) == 0)
 		return (execute_unset(env, node));
 	if (ft_strncmp(node->args[0], "exit", 6) == 0)
-		return (execute_exit(env, env->last_exit_code));
+		return (execute_exit(env, node, g_sig));
 	return (1);
 }
 
@@ -70,7 +70,7 @@ pid_t	execute_one_pipeline_cmd(t_env *env, t_list *pipeline,
 		return (-1);
 	// node = (t_ast_node *)pipeline->content;
 	pid = fork();
-	//fprintf(stderr, "[PID]execute_one_pipeline_cmd(): %d\n", pid);
+	fprintf(stderr, "[PID]execute_one_pipeline_cmd(): %d\n", pid);
 	if (pid != 0)
 	{
 		return (pid);
@@ -261,6 +261,9 @@ int	execute_pipeline(t_env *env, t_ast_node *node)
 bool	cmd_is_builtin(t_env *env, t_ast_node *node)
 {
 	(void)env;
+	fprintf(stderr, "[EXECUTE DEBUG]cmd_is_builtin() node->args[0]: %s\n", node->args[0]);
+	if(!node->args[0])
+		return (false);
 	return (ft_strncmp(node->args[0], "cd", 3) == 0 || ft_strncmp(node->args[0],
 			"echo", 5) == 0 || ft_strncmp(node->args[0], "pwd", 4) == 0
 		|| ft_strncmp(node->args[0], "export", 7) == 0
@@ -334,7 +337,7 @@ int	execute_external_command(t_env *env, t_ast_node *node,
 	else
 	{
 		pid = fork();
-		//fprintf(stderr, "[PID]execute_external_command(): %d\n", pid);
+		fprintf(stderr, "[PID]execute_external_command(): %d\n", pid);
 		if (pid == 0)
 		{
 			set_all_signals(NORMAL_MODE, env->sigenv);
@@ -355,7 +358,8 @@ int	execute_external_command(t_env *env, t_ast_node *node,
 int	execute_command(t_env *env, t_ast_node *node, t_execute_type exec_type)
 {
 	int	status;
-
+	
+	status = 0;
 	if (cmd_is_builtin(env, node))
 		status = execute_builtin_command(env, node);
 	else
@@ -404,7 +408,7 @@ int	execute_group(t_env *env, t_ast_node *node)
 
 	status = 0;
 	pid = fork();
-	//fprintf(stderr, "[PID]execute_group(): %d\n", pid);
+	fprintf(stderr, "[PID]execute_group(): %d\n", pid);
 	if (pid == 0)
 	{
 		setup_child_signals(env, CHILD_SIG_CUSTOM);
@@ -447,29 +451,49 @@ int	execute(t_env *env, t_ast_node *node, t_execute_type exec_type)
 {
 	int	status;
 
-	if (!node)
-		return (0);
-	if (node->type == NODE_CMD)
-	{
-		execute_command_expansion(env, node);
-		status = execute_command(env, node, exec_type);
-	}
-	else if (node->type == NODE_PIPE)
-		status = execute_pipeline(env, node);
-	else if (node->type == NODE_REDIR_IN || node->type == NODE_REDIR_OUT
-		|| node->type == NODE_REDIR_APPEND || node->type == NODE_HEREDOC)
-		status = execute_redirections(env, node);
-	else if (node->type == NODE_AND || node->type == NODE_OR)
-		status = execute_logical_op(env, node);
-	else if (node->type == NODE_GROUP)
-		status = execute_group(env, node);
-	else
-	{
-		perror("Unknown node type in execution\n");
-		return (1);
-	}
-	EXIT_SUCCESS;
-	return (status);
+       pid_t pid = getpid();
+       if (!node) {
+	       fprintf(stderr, "[EXECUTE DEBUG][PID %d] node is NULL\n", pid);
+	       return (0);
+       }
+       fprintf(stderr, "[EXECUTE DEBUG][PID %d] node type: %d\n", pid, node->type);
+       if (node->args && node->args[0])
+	       fprintf(stderr, "[EXECUTE DEBUG][PID %d] node arg[0]: %s\n", pid, node->args[0]);
+       if (node->type == NODE_CMD)
+       {
+	       fprintf(stderr, "[EXECUTE DEBUG][PID %d] NODE_CMD\n", pid);
+	       execute_command_expansion(env, node);
+	       status = execute_command(env, node, exec_type);
+       }
+       else if (node->type == NODE_PIPE)
+       {
+	       fprintf(stderr, "[EXECUTE DEBUG][PID %d] NODE_PIPE\n", pid);
+	       status = execute_pipeline(env, node);
+       }
+       else if (node->type == NODE_REDIR_IN || node->type == NODE_REDIR_OUT
+	       || node->type == NODE_REDIR_APPEND || node->type == NODE_HEREDOC)
+       {
+	       fprintf(stderr, "[EXECUTE DEBUG][PID %d] NODE_REDIR\n", pid);
+	       status = execute_redirections(env, node);
+       }
+       else if (node->type == NODE_AND || node->type == NODE_OR)
+       {
+	       fprintf(stderr, "[EXECUTE DEBUG][PID %d] NODE_LOGICAL_OP\n", pid);
+	       status = execute_logical_op(env, node);
+       }
+       else if (node->type == NODE_GROUP)
+       {
+	       fprintf(stderr, "[EXECUTE DEBUG][PID %d] NODE_GROUP\n", pid);
+	       status = execute_group(env, node);
+       }
+       else
+       {
+	       fprintf(stderr, "[EXECUTE DEBUG][PID %d] Unknown node type in execution\n", pid);
+	       perror("Unknown node type in execution\n");
+	       return (1);
+       }
+       EXIT_SUCCESS;
+       return (status);
 }
 
 int	execute_ast(t_env *env, t_ast_node *root, t_execute_type exec_type)

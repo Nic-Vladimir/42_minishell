@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:02:41 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/19 11:14:20 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/15 11:27:03 by mgavornik        ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../inc/minishell.h"
 
@@ -47,6 +47,12 @@ char	*find_executable(t_env *env, const char *command)
 	char	*result;
 	char	*saveptr;
 
+	result = NULL;
+	fprintf(stderr, "[DEBUG] find_executable: %s\n", command);
+	if (!command)
+	{
+		return (result);
+	}
 	if (ft_strchr(command, '/'))
 		return (check_executable_path(command));
 	path_env = get_env_value(env, "PATH");
@@ -55,7 +61,6 @@ char	*find_executable(t_env *env, const char *command)
 	path_copy = strdup(path_env);
 	if (!path_copy)
 		return (NULL);
-	result = NULL;
 	dir = strtok_r(path_copy, ":", &saveptr);
 	while (dir && !result)
 	{

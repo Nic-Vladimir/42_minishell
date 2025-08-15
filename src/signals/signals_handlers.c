@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 10:16:04 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/29 02:56:35 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/15 12:58:31 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -63,7 +63,7 @@ void	cd_handler(sig_atomic_t g_sig, t_env *env)
 {
 	printf("Signal recognized\n");
 	printf("exit\n");
-	execute_exit(env, g_sig);
+	execute_exit(env, NULL, g_sig);
 }
 
 void	set_all_signals(t_sig_mode mode, t_sigenv *sigenv)

@@ -6,7 +6,7 @@
 /*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:02:59 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/14 18:28:56 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/15 13:00:54 by mgavornik        ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -28,6 +28,8 @@ void	ft_free_split(char **res)
 
 void	clean_rl(void)
 {
+	rl_clear_history();
+    rl_free_line_state();
 	rl_cleanup_after_signal();
 	clear_history();
 	rl_deprep_terminal();
@@ -48,12 +50,16 @@ void	reset_terminal_for_readline(void)
 	rl_redisplay();
 }
 
-int		execute_exit(t_env *env, sig_atomic_t g_sig)
+int		execute_exit(t_env *env, t_ast_node *node ,sig_atomic_t g_sig)
 {
+	if(node)
+		g_sig = node->args[1] ? ft_atoi(node->args[1]) : 0; 
 	if (!env) {
 		//fprintf(stderr, "[EXIT DEBUG] PID %d: env is NULL, exiting.\n", getpid());
 		exit(g_sig);
 	}
+	// fprintf(stderr, "[EXIT DEBUG] status: %d\n", env->last_exit_code);
+	// fprintf(stderr, "[EXIT DEBUG] g_sig: %d\n", g_sig);
 	if (env->shell_pid == getpid()) {
 		//fprintf(stderr, "[EXIT DEBUG] PID %d (parent): running full cleanup and exit.\n", getpid());
 		comprehensive_cleanup(&env); //execute_cleaning(env);

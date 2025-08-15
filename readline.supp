@@ -10,3 +10,14 @@
     ...
     fun:add_history
 }
+{
+   readline_still_reachable
+   Memcheck:Leak
+   fun:realloc
+   fun:xrealloc
+   fun:rl_extend_line_buffer
+   fun:rl_insert_text
+   fun:rl_bracketed_paste_begin
+   fun:_rl_dispatch_subseq
+   fun:readline_internal_char
+}
