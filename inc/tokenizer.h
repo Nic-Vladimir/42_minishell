@@ -1,19 +1,17 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:33:51 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/14 13:21:43 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/15 16:02:47 by mgavorni         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #ifndef TOKENIZER_H
 # define TOKENIZER_H
-
-// TODO: Learn about multiple header inclusions
 
 typedef enum e_token_type
 {
@@ -46,6 +44,6 @@ typedef struct s_tokenizer_data
 	t_token			*tail;
 }					t_tokenizer_data;
 
-void free_tok_data(t_tokenizer_data *tok_data);
-void clear_tok_data(t_tokenizer_data *tok_data);
+void				free_tok_data(t_tokenizer_data *tok_data);
+void				clear_tok_data(t_tokenizer_data *tok_data);
 #endif

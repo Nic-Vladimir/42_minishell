@@ -1,32 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_command.c                                     :+:      :+:    :+:   */
+/*   exec_engine_utils2.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/24 11:16:18 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/15 14:27:45 by mgavorni         ###   ########.fr       */
+/*   Created: 2025/08/15 14:58:45 by mgavorni          #+#    #+#             */
+/*   Updated: 2025/08/15 15:00:04 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	setup_child_fds(int in_fd, int out_fd)
-{
-	if (in_fd != STDIN_FILENO && in_fd != -1)
-	{
-		dup2(in_fd, STDIN_FILENO);
-		close(in_fd);
-	}
-	if (out_fd != STDOUT_FILENO && out_fd != -1)
-	{
-		dup2(out_fd, STDOUT_FILENO);
-		close(out_fd);
-	}
-}
-
-void	execute_child_process(t_env *env, t_ast_node *node)
+void	handle_execve(t_env *env, t_ast_node *node)
 {
 	char	**envp;
 	char	*exec_path;
@@ -51,4 +37,20 @@ void	execute_child_process(t_env *env, t_ast_node *node)
 		free_env(env);
 		exit(127);
 	}
+}
+
+int	check_process_child_exit(t_env *env, int status)
+{
+	int	signal;
+
+	(void)env;
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	else if (WIFSIGNALED(status))
+	{
+		signal = WTERMSIG(status);
+		return (128 + signal);
+	}
+	else
+		return (EXIT_FAILURE);
 }

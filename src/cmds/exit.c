@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:02:59 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/15 13:00:54 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/15 14:24:56 by mgavorni         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 #include <termios.h>
@@ -29,7 +29,7 @@ void	ft_free_split(char **res)
 void	clean_rl(void)
 {
 	rl_clear_history();
-    rl_free_line_state();
+	rl_free_line_state();
 	rl_cleanup_after_signal();
 	clear_history();
 	rl_deprep_terminal();
@@ -50,32 +50,32 @@ void	reset_terminal_for_readline(void)
 	rl_redisplay();
 }
 
-int		execute_exit(t_env *env, t_ast_node *node ,sig_atomic_t g_sig)
+int	execute_exit(t_env *env, t_ast_node *node, sig_atomic_t g_sig)
 {
-	if(node)
-		g_sig = node->args[1] ? ft_atoi(node->args[1]) : 0; 
-	if (!env) {
-		//fprintf(stderr, "[EXIT DEBUG] PID %d: env is NULL, exiting.\n", getpid());
+	if (node && node->args[1])
+		g_sig = ft_atoi(node->args[1]);
+	else
+		g_sig = 0;
+	if (!env)
+	{
 		exit(g_sig);
 	}
-	// fprintf(stderr, "[EXIT DEBUG] status: %d\n", env->last_exit_code);
-	// fprintf(stderr, "[EXIT DEBUG] g_sig: %d\n", g_sig);
-	if (env->shell_pid == getpid()) {
-		//fprintf(stderr, "[EXIT DEBUG] PID %d (parent): running full cleanup and exit.\n", getpid());
-		comprehensive_cleanup(&env); //execute_cleaning(env);
+	if (env->shell_pid == getpid())
+	{
+		comprehensive_cleanup(&env);
 		clean_rl();
-		//free_env(env);
 		exit(g_sig);
-	} else {
-		//fprintf(stderr, "[EXIT DEBUG] PID %d (child): running full cleanup and exit.\n", getpid());
+	}
+	else
+	{
 		comprehensive_cleanup(&env);
 		exit(g_sig);
 	}
 }
 
-int execute_cleaning(t_env *env)
+int	execute_cleaning(t_env *env)
 {
-	if(env)
+	if (env)
 	{
 		if (env->root)
 			free_ast(&(env->root));
@@ -83,7 +83,6 @@ int execute_cleaning(t_env *env)
 			free_tokens(env->tokenizer);
 		if (env->pipeline)
 			free_pipeline_list(&env->pipeline);
-		
 	}
 	return (0);
-}	
+}

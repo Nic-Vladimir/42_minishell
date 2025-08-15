@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:02:13 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/07/28 11:15:00 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/08/15 14:16:43 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,89 +85,3 @@ t_ast_node	*parse(t_tokenizer_data *tok_data)
 	tok_data_cpy = tok_data;
 	return (parse_logical_operators(tok_data_cpy));
 }
-
-/*
-// DEBUGGING FUNCTIONS ---
-// Function to get string representation of node types
-const char	*node_type_to_str(t_node_type type)
-{
-	if (type == NODE_CMD)
-		return ("CMD");
-	else if (type == NODE_PIPE)
-		return ("PIPE");
-	else if (type == NODE_REDIR_IN)
-		return ("REDIR_IN");
-	else if (type == NODE_REDIR_OUT)
-		return ("REDIR_OUT");
-	else if (type == NODE_REDIR_APPEND)
-		return ("APPEND");
-	else if (type == NODE_HEREDOC)
-		return ("HEREDOC");
-	else if (type == NODE_AND)
-		return ("AND");
-	else if (type == NODE_OR)
-		return ("OR");
-	else if (type == NODE_GROUP)
-		return ("GROUP");
-	else
-		return ("UNKNOWN");
-}
-
-// Helper function to print indentation
-void	print_indent(int depth)
-{
-	for (int i = 0; i < depth; i++)
-	{
-		printf("  ");
-	}
-}
-
-// Recursive function to display the AST
-void	display_ast(t_ast_node *node, int depth)
-{
-	if (!node)
-		return ;
-	print_indent(depth);
-	printf("Node: %s\n", node_type_to_str(node->type));
-	// Display args for command nodes
-	if (node->type == NODE_CMD && node->args)
-	{
-		print_indent(depth + 1);
-		printf("Args: ");
-		for (int i = 0; node->args[i]; i++)
-		{
-			printf("\"%s\" ", node->args[i]);
-		}
-		printf("\n");
-	}
-	// Display filename for redirection nodes
-	if ((node->type == NODE_REDIR_IN || node->type == NODE_REDIR_OUT
-			|| node->type == NODE_REDIR_APPEND || node->type == NODE_HEREDOC)
-		&& node->args)
-	{
-		print_indent(depth + 1);
-		printf("File: \"%s\"\n", node->args[0]);
-	}
-	// Recursively display children
-	if (node->left)
-	{
-		print_indent(depth);
-		printf("Left:\n");
-		display_ast(node->left, depth + 1);
-	}
-	if (node->right)
-	{
-		print_indent(depth);
-		printf("Right:\n");
-		display_ast(node->right, depth + 1);
-	}
-}
-
-// Main function to debug an AST
-void	debug_ast(t_ast_node *root)
-{
-	printf("=== AST Debug Output ===\n");
-	display_ast(root, 0);
-	printf("=======================\n");
-}
-*/

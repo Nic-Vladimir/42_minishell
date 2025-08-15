@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 21:21:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/28 17:59:26 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/08/15 15:36:45 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,52 +94,3 @@ char	*expand_wildcard(char *arg)
 	free(suffix);
 	return (result);
 }
-
-// static char	*handle_opendir_failure(char *prefix, char *suffix,
-// char *result,
-//		char *arg)
-//{
-//	free(prefix);
-//	free(suffix);
-//	free(result);
-//	return (ft_strdup(arg));
-//}
-//
-// char	*expand_wildcard(char *arg)
-//{
-//	char			*prefix;
-//	char			*suffix;
-//	char			*result;
-//	DIR				*dir;
-//	struct dirent	*entry;
-//	int				match_count;
-//
-//	prefix = ft_substr(arg, 0, ft_strchr(arg, '*') - arg);
-//	suffix = ft_strdup(ft_strchr(arg, '*') + 1);
-//	result = ft_strdup("");
-//	match_count = 0;
-//	dir = opendir(".");
-//	if (!dir)
-//		return (handle_opendir_failure(prefix, suffix, result, arg));
-//	while ((entry = readdir(dir)) != NULL)
-//	{
-//		if (entry->d_name[0] != '.' && match_pattern(entry->d_name, prefix,
-//				suffix))
-//		{
-//			if (match_count > 0)
-//				result = ft_strjoin_free(result, " ");
-//			result = ft_strjoin_free(result, entry->d_name);
-//			match_count++;
-//		}
-//	}
-//	closedir(dir);
-//	if (match_count == 0)
-//	{
-//		free(result);
-//		result = ft_strdup(arg);
-//	}
-//	free(prefix);
-//	free(suffix);
-//	return (result);
-//}
-//

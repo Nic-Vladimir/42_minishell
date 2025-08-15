@@ -1,33 +1,19 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:44:35 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/15 12:22:43 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/15 15:54:56 by mgavorni         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../inc/ast.h"
 #include "../inc/minishell.h"
 #include "../inc/tokenizer.h"
 
-/*
-static void	print_tokens(t_tokenizer_data *tok_data)
-{
-	t_tokenizer_data	*tok_ptr;
-
-	tok_ptr = tok_data;
-	while (tok_ptr->tokens)
-	{
-		printf("Tokens: [%s] (Type: %d)\n", tok_ptr->tokens->value,
-			tok_ptr->tokens->type);
-		tok_ptr->tokens = tok_ptr->tokens->next;
-	}
-}
-*/
 int	check_empty(const char *input)
 {
 	if (!input || !*input)
@@ -43,10 +29,13 @@ int	check_empty(const char *input)
 
 void	handle_command(t_env *env, char *input)
 {
-	t_token		*token_head = NULL;
-	t_ast_node	*root = NULL;
-	int			status = 0;
+	t_token		*token_head;
+	t_ast_node	*root;
+	int			status;
 
+	token_head = NULL;
+	root = NULL;
+	status = 0;
 	print_transient_prompt(input);
 	token_head = tokenize(env->tokenizer, input);
 	if (token_head == NULL)
@@ -56,7 +45,6 @@ void	handle_command(t_env *env, char *input)
 		printf("minishell: Syntax error\n");
 		return ;
 	}
-	//fprintf(stderr,"[PID] handle_command() %d\n", env->shell_pid);
 	env->tokenizer->tokens = token_head;
 	root = parse(env->tokenizer);
 	env->root = root;
@@ -87,9 +75,8 @@ int	check_input(t_env *env, char *input)
 	return (0);
 }
 
-int main_loop(char *prompt, char *input, t_env *env)
+int	main_loop(char *prompt, char *input, t_env *env)
 {
-
 	while (1)
 	{
 		prompt = get_prompt(env);
@@ -98,16 +85,7 @@ int main_loop(char *prompt, char *input, t_env *env)
 		if (check_input(env, input))
 			continue ;
 		handle_command(env, input);
-		//(stderr, "[PID]main_loop() %d\n", env->shell_pid); //env->shell_pid
-		
-		// if(env)
-		// {
-		// 	report_memory_usage(env);
-		// 	comprehensive_cleanup(&env);
-		// }
-		//rl_cleanup_after_signal();
-		//free(input);
-		input = NULL;	
+		input = NULL;
 	}
 	comprehensive_cleanup(&env);
 	return (0);
@@ -127,7 +105,6 @@ int	main(int argc, char **argv, char **envp)
 	env->sigenv->env = env;
 	set_all_signals(MINI_MODE, env->sigenv);
 	main_loop(prompt, input, env);
-	//(stderr, "[PID]main() %d\n", env->shell_pid);
 	free_everything(&env);
 	return (0);
 }

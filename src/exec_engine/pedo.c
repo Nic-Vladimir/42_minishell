@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   pedo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 12:39:37 by mgavornik         #+#    #+#             */
-/*   Updated: 2025/08/15 12:58:14 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/15 15:32:20 by mgavorni         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 #include "../../inc/pedo.h"
@@ -40,7 +40,7 @@ static void	custom_handler(int sig, siginfo_t *info, void *ucontext)
 	if (sig == SIGINT)
 	{
 		mini_sigint_handler(sig);
-		execute_exit(env_struct, NULL ,130); //CHANGED
+		execute_exit(env_struct, NULL, 130);
 	}
 }
 

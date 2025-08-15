@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   shell_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 18:06:34 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/14 18:29:02 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/15 14:26:57 by mgavorni         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
@@ -94,7 +94,6 @@ t_env	*init_env(char **envp)
 	if (!env->sigenv)
 		return (NULL);
 	env->shell_pid = getpid();
-	//fprintf(stderr, "[PID]init_env() %d\n", env->shell_pid);
 	env->last_exit_code = 0;
 	env->vars = init_hashmap_vars();
 	if (!env->vars)

@@ -3,23 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   validate_syntax.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:43:09 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/05/29 21:08:35 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/08/15 15:36:11 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-/*
-static bool	is_valid_operator_sequence(t_token_type prev, t_token_type current)
-{
-	if (prev == TOK_GROUP_OPEN && current == TOK_GROUP_CLOSE)
-		return (true);
-	return (false);
-}
-*/
 static bool	validate_pipe_and_logical_rules(t_token *current, t_token *prev)
 {
 	if (current->type == TOK_PIPE)

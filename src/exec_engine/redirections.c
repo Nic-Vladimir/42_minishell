@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 18:20:38 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/14 18:29:34 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/15 15:33:19 by mgavorni         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 #include <fcntl.h>
@@ -137,25 +137,18 @@ int	redirect_input(t_env *env, t_ast_node *node)
 	int		status;
 	char	*delimiter;
 
+	in_fd = 0;
 	status = EXIT_FAILURE;
 	if (node->type == NODE_HEREDOC)
 	{
 		delimiter = node->args[0];
 		if (collect_heredoc(env, delimiter, &in_fd) == -1)
-		{
 			return (status);
-		}
 	}
 	else if (node->type == NODE_REDIR_IN)
-	{
 		in_fd = open(node->args[0], O_RDONLY);
-	}
 	if (in_fd == -1)
-	{
-		//fprintf(stderr, "minishell: %s: No such file or directory\n",
-		//	node->args[0]);
 		return (status);
-	}
 	og_in_fd = dup(STDIN_FILENO);
 	dup2(in_fd, STDIN_FILENO);
 	close(in_fd);
@@ -170,7 +163,7 @@ int	execute_redirections(t_env *env, t_ast_node *node)
 	int	status;
 
 	status = EXIT_FAILURE;
-	if(env != NULL && node != NULL)
+	if (env != NULL && node != NULL)
 	{
 		if (node->type == NODE_REDIR_IN || node->type == NODE_HEREDOC)
 			status = redirect_input(env, node);

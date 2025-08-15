@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:40:49 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/14 13:15:07 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/15 15:35:40 by mgavorni         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 #include "../../inc/tokenizer.h"
@@ -35,24 +35,11 @@ static t_token	*validate_tokens(t_token *tokens)
 		return (NULL);
 	return (tokens);
 }
-bool is_valid_token_char(char curent_char)
-{
-	return (curent_char == '|'
-		|| curent_char == '&'
-		|| curent_char == '<'
-		|| curent_char == '>'
-		|| curent_char == '('
-		|| curent_char == ')'
-		|| curent_char == '\''
-		|| curent_char == '\"'
-		|| isspace(curent_char));
-}
 
 t_token	*tokenize(t_tokenizer_data *tok_data, char *input)
 {
 	char	curr_char;
 
-	
 	while (*input)
 	{
 		curr_char = *input;
@@ -72,78 +59,8 @@ t_token	*tokenize(t_tokenizer_data *tok_data, char *input)
 			input = process_double_quotes(tok_data, input);
 		else if (!isspace(curr_char))
 			input = process_word_token(tok_data, input);
-		else if (!is_valid_token_char(curr_char))
-			input = process_invalid_character(tok_data, input);
 		else
 			input++;
 	}
 	return (validate_tokens(tok_data->tokens));
 }
-
-// t_token	*tokenize(t_tokenizer_data *tok_data, char *input)
-//{
-//	while (*input)
-//	{
-//		if (*input == '|')
-//		{
-//			if (*(input + 1) == '|')
-//			{
-//				add_token(tok_data, TOK_OR, "||", 2);
-//				input++;
-//			}
-//			else
-//				add_token(tok_data, TOK_PIPE, "|", 1);
-//		}
-//		else if (*input == '&')
-//		{
-//			if (*(input + 1) == '&')
-//			{
-//				add_token(tok_data, TOK_AND, "&&", 2);
-//				input++;
-//			}
-//			else
-//				add_token(tok_data, TOK_AND, "&", 1);
-//		}
-//		else if (*input == '<')
-//		{
-//			if (*(input + 1) == '<')
-//			{
-//				add_token(tok_data, TOK_HEREDOC, "<<", 2);
-//				input++;
-//			}
-//			else
-//				add_token(tok_data, TOK_REDIR_IN, "<", 1);
-//		}
-//		else if (*input == '>')
-//		{
-//			if (*(input + 1) == '>')
-//			{
-//				add_token(tok_data, TOK_REDIR_APPEND, ">>", 2);
-//				input++;
-//			}
-//			else
-//				add_token(tok_data, TOK_REDIR_OUT, ">", 1);
-//		}
-//		else if (*input == '\'')
-//		{
-//			input = process_single_quotes(tok_data, input);
-//			continue ;
-//		}
-//		else if (*input == '\"')
-//		{
-//			input = process_double_quotes(tok_data, input);
-//			continue ;
-//		}
-//		else if (*input == '(')
-//			add_token(tok_data, TOK_GROUP_OPEN, "(", 1);
-//		else if (*input == ')')
-//			add_token(tok_data, TOK_GROUP_CLOSE, ")", 1);
-//		else if (!isspace(*input))
-//		{
-//			input = process_word_token(tok_data, input);
-//			continue ;
-//		}
-//		input++;
-//	}
-//	return (tok_data->tokens);
-//}

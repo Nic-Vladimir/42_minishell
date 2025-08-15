@@ -1,32 +1,17 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 09:02:04 by mgavornik         #+#    #+#             */
-/*   Updated: 2025/08/14 00:54:59 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/15 15:27:39 by mgavorni         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 #include "../../inc/pedo.h"
-#include "../../inc/fd.h"
-
-void	heredoc_child_cleanup(t_env *env)
-{
-	if (env)
-	{
-		if (env->root)
-			free_ast(&env->root);
-		if (env->tokenizer)
-			free_tokens(env->tokenizer);
-		if(env->pipeline)
-			free_pipeline_list(&env->pipeline);
-		free_env(env);
-	}
-}
 
 static void	heredoc_cleanup(void *data)
 {
@@ -41,16 +26,10 @@ static void	heredoc_cleanup(void *data)
 			free_ast(&env->root);
 		if (env->tokenizer)
 			free_tokens(env->tokenizer);
-		if(env->pipeline)
+		if (env->pipeline)
 			free_pipeline_list(&env->pipeline);
 		free_env(env);
 	}
-}
-
-void	herdoc_linker(t_heredoc_data *hd, t_env *env, char *delimiter)
-{
-	hd->env = env;
-	hd->delimiter = delimiter;
 }
 
 static int	redirect_stdio_to_tty(int *orig_stdin, int *orig_stdout)
@@ -64,8 +43,7 @@ static int	redirect_stdio_to_tty(int *orig_stdin, int *orig_stdout)
 	tty_fd = open("/dev/tty", O_RDWR);
 	if (tty_fd == -1)
 		return (-1);
-	if (dup2(tty_fd, STDIN_FILENO) == -1
-		|| dup2(tty_fd, STDOUT_FILENO) == -1)
+	if (dup2(tty_fd, STDIN_FILENO) == -1 || dup2(tty_fd, STDOUT_FILENO) == -1)
 	{
 		close(tty_fd);
 		return (-1);
@@ -109,7 +87,6 @@ int	collect_heredoc(t_env *env, char *delimiter, int *write_fd)
 		perror("pipe failed");
 		return (-1);
 	}
-	
 	init_structs(&hd_data, &child_data);
 	herdoc_linker(&hd_data, env, delimiter);
 	hd_data.write_fd = pipe_fds[1];
@@ -125,5 +102,3 @@ int	collect_heredoc(t_env *env, char *delimiter, int *write_fd)
 	*write_fd = pipe_fds[0];
 	return (0);
 }
-
-

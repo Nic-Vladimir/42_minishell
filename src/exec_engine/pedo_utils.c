@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   pedo_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgavornik <mgavornik@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 08:54:24 by mgavornik         #+#    #+#             */
-/*   Updated: 2025/08/14 18:29:25 by mgavornik        ###   ########.fr       */
+/*   Updated: 2025/08/15 15:31:47 by mgavorni         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 #include "../../inc/pedo.h"
@@ -34,7 +34,6 @@ static int	parent_process(pid_t pid, t_env *env, int in_fd, int out_fd)
 	signal(SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
 	set_all_signals(MINI_MODE, env->sigenv);
-	
 	if (in_fd != STDIN_FILENO)
 		close(in_fd);
 	if (out_fd != STDOUT_FILENO)
@@ -51,7 +50,6 @@ int	execute_in_child(t_env *env, t_child_data *child_data, int in_fd,
 	pid_t	pid;
 
 	pid = fork();
-	//fprintf(stderr, "[PID]execute_in_child(): %d\n", pid);
 	if (pid == -1)
 	{
 		perror("fork failed");
