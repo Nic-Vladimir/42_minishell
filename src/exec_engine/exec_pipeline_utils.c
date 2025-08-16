@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 02:07:38 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/15 16:06:48 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/16 15:37:19 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,6 @@ int	execute_pipeline_cmds(t_env *env, t_list *pipeline)
 		current = current->next;
 	}
 	last_cmd_status = wait_for_children(env, last_pid, pipeline_count);
-	printf("\n");
+	ft_printf("\n");
 	return (last_cmd_status);
 }

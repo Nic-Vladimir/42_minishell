@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 16:59:00 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/15 14:17:48 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/16 15:37:05 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static t_ast_node	*create_redirection_node(t_token_type redir_type)
 		redir_node = ast_new_node(NODE_HEREDOC, NULL);
 	else
 	{
-		printf("Syntax error: unnexpected redirection type\n");
+		ft_printf("Syntax error: unnexpected redirection type\n");
 		return (NULL);
 	}
 	return (redir_node);
@@ -62,7 +62,7 @@ t_ast_node	*parse_redirection(t_tokenizer_data *tok_data, t_ast_node *cmd)
 	tok_data->tokens = (*tok_data->tokens).next;
 	if (!tok_data->tokens || tok_data->tokens->type != TOK_WORD)
 	{
-		printf("Syntax error: expected filename after redirection\n");
+		ft_printf("Syntax error: expected filename after redirection\n");
 		return (NULL);
 	}
 	redir_node = create_redirection_node(redir->type);

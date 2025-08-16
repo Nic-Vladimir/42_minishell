@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 22:27:53 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/17 15:03:47 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/16 15:37:11 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ int	process_heredoc_input(t_env *env, char *delimiter, int write_fd)
 		if (herdoc_stop(line, delimiter))
 		{
 			if (!line)
-				printf("delimited by end-of-file (wanted `%s')\n", delimiter);
+				ft_printf("delimited by end-of-file (wanted `%s')\n",
+					delimiter);
 			free(line);
 			break ;
 		}

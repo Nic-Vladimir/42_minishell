@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 10:16:04 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/15 15:34:05 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/16 15:36:01 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	custom_prompt_handler(void)
 	size_t	len;
 
 	prompt = rl_prompt;
-	newline_pos = strchr(prompt, '\n');
+	newline_pos = ft_strchr(prompt, '\n');
 	current_input = rl_line_buffer;
 	write(STDOUT_FILENO, "\n", 1);
 	if (newline_pos)
@@ -36,7 +36,7 @@ void	custom_prompt_handler(void)
 		rl_redisplay();
 	}
 	if (current_input && *current_input)
-		printf("%s", current_input);
+		ft_printf("%s", current_input);
 	g_sig = 130;
 }
 
@@ -61,8 +61,8 @@ void	mini_sigint_handler(sig_atomic_t g_sig)
 
 void	cd_handler(sig_atomic_t g_sig, t_env *env)
 {
-	printf("Signal recognized\n");
-	printf("exit\n");
+	ft_printf("Signal recognized\n");
+	ft_printf("exit\n");
 	execute_exit(env, NULL, g_sig);
 }
 

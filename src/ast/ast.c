@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:02:13 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/15 14:16:43 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/16 15:36:44 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ t_ast_node	*parse_group(t_tokenizer_data *tok_data)
 		subtree = parse_logical_operators(tok_data);
 		if (!tok_data->tokens || tok_data->tokens->type != TOK_GROUP_CLOSE)
 		{
-			printf("Syntax error: expected closing ')'\n");
+			ft_printf("Syntax error: expected closing ')'\n");
 			return (NULL);
 		}
 		tok_data->tokens = tok_data->tokens->next;

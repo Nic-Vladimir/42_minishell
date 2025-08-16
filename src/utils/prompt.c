@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 01:30:29 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/15 15:36:30 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/16 15:36:32 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	print_transient_prompt(char *command)
 {
-	printf("\033[A\r\033[K");
-	printf("\033[A\r\033[K");
-	printf("\033[38;5;46m❯\033[0m %s\n", command);
+	ft_printf("\033[A\r\033[K");
+	ft_printf("\033[A\r\033[K");
+	ft_printf("\033[38;5;46m❯\033[0m %s\n", command);
 }
 
 static char	*format_prompt(const char *prefix, const char *cwd,

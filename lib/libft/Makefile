@@ -57,7 +57,8 @@ BSRCS = ft_lstadd_back.c \
 		get_next_line.c \
 		ft_printf.c \
 		ft_printf_utils_1.c \
-		ft_printf_utils_2.c
+		ft_printf_utils_2.c \
+		ft_strtok_r.c
 
 SRC_DIR       = ./src/
 INC_DIR       = ./inc/

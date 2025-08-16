@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:02:41 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/15 14:26:29 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/16 15:34:47 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static char	*check_executable_path(const char *path)
 
 	result = NULL;
 	if (access(path, X_OK) == 0)
-		result = strdup(path);
+		result = ft_strdup(path);
 	return (result);
 }
 
@@ -28,12 +28,13 @@ static char	*search_in_directory(const char *dir, const char *command)
 	size_t	path_len;
 	char	*result;
 
-	path_len = strlen(dir) + strlen(command) + 2;
+	path_len = ft_strlen(dir) + ft_strlen(command) + 2;
 	full_path = malloc(path_len);
 	if (!full_path)
 		return (NULL);
-	ft_memset(full_path, 0, path_len);
-	snprintf(full_path, path_len, "%s/%s", dir, command);
+	ft_strlcpy(full_path, dir, path_len);
+	ft_strlcat(full_path, "/", path_len);
+	ft_strlcat(full_path, command, path_len);
 	result = check_executable_path(full_path);
 	free(full_path);
 	return (result);
@@ -55,14 +56,14 @@ char	*find_executable(t_env *env, const char *command)
 	path_env = get_env_value(env, "PATH");
 	if (!path_env)
 		return (NULL);
-	path_copy = strdup(path_env);
+	path_copy = ft_strdup(path_env);
 	if (!path_copy)
 		return (NULL);
-	dir = strtok_r(path_copy, ":", &saveptr);
+	dir = ft_strtok_r(path_copy, ":", &saveptr);
 	while (dir && !result)
 	{
 		result = search_in_directory(dir, command);
-		dir = strtok_r(NULL, ":", &saveptr);
+		dir = ft_strtok_r(NULL, ":", &saveptr);
 	}
 	free(path_copy);
 	return (result);
@@ -79,7 +80,7 @@ char	*get_env_value(t_env *env, const char *key)
 	current_node = env->vars->buckets[index];
 	while (current_node)
 	{
-		if (strcmp(current_node->key, key) == 0)
+		if (ft_strcmp(current_node->key, key) == 0)
 		{
 			return (current_node->value);
 		}

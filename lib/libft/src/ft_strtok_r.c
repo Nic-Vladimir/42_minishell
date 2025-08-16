@@ -1,33 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcat.c                                       :+:      :+:    :+:   */
+/*   ft_strtok_r.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vnicoles <vnicoles@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/14 14:14:16 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/16 15:30:13 by vnicoles         ###   ########.fr       */
+/*   Created: 2025/08/16 14:54:41 by vnicoles          #+#    #+#             */
+/*   Updated: 2025/08/16 15:08:51 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/libft.h"
 
-size_t	ft_strlcat(char *dest, const char *src, size_t destsize)
+char	*ft_strtok_r(char *str, const char *delim, char **saveptr)
 {
-	size_t	dest_len;
-	size_t	src_len;
-	size_t	i;
+	char	*start;
 
-	dest_len = ft_strlen(dest);
-	src_len = ft_strlen(src);
-	if (dest_len >= destsize)
-		return (destsize + src_len);
-	i = dest_len;
-	while (i < destsize - 1 && src[i - dest_len])
+	if (!str && (!saveptr || !*saveptr))
+		return (NULL);
+	if (!str)
+		str = *saveptr;
+	while (*str && ft_strchr(delim, *str))
+		str++;
+	if (!*str)
+		return (*saveptr = NULL, NULL);
+	start = str;
+	while (*str && !ft_strchr(delim, *str))
+		str++;
+	if (*str)
 	{
-		dest[i] = src[i - dest_len];
-		i++;
+		*str = '\0';
+		*saveptr = str + 1;
 	}
-	dest[i] = '\0';
-	return (dest_len + src_len);
+	else
+		*saveptr = NULL;
+	return (start);
 }

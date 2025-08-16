@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:22:48 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/15 14:25:25 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/16 15:37:22 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	execute_unset(t_env *env, t_ast_node *node)
 	i = 1;
 	if (!node->args[i])
 	{
-		printf("unset: not enough arguments\n");
+		ft_printf("unset: not enough arguments\n");
 		return (1);
 	}
 	while (node->args[i])

@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 12:39:37 by mgavornik         #+#    #+#             */
-/*   Updated: 2025/08/15 15:32:20 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/16 15:38:50 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ void	setup_child_signals(t_env *env, int behavior)
 
 	if (behavior == CHILD_SIG_CUSTOM)
 	{
-		memset(&sa, 0, sizeof(sa));
-		memset(&value, 0, sizeof(value));
+		ft_memset(&sa, 0, sizeof(sa));
+		ft_memset(&value, 0, sizeof(value));
 		value.sival_ptr = env;
 		g_sig = (sig_atomic_t)(uintptr_t)env;
 		sa.sa_sigaction = custom_handler;

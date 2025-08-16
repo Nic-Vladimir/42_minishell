@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 05:47:09 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/15 14:26:43 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/16 15:30:24 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,14 @@ static char	*get_env_var_string(char *key, char *value)
 	char	*env_var;
 	size_t	len;
 
-	len = strlen(key) + strlen(value) + 2;
+	len = ft_strlen(key) + ft_strlen(value) + 2;
 	env_var = (char *)malloc(len);
 	if (env_var)
-		sprintf(env_var, "%s=%s", key, value);
+	{
+		ft_strlcpy(env_var, key, len);
+		ft_strlcat(env_var, "=", len);
+		ft_strlcat(env_var, value, len);
+	}
 	return (env_var);
 }
 

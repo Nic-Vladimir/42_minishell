@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:13:28 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/15 15:34:14 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/16 15:38:43 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	set_mini_mode(sig_atomic_t g_sig)
 {
 	struct sigaction	sa;
 
-	memset(&sa, 0, sizeof(sa));
+	ft_memset(&sa, 0, sizeof(sa));
 	sigemptyset(&sa.sa_mask);
 	if (g_sig == SIGINT)
 	{

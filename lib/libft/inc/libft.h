@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:18:18 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/06/28 14:05:07 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/16 15:27:21 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ void				ft_lstclear(t_list **lst, void (*del)(void *));
 void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 						void (*del)(void *));
+char				*ft_strtok_r(char *str, const char *delim, char **saveptr);
 
 // --- Get_next_line ---
 

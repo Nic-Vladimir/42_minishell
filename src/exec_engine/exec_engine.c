@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 08:34:17 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/15 16:05:01 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/16 15:12:00 by vnicoles         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,8 @@ bool	cmd_is_builtin(t_env *env, t_ast_node *node)
 
 int	execute(t_env *env, t_ast_node *node, t_execute_type exec_type)
 {
-	int		status;
-	pid_t	pid;
+	int	status;
 
-	pid = getpid();
 	if (!node)
 		return (0);
 	status = execute_node_by_type(env, node, exec_type);
