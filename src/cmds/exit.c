@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:02:59 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/15 14:24:56 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/17 21:01:59 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,6 @@ void	ft_free_split(char **res)
 void	clean_rl(void)
 {
 	rl_clear_history();
-	rl_free_line_state();
-	rl_cleanup_after_signal();
-	clear_history();
-	rl_deprep_terminal();
 }
 
 void	reset_terminal_for_readline(void)
