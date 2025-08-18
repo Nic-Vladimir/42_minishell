@@ -6,7 +6,7 @@
 #    By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 19:12:35 by vnicoles          #+#    #+#              #
-#    Updated: 2025/08/15 15:55:48 by mgavorni         ###   ########.fr        #
+#    Updated: 2025/08/18 11:20:01 by mgavorni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,6 +39,7 @@ SRC			= main.c \
 				ast/redirections.c \
 				ast/parse_simple_command.c \
 				ast/init_node.c \
+				env/ft_getpid.c \
 				env/shell_env.c \
 				env/env_utils.c \
 				env/hmap_insert.c\

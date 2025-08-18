@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 03:02:59 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/17 21:01:59 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/18 11:19:17 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	execute_exit(t_env *env, t_ast_node *node, sig_atomic_t g_sig)
 	{
 		exit(g_sig);
 	}
-	if (env->shell_pid == getpid())
+	if (env->shell_pid == ft_getpid())
 	{
 		comprehensive_cleanup(&env);
 		clean_rl();

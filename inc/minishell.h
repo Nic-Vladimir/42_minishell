@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:48:22 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/15 15:59:05 by mgavorni         ###   ########.fr       */
+/*   Updated: 2025/08/18 11:17:23 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,4 +215,6 @@ void							do_pipeline(t_env **env);
 void							do_input(t_env **env);
 void							free_hashmap(t_hashmap *hashmap);
 void							free_sig(t_sigenv *sigenv);
+
+pid_t							ft_getpid(void);
 #endif

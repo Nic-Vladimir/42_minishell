@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 10:16:04 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/16 15:36:01 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/08/18 11:28:19 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ void	mini_sigint_handler(sig_atomic_t g_sig)
 
 void	cd_handler(sig_atomic_t g_sig, t_env *env)
 {
-	ft_printf("Signal recognized\n");
 	ft_printf("exit\n");
 	execute_exit(env, NULL, g_sig);
 }

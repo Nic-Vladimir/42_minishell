@@ -6,7 +6,7 @@
 /*   By: mgavorni <mgavorni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 18:06:34 by vnicoles          #+#    #+#             */
-/*   Updated: 2025/08/16 15:39:39 by vnicoles         ###   ########.fr       */
+/*   Updated: 2025/08/18 11:19:10 by mgavorni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ t_env	*init_env(char **envp)
 	sig_malinit(&env->sigenv);
 	if (!env->sigenv)
 		return (NULL);
-	env->shell_pid = getpid();
+	env->shell_pid = ft_getpid();
 	env->last_exit_code = 0;
 	env->vars = init_hashmap_vars();
 	if (!env->vars)
