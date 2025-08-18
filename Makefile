@@ -73,7 +73,6 @@ SRC			= main.c \
 				cmds/unset.c \
 				signals/signals.c \
 				signals/signals_handlers.c \
-				fancy_write.c \
 				tokenizer/tokenizer.c \
 				tokenizer/tokenizer_filters.c \
 				tokenizer/tokenizer_utils.c \

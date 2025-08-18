@@ -24,6 +24,4 @@
 # define BOLD "\033[1m"
 # define CLEAR "\r\033[K"
 
-void	write_string(int fd, char *str);
-void	fancy_write(int fd, char *str, char *color);
 #endif
